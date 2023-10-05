@@ -11,6 +11,12 @@
       "image": "us-central1-docker.pkg.dev/phx-datadissemination/cloud-run-source-deploy/wildfire-shiny/wildfire-test:200d27ca768d5cdd5d36611edd4a2086feb31f49",
       "port": 3838,
       "name": "Wildfires"
+    },
+    {
+      "slug": "wastewater-report",
+      "image": "us-central1-docker.pkg.dev/phx-datadissemination/cloud-run-source-deploy/wastewater-shiny-report/wastewater-shiny-report:43c3f727de2b61008eb0acb83314c77e93d31a4f",
+      "port": 3838,
+      "name": "Wastewater Report"
     }
   ]
 }
