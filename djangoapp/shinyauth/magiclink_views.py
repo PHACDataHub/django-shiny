@@ -80,7 +80,7 @@ class EmailLoginView(Login):
                 email_address=email,
                 template_id=GC_NOTIFY_TEMPLATE_ID,
                 personalisation={
-                    "magiclink": magiclink_url,
+                    "magiclink": magiclink_url.replace("http://", "https://"),
                     "magiclink_expiry": magiclink.expiry.strftime("%Y-%m-%d %H:%M:%S"),
                 },
             )
@@ -91,7 +91,7 @@ class EmailLoginView(Login):
             payload = json.dumps(
                 {
                     "email": email,
-                    "magiclink": magiclink_url,
+                    "magiclink": magiclink_url.replace("http://", "https://"),
                     "expiry": magiclink.expiry.strftime("%Y-%m-%d %H:%M:%S"),
                 }
             )

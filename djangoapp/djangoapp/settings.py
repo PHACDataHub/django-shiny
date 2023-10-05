@@ -80,6 +80,16 @@ AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
 )
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://shiny.phac.alpha.canada.ca',
+]
+CSRF_ALLOWED_ORIGINS = [
+    'https://shiny.phac.alpha.canada.ca',
+]
+CORS_ORIGINS_WHITELIST = [
+    'https://shiny.phac.alpha.canada.ca',
+]
+
 LOGIN_URL = "email_login"
 LOGIN_REDIRECT_URL = "/login/success/"  # Redirect to homepage with success banner
 MAGICLINK_LOGIN_SENT_TEMPLATE_NAME = "auth/login_link_sent.jinja"
