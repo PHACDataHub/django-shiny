@@ -4,11 +4,16 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
-from djangoapp.settings import env
+from djangoapp.settings import env, SHINY_APPS
 
 import requests
 
 from bs4 import BeautifulSoup
+
+shiny_apps = {app["slug"]: app for app in SHINY_APPS}
+
+def user_has_access(user, app_slug):
+    return shiny_apps[app_slug]["access"] == "public" or user.is_authenticated
 
 
 def home(request):
@@ -22,29 +27,27 @@ def logout_view(request):
 
 
 def login_success(request):
-    # Add success message
     messages.success(request, "You have successfully logged in.")
     return redirect("index")
 
 
-@login_required
 def shiny(request, app_slug):
+    if not user_has_access(request.user, app_slug):
+        return redirect(f"/login/?next=/shiny/{app_slug}/")
     return render(
         request, "djangoapp/shiny.jinja", {"active_tab": app_slug, "app_slug": app_slug}
     )
 
 
-@login_required
 def shiny_contents(request, app_slug):
+    if not user_has_access(request.user, app_slug):
+        return redirect(f"/login/?next=/shiny/{app_slug}/")
     response = requests.get(f"http://{app_slug}-service:8100")
     soup = BeautifulSoup(response.content, "html.parser")
     return JsonResponse({"html_contents": str(soup)})
 
 
 def auth(request, app_slug):
-    """
-    TODO: Modify to use per-application/per-user permissions checking
-    """
-    if request.user.is_authenticated:
+    if not user_has_access(request.user, app_slug):
         return HttpResponse(status=200)
     return HttpResponse(status=403)

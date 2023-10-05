@@ -20,7 +20,7 @@ from urllib.parse import urlparse
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 with open(os.path.join(BASE_DIR, "shiny_apps.json")) as f:
-    SHINY_APPS = json.load(f)
+    SHINY_APPS = json.load(f)['apps']
 
 env = environ.Env()
 env_file = os.path.join(BASE_DIR, ".env")
@@ -122,7 +122,7 @@ TEMPLATES = [
                 "len": len,
                 "str": str,
                 "list": list,
-                "shiny_apps": SHINY_APPS['apps'],
+                "shiny_apps": SHINY_APPS,
             },
             "context_processors": [
                 "django.contrib.auth.context_processors.auth",

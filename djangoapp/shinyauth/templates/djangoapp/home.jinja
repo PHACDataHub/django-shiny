@@ -3,18 +3,16 @@
 {% block content %}
 
   <div class="container mt-3">
-    <h2>Django authentication for Shiny apps demo</h2>
+    <h2>Django authentication for <i>Shiny</i> apps</h2>
     <p class="mt-3">
-      Notice that this home page is not protected, so anyone can access it.
+      <b>To begin, try clicking one of the links above.</b> If the app is protected (<i class="bi bi-lock text-muted"></i>), you will be prompted to login.
     </p>
     <p>
-      We can add Shiny apps to the tab-bar which are either protected, or not. Protected apps will require the user to be authenticated before accessing them.
+      Each Shiny app runs in its own container and is proxied through Django, appearing in an iframe.
     </p>
     <p>
-      <b>To begin, try clicking one of the links above.</b> You will be prompted to login to view the Shiny app.
-    </p>
-    <p>
-      Ultimately, we can add as many Shiny apps as we want to the tab-bar. Each runs in its own container and is proxied through Django, appearing in an iframe.
+      By modifying the <code>shiny_apps.json</code> file, you can add Shiny apps to this page.
+      For more information, see the <a href="https://github.com/PHACDataHub/django-shiny">django-shiny GitHub repo</a>.
     </p>
   </div>
 {% endblock %}

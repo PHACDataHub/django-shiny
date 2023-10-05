@@ -2,7 +2,12 @@
   {% for app in shiny_apps %}
     <li class="nav-item">
       <a class="nav-link {% if active_tab == app.slug %}active{% endif %}"
-        href="{{ url("shiny", app.slug) }}">{{ app.name }}</a>
+        href="{{ url("shiny", app.slug) }}">
+        {{ app.name }}
+        {% if app.access == "private" %}
+          <i class="bi bi-lock text-muted"><span class="visually-hidden">(Private)</span></i>
+        {% endif %}
+      </a>
     </li>
   {% endfor %}
 </ul>
