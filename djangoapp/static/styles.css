@@ -200,3 +200,11 @@ div#content {
   height: calc(100vh - 4rem);
   overflow: hidden;
 }
+
+#loading-spinner {
+  display: none;
+}
+
+body.loading #loading-spinner {
+  display: block;
+}

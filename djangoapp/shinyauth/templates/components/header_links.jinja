@@ -1,8 +1,4 @@
 <ul class="navbar-nav flex-fill justify-content-start bold-links">
-  <li class="nav-item">
-    <a class="nav-link {% if active_tab == 'index' %}active{% endif %}"
-       href="{{ url("index") }}">Home</a>
-  </li>
   {% for app in shiny_apps %}
     <li class="nav-item">
       <a class="nav-link {% if active_tab == app.slug %}active{% endif %}"

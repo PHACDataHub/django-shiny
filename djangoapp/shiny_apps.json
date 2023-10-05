@@ -14,8 +14,8 @@
     },
     {
       "slug": "wastewater-report",
-      "image": "us-central1-docker.pkg.dev/phx-datadissemination/cloud-run-source-deploy/wastewater-shiny-report/wastewater-shiny-report:43c3f727de2b61008eb0acb83314c77e93d31a4f",
-      "port": 3838,
+      "image": "northamerica-northeast1-docker.pkg.dev/phx-datadissemination/shiny-apps/wastewater-shiny-report:v1.1",
+      "port": 8080,
       "name": "Wastewater Report"
     }
   ]

@@ -5,14 +5,22 @@
 {# https://realpython.com/blog/python/getting-started-with-django-channels/ #}
 
 {% block content %}
-  <div id="content" class="container"></div>
+  <div id="content">
+    <div id="loading-spinner" class="mt-5 text-center">
+      <div class="spinner-border text-secondary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </div>
   <script>
     {# https://github.com/gorhill/uBO-Extra/pull/4 #}
     {# https://stackoverflow.com/questions/10418644/creating-an-iframe-with-given-html-dynamically#10433550 #}
 
     $(document).ready(function () {
+      $('body').addClass('loading');
 
       $.getJSON('{{ url("shiny_contents", app_slug) }}', function (data) {
+        $('body').removeClass('loading');
 
         var iframe = document.createElement("iframe");
         $('#content').append(iframe);
