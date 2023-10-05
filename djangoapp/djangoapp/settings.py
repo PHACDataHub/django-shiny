@@ -44,7 +44,7 @@ ALLOWED_HOSTS = [
     'djangoapp',
     '34.95.50.116',
     'djangoapp-service.default.svc.cluster.local',
-    'shiny.wastewater-riskmodeling.phac.alpha.canada.ca',
+    'shiny.phac.alpha.canada.ca',
 ]
 
 INTERNAL_IPS = [

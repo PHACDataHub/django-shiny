@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: shiny.wastewater-riskmodeling.phac.alpha.canada.ca
+  - host: shiny.phac.alpha.canada.ca
     http:
       paths:
       - path: /
