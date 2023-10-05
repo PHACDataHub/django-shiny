@@ -1,0 +1,51 @@
+{% extends 'base.jinja' %}
+
+{% block title %}<title>Login</title>{% endblock %}
+{% block content %}
+  <div class="container p-0 d-flex justify-content-center"
+       id="login-container">
+    <div class="col-md-6 col-sm-12">
+        <form action="{{ url("email_login") }}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}"
+        method="post">
+          {% csrf_token %}
+          {% if next %}
+            <div class="alert alert-warning fade show">
+              <span>Please login to see page</span>
+            </div>
+          {% endif %}
+
+          {% if login_form.errors %}
+            <div class="alert alert-danger alert-dismissible fade show">
+              <span>{{ login_form.errors }}</span>
+              <button type="button"
+                      class="btn-close"
+                      data-bs-dismiss="alert"
+                      aria-label="Close"></button>
+            </div>
+          {% endif %}
+
+          <div class="card">
+            <h2 class="card-header">Login or create account</h2>
+            <div class="card-body">
+              <div class="form-floating mb-3">
+                <input type="text"
+                       name="{{ login_form.email.name }}"
+                       maxlength="150"
+                       placeholder="{{ login_form.email.placeholder }}"
+                       required
+                       id="{{ login_form.email.auto_id }}"
+                       class="textinput textInput form-control">
+                <label for="{{ login_form.email.auto_id }}">Email:</label>
+              </div>
+              <div>
+                <input class='btn btn-primary white' type="submit" value="Send a login link to my email" />
+              </div>
+            </div>
+          </div>
+        </form>
+    </div>
+  </div>
+  <script>
+    document.getElementById('id_email').focus();
+  </script>
+{% endblock content %}

@@ -1,0 +1,3 @@
+.gitignore
+k8s/
+shinyapp_example/

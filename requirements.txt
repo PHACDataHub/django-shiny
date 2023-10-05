@@ -1,0 +1,12 @@
+django
+django-environ
+django-jinja
+django-magiclink
+google-cloud-secret-manager
+psycopg2-binary
+django-bootstrap-form
+gunicorn
+beautifulsoup4
+psycopg2-binary
+requests
+whitenoise

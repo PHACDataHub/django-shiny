@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: djangoapp-deployment
+  labels:
+    app: djangoapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: djangoapp
+  template:
+    metadata:
+      labels:
+        app: djangoapp
+    spec:
+      containers:
+      - name: djangoapp
+        image: northamerica-northeast1-docker.pkg.dev/phx-datadissemination/django-shiny/djangoapp:v1.3
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - secretRef:
+            name: secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: djangoapp-service
+spec:
+  selector:
+    app: djangoapp
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000

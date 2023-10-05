@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% block title %}<title>PHAC Shiny Apps</title>{% endblock title %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="{{ static('thirdparty/htmx.min.js') }}"></script>
+    <script src="{{ static('thirdparty/jquery-3.6.1.min.js') }}"></script>
+    <script src="{{ static('thirdparty/idiomorph.min.js') }}"></script>
+    <script src="{{ static('thirdparty/idiomorph-ext.js') }}"></script>
+    <link rel="shortcut icon"
+          type="image/png"
+          href="{{ static("favicon.ico") }}">
+    <script src="{{ static('thirdparty/bootstrap.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ static("thirdparty/css/bootstrap.min.css") }}">
+    <link rel="stylesheet" href="{{ static("thirdparty/css/bootstrap-icons.min.css") }}">
+    <link rel="stylesheet" href="{{ static("styles.css") }}">
+  </head>
+  <body hx-ext="morph" {% if login_form %}class="fancy-background"{% endif %}>
+    <a class="visually-hidden-focusable" href="#main-content" id="skip-link">Skip to main</a>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark d-print-none"
+         id="top-nav">
+      <div class="container">
+        <h1 class="nav-header">
+          <a href="{{ url("index") }}" class="text-reset text-decoration-none">
+            {% block nav_header_text %}
+              PHAC Shiny Apps
+            {% endblock nav_header_text %}
+          </a>
+        </h1>
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="{{ _("toggle_navigation") }}">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          {% block header_menu %}
+            {% include 'components/header_links.jinja' %}
+          {% endblock %}
+          <ul class="navbar-nav flex-fill justify-content-end">
+            {#
+            {% block lang_toggle %}
+              {% if not hide_lang_toggle %}
+                <li class="nav-item">
+                  <a lang="{{ get_other_lang_code() }}"
+                     class="nav-link"
+                     href="{{ url_to_other_lang() }}">{{ get_other_lang() }}</a>
+                </li>
+              {% endif %}
+            {% endblock %}
+            #}
+            {% if request.user.is_authenticated %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle"
+                   href="#"
+                   id="navbarDropdown"
+                   role="button"
+                   data-bs-toggle="dropdown"
+                   aria-haspopup="true"
+                   aria-expanded="false">{{ request.user }}</a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li>
+                    <a class="dropdown-item" href="{{ url("logout") }}">
+                      {# Bootstrap icon for logout #}
+                      <i class="bi bi-box-arrow-right"></i>
+                      Log out
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            {% else %}
+            {# Login button #}
+            <li class="nav-item">
+              <a class="nav-link fw-semibold"
+                 href="{{ url("email_login") }}">
+                <i class="bi bi-box-arrow-in-right me-1"></i>
+                Login
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main id="main-content">
+      <div id="modal-container"></div>
+      {% block sidebar %}<!-- insert default navigation text for every page -->{% endblock %}
+      <div class="container">
+        {% block messages %}
+          {% if messages %}
+            <div class="mt-3">
+              {% for message in messages %}
+                <div id="successful-action-alert"
+                     class="django-message alert alert-{{ message.tags }} alert-dismissible fade show"
+                     role="alert">
+                  {{ message|safe }}
+                  <button type="button"
+                          class="btn-close"
+                          data-bs-dismiss="alert"
+                          aria-label="Close"></button>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endblock messages %}
+      </div>
+      {% block content %}
+      {% endblock content %}
+    </main>
+    <footer class="d-print-none">
+      <nav class="navbar navbar-dark mt-3 bg-dark">
+        <div class="container">
+          <p class="my-3">Version 0.01</p>
+          <ul class="list-unstyled my-3 list-inline">
+            {# <li class="list-inline-item">
+              <a href="#" data-bs-toggle="modal" data-bs-target="#terms-modal">{{ _("terms_and_conditions") }}</a>
+            </li> #}
+            <li class="list-inline-item">
+              <a href="#">
+                Issues? Email dev team
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </footer>
+    <script>
+    htmx.on("htmx:syntax:error", function(evt) {
+              debugger;
+    });
+    document.body.addEventListener('htmx:configRequest', (event) => {
+      //htmx.logAll();
+      event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+    });
+    </script>
+  </body>
+</html>

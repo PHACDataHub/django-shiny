@@ -1,0 +1,16 @@
+{
+  "apps": [
+    {
+      "slug": "wastewater",
+      "image": "northamerica-northeast1-docker.pkg.dev/phx-datadissemination/django-shiny/wastewater:v1",
+      "port": 8100,
+      "name": "Wastewater"
+    },
+    {
+      "slug": "wildfire",
+      "image": "us-central1-docker.pkg.dev/phx-datadissemination/cloud-run-source-deploy/wildfire-shiny/wildfire-test:200d27ca768d5cdd5d36611edd4a2086feb31f49",
+      "port": 3838,
+      "name": "Wildfires"
+    }
+  ]
+}

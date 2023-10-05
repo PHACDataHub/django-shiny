@@ -1,0 +1,32 @@
+{% extends "base.jinja" %}
+
+{# https://stackoverflow.com/questions/39714619/proxy-redirecting-websockets-and-http-to-the-same-unix-socket #}
+{# https://blog.heroku.com/in_deep_with_django_channels_the_future_of_real_time_apps_in_django #}
+{# https://realpython.com/blog/python/getting-started-with-django-channels/ #}
+
+{% block content %}
+  <div id="content" class="container"></div>
+  <script>
+    {# https://github.com/gorhill/uBO-Extra/pull/4 #}
+    {# https://stackoverflow.com/questions/10418644/creating-an-iframe-with-given-html-dynamically#10433550 #}
+
+    $(document).ready(function () {
+
+      $.getJSON('{{ url("shiny_contents", app_slug) }}', function (data) {
+
+        var iframe = document.createElement("iframe");
+        $('#content').append(iframe);
+
+        iframe.contentWindow.document.open();
+        iframe.contentWindow.document.write(data.html_contents);
+        iframe.contentWindow.document.close();
+
+        // Attempt circumvention
+        if (iframe.contentWindow.WebSocket)
+            WebSocket = iframe.contentWindow.WebSocket;
+      });
+
+    });
+
+  </script>
+{% endblock %}
