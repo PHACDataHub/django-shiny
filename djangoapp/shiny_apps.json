@@ -2,21 +2,21 @@
   "apps": [
     {
       "slug": "wastewater",
-      "image": "northamerica-northeast1-docker.pkg.dev/phx-datadissemination/django-shiny/wastewater:v1",
+      "image": "northamerica-northeast1-docker.pkg.dev/phx-datadissemination/django-shiny/wastewater:latest",
       "port": 8100,
       "name": "Wastewater",
       "access": "public"
     },
     {
       "slug": "wildfire",
-      "image": "us-central1-docker.pkg.dev/phx-datadissemination/cloud-run-source-deploy/wildfire-shiny/wildfire-test:200d27ca768d5cdd5d36611edd4a2086feb31f49",
+      "image": "us-central1-docker.pkg.dev/phx-datadissemination/cloud-run-source-deploy/wildfire-shiny/wildfire-test:latest",
       "port": 3838,
       "name": "Wildfires",
       "access": "private"
     },
     {
       "slug": "wastewater-report",
-      "image": "northamerica-northeast1-docker.pkg.dev/phx-datadissemination/shiny-apps/wastewater-shiny-report:v1.1",
+      "image": "northamerica-northeast1-docker.pkg.dev/phx-datadissemination/shiny-apps/wastewater-shiny-report:latest",
       "port": 8100,
       "name": "Wastewater Report",
       "access": "private"

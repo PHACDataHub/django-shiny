@@ -1,0 +1,19 @@
+steps:
+  # Docker Build
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 
+           'northamerica-northeast1-docker.pkg.dev/phx-datadissemination/django-shiny/djangoapp', 
+           '.']
+
+  # Docker Push
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 
+           'northamerica-northeast1-docker.pkg.dev/phx-datadissemination/django-shiny/djangoapp']
+
+  # Run Python script k8s/generate_shiny_yaml.py
+  - name: 'python'
+    args: ['k8s/generate_shiny_yaml.py']
+
+  # Kubectl Apply
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['apply', '-f', 'k8s']
