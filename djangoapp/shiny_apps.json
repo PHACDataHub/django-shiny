@@ -2,8 +2,8 @@
   "apps": [
     {
       "slug": "wastewater",
-      "image": "northamerica-northeast1-docker.pkg.dev/phx-datadissemination/django-shiny/wastewater:latest",
-      "port": 8100,
+      "image": "us-east1-docker.pkg.dev/phx-datadissemination/cloud-run-source-deploy/wastewater-shiny/wastewater-shiny:518f5a039a15fec4b000ccfa8b9988a40d7a13bb",
+      "port": 5000,
       "name": "Wastewater",
       "access": "public"
     },
