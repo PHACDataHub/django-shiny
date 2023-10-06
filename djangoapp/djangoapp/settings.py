@@ -165,7 +165,7 @@ else:
             'NAME': 'postgres',
             'USER': 'postgres',
             'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-            'HOST': 'database'
+            'HOST': 'database-service'
         }
     }
 
