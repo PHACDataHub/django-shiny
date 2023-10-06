@@ -1,5 +1,5 @@
 """
-Substitutes the values in the template shinyapp.example file
+Substitutes the values in the template cloudbuild.example file
 for each shiny app in shiny_apps.json
 """
 
@@ -19,7 +19,7 @@ def main():
         shiny_apps = json.load(f)['apps']
 
     # Delete existing *.shinyapp.yaml files
-    existing_files = [f for f in os.listdir(current_dir) if f.endswith('.shinyapp.yaml')]
+    existing_files = [f for f in os.listdir(current_dir) if f.endswith('.cloudbuild.yaml')]
     for f in existing_files:
         try:
             os.remove(os.path.join(current_dir, f))
@@ -28,26 +28,21 @@ def main():
             pass
     for app in shiny_apps:
         app_slug = str(app['slug'])
-        app_image = str(app['image'])
-        app_port = str(app['port'])
 
         with open(template) as f:
             template_lines = f.readlines()
-            # The variables are $APP_SLUG, $APP_IMAGE and $APP_PORT
-            # in the template file
+            # The variable we care about is $APP_SLUG in the template file
             template_lines = [line.replace('$APP_SLUG', app_slug) for line in template_lines]
-            template_lines = [line.replace('$APP_IMAGE', app_image) for line in template_lines]
-            template_lines = [line.replace('$APP_PORT', app_port) for line in template_lines]
 
 
         # Write the new file
-        new_file = os.path.join(current_dir, f"{app_slug}.shinyapp.yaml")
+        new_file = os.path.join(current_dir, f"{app_slug}.cloudbuild.yaml")
         with open(new_file, 'w') as f:
             f.writelines(template_lines)
 
         print("Created file: {}".format(new_file))
 
-    print("Done creating YAML files for shiny apps.")
+    print("Done creating cloudbuild.yaml files for shiny apps.")
 
 
 if __name__ == '__main__':

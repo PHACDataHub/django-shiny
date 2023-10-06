@@ -12,7 +12,21 @@ steps:
 
   # Run Python script k8s/generate_shiny_yaml.py
   - name: 'python'
-    args: ['python', './k8s/generate_shiny_yaml.py']
+    args: ['python', './k8s/generate_shiny_k8s_yaml.py']
+
+  # Run Python script cloudbuild/generate_shinyapp_cloudbuild.py
+  - name: 'python'
+    args: ['python', './cloudbuild/generate_shiny_cloudbuild_yaml.py']
+
+  # Set up cloud build triggers for each shiny app and run them
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        while IFS= read -r project; do
+         gcloud builds submit --config ./<path-to>/$project/project-specific-cloudbuild.yaml .
+        done < affected.txt
 
   # Kubectl Apply
   - name: 'gcr.io/cloud-builders/kubectl'
