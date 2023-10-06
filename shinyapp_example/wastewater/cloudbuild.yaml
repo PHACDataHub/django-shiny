@@ -1,0 +1,11 @@
+steps:
+  # Docker Build
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 
+           'northamerica-northeast1-docker.pkg.dev/phx-datadissemination/shiny-apps/wastewater', 
+           '.']
+
+  # Docker Push
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 
+           'northamerica-northeast1-docker.pkg.dev/phx-datadissemination/shiny-apps/wastewater']
