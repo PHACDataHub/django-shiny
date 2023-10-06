@@ -110,3 +110,5 @@ db.sqlite3
 # frontend libraries
 bower_components/
 node_modules/
+
+k8s/*.shinyapp.yaml

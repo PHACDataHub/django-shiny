@@ -49,5 +49,5 @@ def shiny_contents(request, app_slug):
 
 def auth(request, app_slug):
     if not user_has_access(request.user, app_slug):
-        return HttpResponse(status=200)
-    return HttpResponse(status=403)
+        return HttpResponse(status=403)
+    return HttpResponse(status=200)
