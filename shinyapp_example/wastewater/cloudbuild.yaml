@@ -9,3 +9,10 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 
            'northamerica-northeast1-docker.pkg.dev/phx-datadissemination/shiny-apps/wastewater']
+
+  # Kubectl Rollout Restart
+  - name: 'gcr.io/cloud-builders/kubectl'
+    env:
+    - 'CLOUDSDK_COMPUTE_REGION=northamerica-northeast1'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=django-shiny'
+    args: ['rollout', 'restart', 'deployment/wastewater-deployment']
