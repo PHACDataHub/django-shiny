@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: djangoapp-migrate
+  labels:
+    app: djangoapp
+spec:
+  template:
+    spec:
+      containers:
+        - name: djangoapp
+          image: northamerica-northeast1-docker.pkg.dev/phx-datadissemination/django-shiny/djangoapp:latest
+          imagePullPolicy: Always
+          command: ["/bin/sh","-c"]
+          args: ["python ./djangoapp/manage.py makemigrations && python ./djangoapp/manage.py migrate"]
+          envFrom:
+          - secretRef:
+              name: secrets
+      restartPolicy: Never
+  backoffLimit: 5
