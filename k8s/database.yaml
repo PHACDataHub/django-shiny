@@ -20,7 +20,7 @@ spec:
           claimName: database-pvc
       containers:
       - name: database
-        image: postgres:10
+        image: postgres:16
         ports:
         - containerPort: 5432
         envFrom:
