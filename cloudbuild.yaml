@@ -12,7 +12,7 @@ steps:
 
   # Run Python script k8s/generate_shiny_yaml.py
   - name: 'python'
-    args: ['k8s/generate_shiny_yaml.py']
+    args: ['python', './k8s/generate_shiny_yaml.py']
 
   # Kubectl Apply
   - name: 'gcr.io/cloud-builders/kubectl'
