@@ -21,3 +21,11 @@ steps:
     - 'CLOUDSDK_COMPUTE_REGION=northamerica-northeast1'
     - 'CLOUDSDK_CONTAINER_CLUSTER=django-shiny'
     args: ['apply', '-f', 'k8s']
+
+  # Kubectl Rollout Restart
+  - name: 'gcr.io/cloud-builders/kubectl'
+  # Set environment variables
+    env:
+    - 'CLOUDSDK_COMPUTE_REGION=northamerica-northeast1'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=django-shiny'
+    args: ['rollout', 'restart', 'deployment/djangoapp-deployment']
