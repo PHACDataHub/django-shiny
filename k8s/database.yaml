@@ -14,6 +14,10 @@ spec:
       labels:
         app: database
     spec:
+      volumes:
+      - name: database-storage
+        persistentVolumeClaim:
+          claimName: database-pvc
       containers:
       - name: database
         image: postgres:10
@@ -22,6 +26,9 @@ spec:
         envFrom:
         - secretRef:
             name: secrets
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: database-storage
 ---
 apiVersion: v1
 kind: Service
