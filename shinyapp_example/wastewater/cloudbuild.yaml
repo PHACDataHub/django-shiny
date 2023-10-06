@@ -2,17 +2,20 @@ steps:
   # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 
-           'northamerica-northeast1-docker.pkg.dev/phx-datadissemination/shiny-apps/wastewater', 
+           'northamerica-northeast1-docker.pkg.dev/phx-datadissemination/shiny-apps/${_APP_SLUG}', 
            '.']
 
   # Docker Push
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 
-           'northamerica-northeast1-docker.pkg.dev/phx-datadissemination/shiny-apps/wastewater']
+           'northamerica-northeast1-docker.pkg.dev/phx-datadissemination/shiny-apps/${_APP_SLUG}']
 
   # Kubectl Rollout Restart
   - name: 'gcr.io/cloud-builders/kubectl'
     env:
     - 'CLOUDSDK_COMPUTE_REGION=northamerica-northeast1'
     - 'CLOUDSDK_CONTAINER_CLUSTER=django-shiny'
-    args: ['rollout', 'restart', 'deployment/wastewater-deployment']
+    args: ['rollout', 'restart', 'deployment/${_APP_SLUG}-deployment']
+
+substitutions:
+    _APP_SLUG: wastewater
