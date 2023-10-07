@@ -18,18 +18,10 @@ steps:
   - name: 'python'
     args: ['python', './cloudbuild/generate_shiny_cloudbuild_yaml.py']
 
-  # Set up cloud build triggers for each shiny app and run them
+  # Run cloudbuild/cloudbuild_triggers.sh
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        FILES="./cloudbuild/*.cloudbuild.sh"
-        for f in $FILES
-        do
-          echo "Setting up build trigger using $f ..."
-          $f
-        done
+    args: ['./cloudbuild/cloudbuild_triggers.sh']
 
   # Kubectl Apply
   - name: 'gcr.io/cloud-builders/kubectl'
