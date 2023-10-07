@@ -4,6 +4,9 @@ gcloud builds repositories create $REPO_NAME \
   --connection=$CLOUDBUILD_CONNECTION \
   --region=northamerica-northeast1
 
+# Delete existing build trigger, if it exists
+gcloud builds triggers delete $APP_SLUG-shinyapp-trigger
+
 # Set up build trigger
 gcloud builds triggers create github \
   --name=$APP_SLUG-shinyapp-trigger \
@@ -11,3 +14,6 @@ gcloud builds triggers create github \
   --branch-pattern=^$GIT_BRANCH$ \
   --inline-config=./cloudbuild/$APP_SLUG.cloudbuild.yaml \
   --region=northamerica-northeast1
+
+# Run build trigger
+gcloud builds triggers run $APP_SLUG-shinyapp-trigger
