@@ -1,0 +1,13 @@
+# Connect the repository to Cloud Build using existing GitHub connection
+gcloud builds repositories create $REPO_NAME \
+  --remote-uri=$GIT_REPO \
+  --connection=$CLOUDBUILD_CONNECTION \
+  --region=northamerica-northeast1
+
+# Set up build trigger
+gcloud builds triggers create github \
+  --name=$APP_SLUG-shinyapp-trigger \
+  --repository=projects/phx-datadissemination/locations/northamerica-northeast1/connections/$CLOUDBUILD_CONNECTION/repositories/$REPO_NAME \
+  --branch-pattern=^$GIT_BRANCH$ \
+  --inline-config=./cloudbuild/$APP_SLUG.cloudbuild.yaml \
+  --region=northamerica-northeast1

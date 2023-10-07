@@ -13,7 +13,11 @@ from bs4 import BeautifulSoup
 shiny_apps = {app["slug"]: app for app in SHINY_APPS}
 
 def user_has_access(user, app_slug):
-    return shiny_apps[app_slug]["access"] == "public" or user.is_authenticated
+    # Make apps private by default, if not specified in shiny_apps.json
+    return (
+        shiny_apps[app_slug].get("access", "private") == "public"
+        or user.is_authenticated
+    )
 
 
 def home(request):

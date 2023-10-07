@@ -112,3 +112,5 @@ bower_components/
 node_modules/
 
 k8s/*.shinyapp.yaml
+cloudbuild/*.cloudbuild.yaml
+cloudbuild/*.cloudbuild.sh
