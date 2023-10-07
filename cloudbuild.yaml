@@ -21,7 +21,10 @@ steps:
   # Run cloudbuild/cloudbuild_triggers.sh
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
-    args: ['./cloudbuild/cloudbuild_triggers.sh']
+    args:
+    - '-c'
+    - |
+      ./cloudbuild/cloudbuild_triggers.sh || echo 'Error creating or running shinyapp cloudbuild triggers; continuing anyway'
 
   # Kubectl Apply
   - name: 'gcr.io/cloud-builders/kubectl'
