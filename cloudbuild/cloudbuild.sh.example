@@ -1,13 +1,13 @@
-# Connect the repository to Cloud Build using existing GitHub connection
+echo "Connecting repository $GIT_REPO to Cloud Build"
 gcloud builds repositories create $REPO_NAME \
   --remote-uri=$GIT_REPO \
   --connection=$CLOUDBUILD_CONNECTION \
   --region=northamerica-northeast1
 
-# Delete existing build trigger, if it exists
+echo "Deleting existing build trigger $APP_SLUG-shinyapp-trigger"
 gcloud builds triggers delete $APP_SLUG-shinyapp-trigger
 
-# Set up build trigger
+echo "Setting up new build trigger for $GIT_BRANCH branch"
 gcloud builds triggers create github \
   --name=$APP_SLUG-shinyapp-trigger \
   --repository=projects/phx-datadissemination/locations/northamerica-northeast1/connections/$CLOUDBUILD_CONNECTION/repositories/$REPO_NAME \
@@ -15,5 +15,7 @@ gcloud builds triggers create github \
   --inline-config=./cloudbuild/$APP_SLUG.cloudbuild.yaml \
   --region=northamerica-northeast1
 
-# Run build trigger
+echo "Running build trigger"
 gcloud builds triggers run $APP_SLUG-shinyapp-trigger
+
+echo "Done Cloud Build setup for $APP_SLUG!"
