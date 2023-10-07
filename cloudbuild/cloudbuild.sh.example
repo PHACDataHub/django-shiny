@@ -16,6 +16,6 @@ gcloud builds triggers create github \
   --region=northamerica-northeast1
 
 echo "Running build trigger"
-gcloud builds triggers run $APP_SLUG-shinyapp-trigger --region=northamerica-northeast1
+gcloud builds triggers run $APP_SLUG-shinyapp-trigger --region=northamerica-northeast1 --branch=$GIT_BRANCH
 
 echo "Done Cloud Build setup for $APP_SLUG!"
