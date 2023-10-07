@@ -5,7 +5,7 @@ gcloud builds repositories create $REPO_NAME \
   --region=northamerica-northeast1
 
 echo "Deleting existing build trigger $APP_SLUG-shinyapp-trigger"
-gcloud builds triggers delete $APP_SLUG-shinyapp-trigger
+gcloud builds triggers delete $APP_SLUG-shinyapp-trigger --region=northamerica-northeast1
 
 echo "Setting up new build trigger for $GIT_BRANCH branch"
 gcloud builds triggers create github \
@@ -16,6 +16,6 @@ gcloud builds triggers create github \
   --region=northamerica-northeast1
 
 echo "Running build trigger"
-gcloud builds triggers run $APP_SLUG-shinyapp-trigger
+gcloud builds triggers run $APP_SLUG-shinyapp-trigger --region=northamerica-northeast1
 
 echo "Done Cloud Build setup for $APP_SLUG!"
