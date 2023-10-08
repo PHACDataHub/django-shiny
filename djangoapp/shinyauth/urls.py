@@ -22,7 +22,9 @@ urlpatterns = [
     
     path('manage/user_group/<int:group_id>/', views.manage_user_group, name='manage_user_group'),
     path('manage/user_group/create/', views.create_user_group, name='create_user_group'),
+    path('manage/user_group/delete/<int:group_id>/', views.delete_user_group, name='delete_user_group'),
     
     path('manage/email_match/<int:match_id>/', views.manage_email_match, name='manage_email_match'),
     path('manage/email_match/create/', views.create_email_match, name='create_email_match'),
+    path('manage/email_match/delete/<int:match_id>/', views.delete_email_match, name='delete_email_match'),
 ]   

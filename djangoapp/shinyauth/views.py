@@ -117,6 +117,13 @@ def manage_user_group(request, group_id):
     return render(request, "djangoapp/manage_user_group.jinja", context)
 
 
+def delete_user_group(request, group_id):
+    group = UserGroup.objects.get(id=group_id)
+    group.delete()
+    messages.success(request, "User group successfully deleted.")
+    return redirect("manage_users")
+
+
 def create_user_group(request):
     if not request.user.is_superuser:
         return redirect("index")
@@ -155,6 +162,13 @@ def manage_email_match(request, match_id):
         "form": UserEmailMatchForm(instance=match),
     }
     return render(request, "djangoapp/manage_email_match.jinja", context)
+
+
+def delete_email_match(request, match_id):
+    match = UserEmailMatch.objects.get(id=match_id)
+    match.delete()
+    messages.success(request, "Email match successfully deleted.")
+    return redirect("manage_users")
 
 
 def create_email_match(request):
