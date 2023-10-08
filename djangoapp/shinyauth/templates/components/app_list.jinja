@@ -1,0 +1,45 @@
+<div id="app-list" class="row">
+  {% for app in apps %}
+  <div class="col-md-6">
+    <div class="card app-card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col">
+            <h5 class="card-title">{{ app|capitalize }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">
+              {% if app.is_admin_only %}
+              <i class="bi bi-shield-lock text-danger"></i> Admin access only
+              {% elif not app.is_publicly_accessible %}
+              <i class="bi bi-lock text-muted"></i> Limited access
+              {% else %}
+              <i class="bi bi-globe"></i> Public access
+              {% endif %}
+            </h6>
+            <p class="card-text">{{ app.description or "No description" }}</p>
+            <a href="{{ url("shiny", app.slug) }}" class="card-link view-app">View app</a>
+            {% if request.user.is_superuser %}
+            <a href="{{ url("manage_app", app.slug) }}" class="card-link manage-app text-danger">Manage</a>
+            {% endif %}
+          </div>
+          {% if app.thumbnail %}
+            <div class="col-lg-4 text-end">
+              <img src="{{ app.thumbnail.url }}" class="app-thumbnail">
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<script>
+document.querySelectorAll('.app-card').forEach(function(card) {
+  // Add a click handler to the card that just clicks its child "a.view-app" link.
+  card.addEventListener('click', function(e) {
+    if (e.target.tagName.toLowerCase() !== 'a') {
+      card.querySelector('{{ default_card_link }}').click();
+    }
+  });
+});
+</script>

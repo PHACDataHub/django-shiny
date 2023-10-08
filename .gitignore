@@ -105,7 +105,7 @@ ENV/
 .idea
 
 # default django database
-# db.sqlite3
+db.sqlite3
 
 # frontend libraries
 bower_components/
@@ -114,3 +114,6 @@ node_modules/
 k8s/*.shinyapp.yaml
 cloudbuild/*.cloudbuild.yaml
 cloudbuild/*.cloudbuild.sh
+
+djangoapp/media
+djangoapp/static

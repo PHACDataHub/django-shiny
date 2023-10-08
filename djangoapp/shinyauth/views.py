@@ -66,7 +66,16 @@ def manage_app(request, app_slug):
     if not request.user.is_superuser:
         return redirect("index")
     app = ShinyApp.objects.get(slug=app_slug)
-    form = ShinyAppForm(request.POST or None, instance=app)
+
+    if request.method == "POST":
+        form = ShinyAppForm(request.POST, request.FILES, instance=app)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "App successfully updated.")
+        else:
+            messages.error(request, "App could not be updated.")
+
+    form = ShinyAppForm(instance=app)
     context = {"active_tab": "manage_apps", "app": app, "form": form}
     return render(request, "djangoapp/manage_app.jinja", context)
 

@@ -9,9 +9,9 @@ class ShinyApp(models.Model):
     branch = models.CharField(max_length=100, default="main")
 
     # Optional: edited manually in the admin interface
-    display_name = models.CharField(max_length=100, null=True, blank=True)
-    description = models.CharField(max_length=500, null=True, blank=True)
-    contact_email = models.EmailField(null=True, blank=True)
+    display_name = models.CharField(max_length=100, blank=True)
+    description = models.CharField(max_length=500, blank=True)
+    contact_email = models.EmailField(blank=True)
     thumbnail = models.ImageField(upload_to='thumbnails', null=True, blank=True)
 
     # When there are no user groups, only admins can access the app
@@ -25,6 +25,9 @@ class ShinyApp(models.Model):
         # Accessible by admins and to users matching accessible_to
         if user.is_superuser:
             return True
+        # Anonymous users can only access public apps
+        if user.is_anonymous:
+            return self.is_publicly_accessible
         for group in self.accessible_by.all():
             # Check user email against regexes for each group
             for match in group.email_matches.all():
@@ -36,6 +39,8 @@ class ShinyApp(models.Model):
         # Visible to admins and to users matching accessible_to OR visible_to
         if user.is_superuser:
             return True
+        if user.is_anonymous:
+            return self.is_publicly_viewable
         for group in self.visible_to.all() | self.accessible_by.all():
             # Check user email against regexes for each group
             for match in group.email_matches.all():
@@ -48,9 +53,15 @@ class ShinyApp(models.Model):
         return self.accessible_by.count() == 0 and self.visible_to.count() == 0
     
     @property
-    def is_public(self):
-        return UserGroup.get(name='public') in self.visible_to.all()
-
+    def is_publicly_viewable(self):
+        public_user_group = UserGroup.objects.get(name='Public')
+        return public_user_group in self.visible_to.all() | self.accessible_by.all()
+    
+    @property
+    def is_publicly_accessible(self):
+        public_user_group = UserGroup.objects.get(name='Public')
+        return public_user_group in self.accessible_by.all()
+    
 
 class UserGroup(models.Model):
     # This does not include actual "User" objects, but defines

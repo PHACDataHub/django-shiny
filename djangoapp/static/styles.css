@@ -213,3 +213,22 @@ div#content {
 body.loading #loading-spinner {
   display: block;
 }
+
+input[readonly], textarea[readonly] {
+  background-color: #e9ecef;
+}
+
+img.app-thumbnail {
+  max-width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+div.app-card {
+  cursor: pointer;
+}
+
+div.app-card:hover {
+  box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+}

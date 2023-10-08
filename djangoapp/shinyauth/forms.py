@@ -10,8 +10,15 @@ class ShinyAppForm(forms.ModelForm):
             "slug", "repo", "branch", "display_name", "description",
             "contact_email", "thumbnail", "accessible_by", "visible_to"
         ]
+        # Choices for the accessible_by and visible_to fields
+        # are from the UserGroup model
         widgets = {
             "accessible_by": forms.CheckboxSelectMultiple(),
-            "visible_to": forms.CheckboxSelectMultiple(),
+            "visible_to": forms.CheckboxSelectMultiple()
         }
 
+        # Set the choices
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields["accessible_by"].queryset = UserGroup.objects.all()
+            self.fields["visible_to"].queryset = UserGroup.objects.all()
