@@ -8,10 +8,24 @@ In your Shiny app repo:
 1. Containerize your app similarly to the example Shiny app in `/shinyapp_example/`.
 
 In this repo:
-1. Add the app to `/djangoapp/shiny_apps.json`.
+1. Add the app to `/djangoapp/shiny_apps.json`:
+   ```json
+   {
+     "apps": [
+       {
+         "slug": "my-new-shiny-app",
+         "repo": "https://github.com/PHACDataHub/my-new-shiny-app.git",
+         "name": "My New Shiny App",
+         "access": "public"
+       },
+       ... more apps ...
+     ],
+     "cloudbuild_connection": "don't change this! (github connection with access to PHACDataHub repos)"
+   }
+   ```
    - The "slug" can only contain alphanumeric characters and hyphens.
-   - Branch (default: "main") and port (default: 8100) are optional.
-   - Specifying a repo is preferred, but you can also specify an existing built container image URL.
+   - "branch" (default: "main"), "port" (default: 8100), and "access" (default: "private") are optional.
+   - Specifying a repo is preferred, but you can instead specify an existing container image URL as "image".
   
 ## Cloud build automation (CI/CD)
 
