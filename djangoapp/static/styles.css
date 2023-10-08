@@ -232,3 +232,9 @@ div.app-card {
 div.app-card:hover {
   box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
 }
+
+.alert-error {
+  --bs-alert-color: #842029;
+  --bs-alert-bg: #f8d7da;
+  --bs-alert-border-color: #f5c2c7;
+}

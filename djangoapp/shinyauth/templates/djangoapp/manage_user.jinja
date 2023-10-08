@@ -1,0 +1,22 @@
+{% extends 'base.jinja' %}
+
+{% block content %}
+
+  <div class="container mt-3">
+    <h2>Manage user: {{ user }}</h2>
+    <hr>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col">
+          <input type="checkbox" class="form-check-input" id="is_superuser"
+          name="is_superuser" {% if form.instance.is_superuser %}checked{% endif %}>
+          <label class="form-check-label" for="is_superuser">App admin</label>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary mt-3">Submit</button>
+    </form>
+    
+  </div>
+{% endblock %}

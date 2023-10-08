@@ -8,11 +8,6 @@
         <form action="{{ url("email_login") }}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}"
         method="post">
           {% csrf_token %}
-          {% if next %}
-            <div class="alert alert-warning fade show">
-              <span>Please login to see page</span>
-            </div>
-          {% endif %}
 
           {% if login_form.errors %}
             <div class="alert alert-danger alert-dismissible fade show">
@@ -25,7 +20,7 @@
           {% endif %}
 
           <div class="card">
-            <h2 class="card-header">Login with PHAC email</h2>
+            <h2 class="card-header">Login with email</h2>
             <div class="card-body">
               <div class="form-floating mb-3">
                 <input type="text"

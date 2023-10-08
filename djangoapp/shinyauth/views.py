@@ -2,13 +2,15 @@ from django.contrib.auth import logout
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 
-from shinyauth.models import ShinyApp
-from shinyauth.forms import ShinyAppForm
+from shinyauth.models import ShinyApp, UserGroup, UserEmailMatch
+from shinyauth.forms import ShinyAppForm, UserGroupForm, UserEmailMatchForm, UserSuperuserForm
 
 import requests
 from bs4 import BeautifulSoup
 
+User = get_user_model()
 
 def home(request):
     context = {"active_tab": "index", "apps": [
@@ -32,10 +34,11 @@ def login_success(request):
 def shiny(request, app_slug):
     app = ShinyApp.objects.get(slug=app_slug)
     if not app.check_access(request.user):
+        messages.warning(request, "You don't have permission to access this app. Please login with an authorized email.")
         return redirect(f"/login/?next=/shiny/{app_slug}/")
     return render(
         request, "djangoapp/shiny.jinja",
-        {"active_tab": app_slug, "app_slug": app_slug}
+        {"app_slug": app_slug, "app_name": app}
     )
 
 
@@ -72,6 +75,7 @@ def manage_app(request, app_slug):
         if form.is_valid():
             form.save()
             messages.success(request, "App successfully updated.")
+            return redirect("manage_apps")
         else:
             messages.error(request, "App could not be updated.")
 
@@ -83,5 +87,113 @@ def manage_app(request, app_slug):
 def manage_users(request):
     if not request.user.is_superuser:
         return redirect("index")
-    context = {"active_tab": "manage_users"}
+    context = {
+        "active_tab": "manage_users",
+        "user_groups": UserGroup.objects.all(),
+        "email_matches": UserEmailMatch.objects.all(),
+        "superusers": User.objects.filter(is_superuser=True).all(),
+        "non_superusers": User.objects.filter(is_superuser=False).all(),    
+    }
     return render(request, "djangoapp/manage_users.jinja", context)
+
+
+def manage_user_group(request, group_id):
+    if not request.user.is_superuser:
+        return redirect("index")
+    group = UserGroup.objects.get(id=group_id)
+    if request.method == "POST":
+        form = UserGroupForm(request.POST, instance=group)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "User group successfully updated.")
+            return redirect("manage_users")
+        else:
+            messages.error(request, "User group could not be updated.")
+    context = {
+        "active_tab": "manage_users",
+        "group": group,
+        "form": UserGroupForm(instance=group),
+    }
+    return render(request, "djangoapp/manage_user_group.jinja", context)
+
+
+def create_user_group(request):
+    if not request.user.is_superuser:
+        return redirect("index")
+    if request.method == "POST":
+        form = UserGroupForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "User group successfully created.")
+            return redirect("manage_users")
+        else:
+            messages.error(request, "User group could not be created.")
+    context = {
+        "active_tab": "manage_users",
+        "form": UserGroupForm(),
+        "group": {"name": "", "users": []},
+        "create": True,
+    }
+    return render(request, "djangoapp/manage_user_group.jinja", context)
+
+
+def manage_email_match(request, match_id):
+    if not request.user.is_superuser:
+        return redirect("index")
+    match = UserEmailMatch.objects.get(id=match_id)
+    if request.method == "POST":
+        form = UserEmailMatchForm(request.POST, instance=match)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Email match successfully updated.")
+            return redirect("manage_users")
+        else:
+            messages.error(request, "Email match could not be updated.")
+    context = {
+        "active_tab": "manage_users",
+        "match": match,
+        "form": UserEmailMatchForm(instance=match),
+    }
+    return render(request, "djangoapp/manage_email_match.jinja", context)
+
+
+def create_email_match(request):
+    if not request.user.is_superuser:
+        return redirect("index")
+    if request.method == "POST":
+        form = UserEmailMatchForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Email match successfully created.")
+            return redirect("manage_users")
+        else:
+            messages.error(request, "Email match could not be created.")
+    context = {
+        "active_tab": "manage_users",
+        "form": UserEmailMatchForm(),
+        "match": {"name": "", "email_regex": ""},
+        "create": True,
+    }
+    return render(request, "djangoapp/manage_email_match.jinja", context)
+
+
+def manage_user(request, user_id):
+    # Only superusers can manage users.
+    # The purpose of this page is simply set the user as superuser, or not
+    if not request.user.is_superuser:
+        return redirect("index")
+    user = User.objects.get(id=user_id)
+    if request.method == "POST":
+        form = UserSuperuserForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "User successfully updated.")
+            return redirect("manage_users")
+        else:
+            messages.error(request, "User could not be updated.")
+    context = {
+        "active_tab": "manage_users",
+        "user": user,
+        "form": UserSuperuserForm(instance=user),
+    }
+    return render(request, "djangoapp/manage_user.jinja", context)
