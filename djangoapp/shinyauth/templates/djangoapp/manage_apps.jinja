@@ -1,0 +1,22 @@
+{% extends 'base.jinja' %}
+
+{% block content %}
+
+  <div class="container mt-3">
+    <h2>Manage apps</h2>
+    <ul>
+      {% for app in apps %}
+        <li>
+          <a href="{{ url("manage_app", app.slug) }}">{{ app|capitalize }}</a>
+          {% if app.is_admin_only %}
+            <i class="bi bi-shield-lock text-danger" title="Admin access only"></i>
+          {% elif not app.is_public %}
+            <i class="bi bi-lock text-muted" title="Limited access"></i>
+          {% else %}
+            <i class="bi bi-unlock text-muted" title="Public access"></i>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

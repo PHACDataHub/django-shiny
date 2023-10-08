@@ -1,0 +1,14 @@
+{% extends 'base.jinja' %}
+
+{% block content %}
+
+  <div class="container mt-3">
+    <h2>Manage app: {{ app|capitalize }}</h2>
+    <hr>
+    <form method="POST">
+      {% csrf_token %}
+      {{ form|safe }}
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+{% endblock %}
