@@ -1,27 +1,21 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
-from djangoapp.settings import env, SHINY_APPS
+from shinyauth.models import ShinyApp
+from shinyauth.forms import ShinyAppForm
 
 import requests
-
 from bs4 import BeautifulSoup
-
-shiny_apps = {app["slug"]: app for app in SHINY_APPS}
-
-def user_has_access(user, app_slug):
-    # Make apps private by default, if not specified in shiny_apps.json
-    return (
-        shiny_apps[app_slug].get("access", "private") == "public"
-        or user.is_authenticated
-    )
 
 
 def home(request):
-    return render(request, "djangoapp/home.jinja", {"active_tab": "index"})
+    context = {"active_tab": "index", "apps": [
+        app for app in ShinyApp.objects.all()
+        if app.check_visibility(request.user)
+    ]}
+    return render(request, "djangoapp/home.jinja", context)
 
 
 def logout_view(request):
@@ -36,15 +30,18 @@ def login_success(request):
 
 
 def shiny(request, app_slug):
-    if not user_has_access(request.user, app_slug):
+    app = ShinyApp.objects.get(slug=app_slug)
+    if not app.check_access(request.user):
         return redirect(f"/login/?next=/shiny/{app_slug}/")
     return render(
-        request, "djangoapp/shiny.jinja", {"active_tab": app_slug, "app_slug": app_slug}
+        request, "djangoapp/shiny.jinja",
+        {"active_tab": app_slug, "app_slug": app_slug}
     )
 
 
 def shiny_contents(request, app_slug):
-    if not user_has_access(request.user, app_slug):
+    app = ShinyApp.objects.get(slug=app_slug)
+    if not app.check_access(request.user):
         return redirect(f"/login/?next=/shiny/{app_slug}/")
     response = requests.get(f"http://{app_slug}-service:8100")
     soup = BeautifulSoup(response.content, "html.parser")
@@ -52,6 +49,30 @@ def shiny_contents(request, app_slug):
 
 
 def auth(request, app_slug):
-    if not user_has_access(request.user, app_slug):
+    app = ShinyApp.objects.get(slug=app_slug)
+    if not app.check_access(request.user):
         return HttpResponse(status=403)
     return HttpResponse(status=200)
+
+
+def manage_apps(request):
+    if not request.user.is_superuser:
+        return redirect("index")
+    context = {"active_tab": "manage_apps", "apps": ShinyApp.objects.all()}
+    return render(request, "djangoapp/manage_apps.jinja", context)
+
+
+def manage_app(request, app_slug):
+    if not request.user.is_superuser:
+        return redirect("index")
+    app = ShinyApp.objects.get(slug=app_slug)
+    form = ShinyAppForm(request.POST or None, instance=app)
+    context = {"active_tab": "manage_apps", "app": app, "form": form}
+    return render(request, "djangoapp/manage_app.jinja", context)
+
+
+def manage_users(request):
+    if not request.user.is_superuser:
+        return redirect("index")
+    context = {"active_tab": "manage_users"}
+    return render(request, "djangoapp/manage_users.jinja", context)

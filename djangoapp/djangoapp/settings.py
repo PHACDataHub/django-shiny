@@ -19,9 +19,6 @@ from urllib.parse import urlparse
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-with open(os.path.join(BASE_DIR, "shiny_apps.json")) as f:
-    SHINY_APPS = json.load(f)['apps']
-
 env = environ.Env()
 env_file = os.path.join(BASE_DIR, ".env")
 
@@ -62,6 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "django_jinja",
     "magiclink",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -122,7 +120,6 @@ TEMPLATES = [
                 "len": len,
                 "str": str,
                 "list": list,
-                "shiny_apps": SHINY_APPS,
             },
             "context_processors": [
                 "django.contrib.auth.context_processors.auth",
@@ -205,6 +202,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
+
+MEDIA_ROOT = BASE_DIR + '/media/'
+MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
 
