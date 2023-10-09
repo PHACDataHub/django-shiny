@@ -33,6 +33,7 @@ CLOUDBUILD_CONNECTION = env("CLOUDBUILD_CONNECTION", default=None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG", default=False)
+LOCAL_DEV = env("LOCAL_DEV", default=False)
 
 print("DEBUG: ", DEBUG)
 
@@ -150,7 +151,7 @@ WSGI_APPLICATION = 'djangoapp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-if DEBUG:
+if LOCAL_DEV:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -216,7 +217,6 @@ if DEBUG:
     ]
 else:
     STATIC_ROOT = BASE_DIR + '/static/'
-    MEDIA_ROOT = BASE_DIR + '/media/'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
