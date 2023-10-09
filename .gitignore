@@ -116,6 +116,5 @@ cloudbuild/*.cloudbuild.yaml
 cloudbuild/*.cloudbuild.sh
 
 djangoapp/media
-djangoapp/static
 
 gcp_service_account_key.json
