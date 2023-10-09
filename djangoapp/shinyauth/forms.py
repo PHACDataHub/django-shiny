@@ -29,8 +29,17 @@ class ShinyAppForm(forms.ModelForm):
         # "slug" MUST NOT be one of the following: "database", "djangoapp"
         def clean_slug(self):
             slug = self.cleaned_data["slug"]
-            if slug == "database" or slug == "djangoapp":
-                raise forms.ValidationError("The slug cannot be 'database' or 'djangoapp'.")
+            if slug in [
+                "database",
+                "djangoapp",
+                "djangoapp-ingress",
+                "djangoapp-migrate",
+                "database-storage",
+                "djangoapp-storage",
+                "secrets",
+                "issuer-lets-encrypt-production"
+            ]:
+                raise forms.ValidationError("The slug cannot be a system-reserved name.")
             return slug
 
 

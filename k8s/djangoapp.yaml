@@ -14,6 +14,10 @@ spec:
       labels:
         app: djangoapp
     spec:
+      volumes:
+      - name: djangoapp-storage
+        persistentVolumeClaim:
+          claimName: djangoapp-pvc
       containers:
       - name: djangoapp
         image: northamerica-northeast1-docker.pkg.dev/phx-datadissemination/django-shiny/djangoapp:latest
@@ -23,6 +27,9 @@ spec:
         envFrom:
         - secretRef:
             name: secrets
+        volumeMounts:
+        - mountPath: /opt/services/djangoapp/src/djangoapp/media
+          name: djangoapp-storage
 ---
 apiVersion: v1
 kind: Service

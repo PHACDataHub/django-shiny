@@ -10,23 +10,6 @@ steps:
     args: ['push', 
            'northamerica-northeast1-docker.pkg.dev/phx-datadissemination/django-shiny/djangoapp']
 
-  # Run Python script k8s/generate_shiny_yaml.py
-  - name: 'python'
-    args: ['python', './k8s/generate_shiny_k8s_yaml.py']
-
-  # Run Python script cloudbuild/generate_shinyapp_cloudbuild.py
-  - name: 'python'
-    args: ['python', './cloudbuild/generate_shiny_cloudbuild_yaml.py']
-
-  # Run cloudbuild/cloudbuild_triggers.sh
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'bash'
-    args:
-    - '-c'
-    - |
-      chmod +x ./cloudbuild/cloudbuild_triggers.sh
-      ./cloudbuild/cloudbuild_triggers.sh || echo 'Error creating or running shinyapp cloudbuild triggers; continuing anyway'
-
   # Kubectl Apply
   - name: 'gcr.io/cloud-builders/kubectl'
   # Set environment variables
