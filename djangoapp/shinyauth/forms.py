@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 # Form for managing app permissions
 class ShinyAppForm(forms.ModelForm):
     class Meta:
@@ -24,6 +25,13 @@ class ShinyAppForm(forms.ModelForm):
             super().__init__(*args, **kwargs)
             self.fields["accessible_by"].queryset = UserGroup.objects.all()
             self.fields["visible_to"].queryset = UserGroup.objects.all()
+
+        # "slug" MUST NOT be one of the following: "database", "djangoapp"
+        def clean_slug(self):
+            slug = self.cleaned_data["slug"]
+            if slug == "database" or slug == "djangoapp":
+                raise forms.ValidationError("The slug cannot be 'database' or 'djangoapp'.")
+            return slug
 
 
 # Form for managing user groups

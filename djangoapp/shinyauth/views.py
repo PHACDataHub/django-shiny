@@ -8,9 +8,11 @@ from shinyauth.models import ShinyApp, UserGroup, UserEmailMatch
 from shinyauth.forms import ShinyAppForm, UserGroupForm, UserEmailMatchForm, UserSuperuserForm
 
 import requests
+import threading
 from bs4 import BeautifulSoup
 
 User = get_user_model()
+
 
 def home(request):
     context = {"active_tab": "index", "apps": [
@@ -29,6 +31,11 @@ def logout_view(request):
 def login_success(request):
     messages.success(request, "You have successfully logged in.")
     return redirect("index")
+
+
+"""
+Shiny app wrapper views
+"""
 
 
 def shiny(request, app_slug):
@@ -56,6 +63,11 @@ def auth(request, app_slug):
     if not app.check_access(request.user):
         return HttpResponse(status=403)
     return HttpResponse(status=200)
+
+
+"""
+App and user management views
+"""
 
 
 def manage_apps(request):
@@ -91,12 +103,21 @@ def create_app(request):
         form = ShinyAppForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            messages.success(request, "App successfully created.")
+            app = ShinyApp.objects.get(slug=form.cleaned_data["slug"])
+            create_app_automation(app)
+            messages.success(request, "App successfully created. It may take a few minutes to deploy.")
             return redirect("manage_apps")
         else:
             messages.error(request, "App could not be created.")
     context = {"active_tab": "manage_apps", "form": ShinyAppForm(), "create": True}
     return render(request, "djangoapp/manage_app.jinja", context)
+
+
+def create_app_automation(app):
+    # Set up cloud build for the new app
+    automation_thread = threading.Thread(target=app.deploy)
+    automation_thread.start()
+    print(f"started automation thread for deploying app {app}")
 
 
 def delete_app(request, app_slug):

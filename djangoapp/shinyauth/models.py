@@ -1,4 +1,5 @@
 from django.db import models
+from shinyauth import devops
 import re
 
 
@@ -47,6 +48,12 @@ class ShinyApp(models.Model):
                 if re.match(match.email_regex, user.email):
                     return True
         return False
+    
+    def generate_deployment(self):
+        devops.generate_deployment(self)
+
+    def deploy(self):
+        devops.deploy_app(self)
     
     @property
     def is_admin_only(self):

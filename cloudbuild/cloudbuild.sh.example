@@ -1,3 +1,10 @@
+echo "---------------------WORKING DIR------------------------"
+pwd
+
+echo "Authenticating to GCP as service account"
+gcloud auth activate-service-account --key-file=../cloudbuild/gcp_service_account_key.json
+gcloud config set project phx-datadissemination
+
 echo "Connecting repository $GIT_REPO to Cloud Build"
 gcloud builds repositories create $REPO_NAME \
   --remote-uri=$GIT_REPO \
@@ -12,7 +19,7 @@ gcloud builds triggers create github \
   --name=$APP_SLUG-shinyapp-trigger \
   --repository=projects/phx-datadissemination/locations/northamerica-northeast1/connections/$CLOUDBUILD_CONNECTION/repositories/$REPO_NAME \
   --branch-pattern=^$GIT_BRANCH$ \
-  --inline-config=./cloudbuild/$APP_SLUG.cloudbuild.yaml \
+  --inline-config=../cloudbuild/$APP_SLUG.cloudbuild.yaml \
   --region=northamerica-northeast1
 
 echo "Running build trigger"

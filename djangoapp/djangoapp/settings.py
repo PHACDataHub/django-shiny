@@ -29,6 +29,8 @@ if os.path.isfile(env_file):
 
 SECRET_KEY = env("SECRET_KEY", default='abc123')
 
+CLOUDBUILD_CONNECTION = env("CLOUDBUILD_CONNECTION", default=None)
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG", default=False)
 

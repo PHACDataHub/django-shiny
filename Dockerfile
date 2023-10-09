@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM google/cloud-sdk:latest
 
 ENV PYTHONUNBUFFERED 1
 RUN mkdir -p /opt/services/djangoapp/src
