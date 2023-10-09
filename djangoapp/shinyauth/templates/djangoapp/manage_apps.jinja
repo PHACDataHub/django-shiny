@@ -4,9 +4,7 @@
 
   <div class="container mt-3">
     <h2 class="mb-3">Manage apps</h2>
-    <p class="mb-3">
-      To add another Shiny app, make a pull request to <a href="https://github.com/PHACDataHub/django-shiny"><i class="bi bi-github"></i> django-shiny</a> on GitHub.
-    </p>
+    <a class="btn btn-primary" href="{{ url('create_app') }}">Add app</a>
     {% set default_card_link = "a.manage-app" %}
     {% include 'components/app_list.jinja' %}
   </div>

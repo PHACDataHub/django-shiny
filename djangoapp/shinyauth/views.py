@@ -74,7 +74,7 @@ def manage_app(request, app_slug):
         form = ShinyAppForm(request.POST, request.FILES, instance=app)
         if form.is_valid():
             form.save()
-            messages.success(request, "App successfully updated.")
+            messages.success(request, "App successfully updated. If you have changed the app hosting info, it may take a few minutes to update.")
             return redirect("manage_apps")
         else:
             messages.error(request, "App could not be updated.")
@@ -82,6 +82,30 @@ def manage_app(request, app_slug):
     form = ShinyAppForm(instance=app)
     context = {"active_tab": "manage_apps", "app": app, "form": form}
     return render(request, "djangoapp/manage_app.jinja", context)
+
+
+def create_app(request):
+    if not request.user.is_superuser:
+        return redirect("index")
+    if request.method == "POST":
+        form = ShinyAppForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "App successfully created.")
+            return redirect("manage_apps")
+        else:
+            messages.error(request, "App could not be created.")
+    context = {"active_tab": "manage_apps", "form": ShinyAppForm(), "create": True}
+    return render(request, "djangoapp/manage_app.jinja", context)
+
+
+def delete_app(request, app_slug):
+    if not request.user.is_superuser:
+        return redirect("index")
+    app = ShinyApp.objects.get(slug=app_slug)
+    app.delete()
+    messages.success(request, "App successfully deleted.")
+    return redirect("manage_apps")
 
 
 def manage_users(request):

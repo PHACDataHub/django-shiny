@@ -16,6 +16,8 @@ urlpatterns = [
 
     path('manage/apps/', views.manage_apps, name='manage_apps'),
     path('manage/app/<str:app_slug>/', views.manage_app, name='manage_app'),
+    path('manage/apps/create/', views.create_app, name='create_app'),
+    path('manage/app/delete/<str:app_slug>/', views.delete_app, name='delete_app'),
 
     path('manage/users/', views.manage_users, name='manage_users'),
     path('manage/user/<int:user_id>/', views.manage_user, name='manage_user'),

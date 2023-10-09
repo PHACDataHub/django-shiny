@@ -25,7 +25,7 @@
       <div class="row mt-3">
         <div class="col">
           <button type="submit" class="btn btn-primary">Submit</button>
-          <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+          <a href="{{ url("manage_users") }}" type="button" class="btn btn-secondary">Cancel</a>
         </div>
         {% if not create %}
           <div class="col-auto">
