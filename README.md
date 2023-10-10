@@ -28,12 +28,16 @@ When a new commit is pushed to main in this repo, Cloud Build will:
 
 ## To do
 
+Technical debt
 - Better secrets management
   - Right now, the GCP credentials file is manually copied (`kubectl cp`) to the running cluster and does not persist!
   - The secrets.yaml file and the GCP credentials file are not stored in any official location.
 - Production-ready `/media/` hosting.
   - Use GCP cloud storage with django-storages backend
   - This will allow us to run the production app with debug=False (and have the images still work)
+- Documentation of how to setup the GCP environment: kubectl and gcloud commands
+
+App features
 - Collapsible top bar
 - Homepage
   - Improve branding
