@@ -30,12 +30,8 @@ When a new commit is pushed to main in this repo, Cloud Build will:
 
 Technical debt
 - Better secrets management
-  - Right now, the GCP credentials file is manually copied (`kubectl cp`) to the running cluster and does not persist!
-  - The secrets.yaml file and the GCP credentials file are not stored in any official location.
-- Production-ready `/media/` hosting.
-  - Use GCP cloud storage with django-storages backend
-  - This will allow us to run the production app with debug=False (and have the images still work)
-- Documentation of how to setup the GCP environment: kubectl and gcloud commands
+  - The secrets.yaml file could be stored in Secret Manager. See https://cloud.google.com/kubernetes-engine/docs/tutorials/workload-identity-secrets (not sure this is the right approach).
+- Improve documentation of how to setup the GCP environment: e.g. detailed kubectl and gcloud commands
 
 App features
 - Collapsible top bar
@@ -64,4 +60,3 @@ For the most part, setting up the GKE cluster is straightforward. There are a fe
 * Create a k8s service account, and associate this with the IAM service account. See https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity
 * Install ingress-nginx on the cluster
 * Set up cert-manager on the cluster: `helm install cert-manager jetstack/cert-manager   --namespace cert-manager   --create-namespace   --version v1.13.1   --set installCRDs=true --set global.leaderElection.namespace=cert-manager`
-
