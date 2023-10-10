@@ -31,6 +31,7 @@ When a new commit is pushed to main in this repo, Cloud Build will:
 Technical debt
 - Better secrets management
   - The secrets.yaml file could be stored in Secret Manager. See https://cloud.google.com/kubernetes-engine/docs/tutorials/workload-identity-secrets (not sure this is the right approach).
+- Create bot account for PHACDataHub organization and use that for the Cloud Build connection (update secrets to reflect this when done)
 - Improve documentation of how to setup the GCP environment: e.g. detailed kubectl and gcloud commands
 
 App features
