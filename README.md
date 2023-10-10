@@ -2,58 +2,40 @@
 
 This is based on [Django Auth Server for Shiny](https://pawamoy.github.io/posts/django-auth-server-for-shiny/), but modified to use Kubernetes and [Magic Link authentication](https://github.com/pyepye/django-magiclink) (among other changes and improvements, notably cloud build automation).
 
+## Open the web-app (hosted on GCP)
+
+[https://shiny.phac.alpha.canada.ca/](https://shiny.phac.alpha.canada.ca/)
+
 ## Adding apps
 
 In your Shiny app repo:
 1. Containerize your app similarly to the example Shiny app in `/shinyapp_example/`.
+2. Make sure you **expose port 8100**.
 
-In this repo:
-1. Add the app to `/djangoapp/shiny_apps.json`:
-   ```json
-   {
-     "apps": [
-       {
-         "slug": "my-new-shiny-app",
-         "repo": "https://github.com/PHACDataHub/my-new-shiny-app.git",
-         "name": "My New Shiny App",
-         "access": "public"
-       },
-       ... more apps ...
-     ],
-     "cloudbuild_connection": "don't change this! (github connection with access to PHACDataHub repos)"
-   }
-   ```
-   - The "slug" can only contain alphanumeric characters and hyphens.
-   - "branch" (default: "main"), "port" (default: 8100), and "access" (default: "private") are optional.
-   - Specifying a repo is preferred, but you can instead specify an existing container image URL as "image".
+In the django-shiny application:
+1. You must be made an "app admin" to add apps.
+   1. You must login once before being added as an app admin (for a user account to be created).
+   2. If you have kubectl access, you can add yourself from the django shell.
+   3. If not, Asma, Emma, Liza and Alex all have "app admin" role and can add you.
+2. Go to Manage Apps and Add App.
   
 ## Cloud build automation (CI/CD)
 
 When a new commit is pushed to main in this repo, Cloud Build will:
 1. Rebuild the image for this repo and push to the Artifact Registry.
-2. For each shiny app in `shiny_apps.json`:
-   1. Generate and apply the kubernetes configuration.
-   2. Generate the cloudbuild configuration.
-   3. Set up a cloud build trigger for push to the branch (default: "main").
-   4. Run the cloud build trigger manually.
-   5. When cloud build is complete, restart the k8s pod for this shiny app.
-5. Generate and apply the k8s configuration for the Django app.
-6. Restart the k8s pod for the Django app.
+2. Generate and apply the k8s configuration for the Django app.
+3. Restart the k8s pod for the Django app.
 
 ## To do
 
-- Finer grained permission management per-app, e.g. user groups, associating apps with user groups.
-- App admin role to manage permissions.
+- Better secrets management
+  - Right now, the GCP credentials file is manually copied (`kubectl cp`) to the running cluster and does not persist!
+  - The secrets.yaml file and the GCP credentials file are not stored in any official location.
+- Production-ready `/media/` hosting.
+  - Use GCP cloud storage with django-storages backend
+  - This will allow us to run the production app with debug=False (and have the images still work)
 - Collapsible top bar
-- App admin GUI
-  - edit user groups & associate apps with user groups
-  - edit app display name, description, thumbnail image (?), contact email
-  - edit app visibility (should it only be visible when user has access to it)
 - Homepage
   - Improve branding
   - Better explain what the site is
-  - App directory (list of apps with descriptions, thumbnail images?)
-- Prevent unneccessary builds/restarts for Shiny Apps via this repo's cloud build pipeline.
-  - Skip all k8s/cloud build steps for an app if it is unchanged from the previous commit of `shiny_apps.yaml`
-- App usage analytics?
 - French translation of Django app. (Sync with Shiny app language selection? Is this possible?)
