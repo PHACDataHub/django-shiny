@@ -1,13 +1,22 @@
 <ul class="navbar-nav flex-fill justify-content-start bold-links">
-  {% for app in shiny_apps %}
+  <li class="nav-item">
+    <a class="nav-link {% if active_tab == "index" %}active{% endif %}"
+      href="{{ url("index") }}">App directory</a>
+  </li>
+  {% if app_slug %}
     <li class="nav-item">
-      <a class="nav-link {% if active_tab == app.slug %}active{% endif %}"
-        href="{{ url("shiny", app.slug) }}">
-        {{ app.name }}
-        {% if app.access == "private" %}
-          <i class="bi bi-lock"><span class="visually-hidden">(Private)</span></i>
-        {% endif %}
-      </a>
+      <a class="nav-link active"
+        href="#">{{ app_name|capitalize }}</a>
     </li>
-  {% endfor %}
+  {% endif %}
+  {% if request.user.is_superuser %}
+    <li class="nav-item">
+      <a class="nav-link {% if active_tab == "manage_apps" %}active{% endif %}"
+        href="{{ url("manage_apps") }}">Manage apps</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {% if active_tab == "manage_users" %}active{% endif %}"
+        href="{{ url("manage_users") }}">Manage users</a>
+    </li>
+  {% endif %}
 </ul>

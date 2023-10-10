@@ -1,0 +1,66 @@
+{% extends 'base.jinja' %}
+
+{% block content %}
+
+  <div class="container mt-3 mb-5">
+    {% if create %}
+      <h2>Create new email match</h2>
+    {% else %}
+      <h2>Manage email match: {{ match.name }}</h2>
+    {% endif %}
+    <hr>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        {# Two text inputs: name and match #}
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" name="name"
+               value="{{ match.name }}">
+      </div>
+      <div class="form-group mt-3">
+        <label for="email_regex" class="form-label">Match email regex</label>
+        <input type="text" class="form-control" id="match" name="email_regex"
+               value="{{ match.email_regex }}">
+      </div>
+      <div class="row mt-3">
+        <div class="col">
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <a href="{{ url("manage_users") }}" type="button" class="btn btn-secondary">Cancel</a>
+        </div>
+        {% if not create %}
+          <div class="col-auto">
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                  data-bs-target="#deleteModal">
+              Delete
+            </button>
+          </div>
+        {% endif %}
+      </div>
+    </form>
+    {# Delete #}
+    {% if not create %}
+      <!-- Modal -->
+      <div class="modal" tabindex="-1" id="deleteModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Confirm delete</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to delete this email match?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <form method="POST" action="{{ url("delete_email_match", match.id)}}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete email match</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    
+  </div>
+{% endblock %}

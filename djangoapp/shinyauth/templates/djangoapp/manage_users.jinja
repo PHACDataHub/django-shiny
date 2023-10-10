@@ -1,0 +1,62 @@
+{% extends 'base.jinja' %}
+
+{% block content %}
+
+  <div class="container mt-3">
+    <h2>Manage user groups</h2>
+    <p class="mt-3">Apps can be limited in visibility or accessibility to certain user groups.</p>
+    <p>Each user group has one or more email matches associated with it.</p>
+    <a href="{{ url('create_user_group') }}" class="btn btn-primary mb-3">Create new user group</a>
+    <ul>
+    {% for user_group in user_groups %}
+      <li>
+        <a href="{{ url('manage_user_group', user_group.id) }}">
+          {{ user_group }}
+        </a>
+      </li>
+    {% endfor %}
+    </ul>
+
+    <h2>Manage email matches</h2>
+    <p class="mt-3">Email matches are simply regex strings that match user email addresses.</p>
+    <p>You can specify an individual person (exact match on an email address) or allow any user with an email at a certain domain.</p>
+    <a href="{{ url('create_email_match') }}" class="btn btn-primary mb-3">Create new email match</a>
+    <ul>
+    {% for email_match in email_matches %}
+      <li>
+        <a href="{{ url('manage_email_match', email_match.id) }}">
+          {{ email_match }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <h2>Manage app admins</h2>
+  <p class="mt-3">App admins can access all apps, and can modify access controls. If you are reading this, you are an app admin!</p>
+  <p>Grant or revoke add admin privileges to users below. <em>A user must login once before they can be made an app admin.</em></p>
+  {% if superusers %}
+  <h4>Currently an app admin:</h4>
+  <ul>
+  {% for user in superusers %}
+    <li>
+      <a href="{{ url('manage_user', user.id) }}">
+        {{ user }}
+      </a>
+    </li>
+  {% endfor %}
+  </ul>
+  {% endif %}
+  {% if non_superusers %}
+  <h4>Not an app admin:</h4>
+  <ul>
+  {% for user in non_superusers %}
+    <li>
+      <a href="{{ url('manage_user', user.id) }}">
+        {{ user }}
+      </a>
+    </li>
+  {% endfor %}
+  </ul>
+  {% endif %}
+  </div>
+{% endblock %}

@@ -19,9 +19,6 @@ from urllib.parse import urlparse
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-with open(os.path.join(BASE_DIR, "shiny_apps.json")) as f:
-    SHINY_APPS = json.load(f)['apps']
-
 env = environ.Env()
 env_file = os.path.join(BASE_DIR, ".env")
 
@@ -32,8 +29,11 @@ if os.path.isfile(env_file):
 
 SECRET_KEY = env("SECRET_KEY", default='abc123')
 
+CLOUDBUILD_CONNECTION = env("CLOUDBUILD_CONNECTION", default=None)
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG", default=False)
+LOCAL_DEV = env("LOCAL_DEV", default=False)
 
 print("DEBUG: ", DEBUG)
 
@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "django_jinja",
     "magiclink",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -122,7 +123,6 @@ TEMPLATES = [
                 "len": len,
                 "str": str,
                 "list": list,
-                "shiny_apps": SHINY_APPS,
             },
             "context_processors": [
                 "django.contrib.auth.context_processors.auth",
@@ -151,7 +151,7 @@ WSGI_APPLICATION = 'djangoapp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-if DEBUG:
+if LOCAL_DEV:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -205,6 +205,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
 

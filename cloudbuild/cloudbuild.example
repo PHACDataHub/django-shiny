@@ -18,4 +18,4 @@ steps:
     args: ['rollout', 'restart', 'deployment/${_APP_SLUG}-deployment']
 
 substitutions:
-    _APP_SLUG: wastewater
+    _APP_SLUG: $APP_SLUG

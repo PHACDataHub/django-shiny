@@ -10,3 +10,5 @@ beautifulsoup4
 psycopg2-binary
 requests
 whitenoise
+Pillow
+django-extensions

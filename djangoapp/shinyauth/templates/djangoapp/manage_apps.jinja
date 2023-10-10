@@ -1,0 +1,11 @@
+{% extends 'base.jinja' %}
+
+{% block content %}
+
+  <div class="container mt-3">
+    <h2 class="mb-3">Manage apps</h2>
+    <a class="btn btn-primary" href="{{ url('create_app') }}">Add app</a>
+    {% set default_card_link = "a.manage-app" %}
+    {% include 'components/app_list.jinja' %}
+  </div>
+{% endblock %}
