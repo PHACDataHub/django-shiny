@@ -46,18 +46,29 @@ App features
 You will need the following resources:
 * Cloud Storage
 * Artifact Registry
+* IAM
+* Secret Manager
 * Cloud Build
 * Google Kubernetes Engine (GKE)
-* Secret Manager?
 
 1. Create a bucket in cloud storage for the Django media directory.
 2. Create 2 repositories in Artifact Registry: `django-shiny` (for this app) and `shiny-apps` (for the subsidiary Shiny apps).
-3. In Cloud Build, set up a 2nd gen connection to GitHub. Every Shiny app repo needs to grant owner permissions to the provider auth account of this connection, or else setting up cloud build for the shiny apps won't work!
-4. In GKE, create a new cluster with the default settings. You will need to access the cluster somehow, so install gcloud CLI and kubectl on your local machine or use cloud shell for that.
+3. Set up an IAM service account for the kubernetes deployment to use. It must have these roles:
+   * Cloud Build connection admin
+   * Cloud Build editor
+   * Storage object user
+   * Secret Manager secret accessor
+   Save the account key json file.
+4. Create a secret `gcp_service_account_key` with the value of the account key json:
+   ```
+   gcloud secrets create gcp_service_account_key --data-file=gcp_service_account_key.json --locations=northamerica-northeast1 --replication-policy=user-managed
+   ```
+5. In Cloud Build, set up a 2nd gen connection to GitHub. Every Shiny app repo needs to grant owner permissions to the provider auth account of this connection, or else setting up cloud build for the shiny apps won't work!
+6. In GKE, create a new cluster with the default settings. You will need to access the cluster somehow, so install gcloud CLI and kubectl on your local machine or use cloud shell for that.
 
-For the most part, setting up the GKE cluster is straightforward. There are a few extra / unusual steps:
+For the most part, setting up the GKE cluster is straightforward, using GKE Autopilot. There are a few extra / unusual steps:
 
-* Set up an IAM service account for the `djangoapp` deployment to use. It must have permissions for cloud build and cloud storage.
 * Create a k8s service account, and associate this with the IAM service account. See https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity
 * Install ingress-nginx on the cluster
 * Set up cert-manager on the cluster: `helm install cert-manager jetstack/cert-manager   --namespace cert-manager   --create-namespace   --version v1.13.1   --set installCRDs=true --set global.leaderElection.namespace=cert-manager`
+

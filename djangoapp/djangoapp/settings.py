@@ -178,10 +178,6 @@ else:
     GS_BLOB_CHUNK_SIZE = 5 * 1024 * 1024
     GS_FILE_OVERWRITE = False
 
-    # Force the URLs not to be signed (workaround for Workload Identity)
-    GS_DEFAULT_ACL = None
-    GS_QUERYSTRING_AUTH = False
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
