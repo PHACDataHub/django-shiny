@@ -27,6 +27,40 @@
             </div>
           {% endif %}
         </div>
+        {% if manage %}
+          <hr>
+          <dl class="mb-0">
+            <dt>GitHub repo</dt>
+            <dd><a href="{{ app.repo }}" target="blank">{{ app.repo }}</a></dd>
+            <dt>Branch</dt>
+            <dd>{{ app.branch }}</dd>
+            <dt>Contact email</dt>
+            <dd><a href="mailto:{{ app.contact_email }}?subject=PHAC Shiny app: {{ app }}">{{ app.contact_email }}</a></dd>
+            <dt>Accessible and visible to</dt>
+            <dd>
+              <ul class="mb-0">
+              {% if app.is_admin_only %}
+                <li>Admins only</li>
+              {% else %}
+                {% for group in list(app.accessible_by.all()) %}
+                  <li>{{ group }}</li>
+                {% endfor %}
+              {% endif %}
+              </ul>
+            </dd>
+            <dt>Visible, but not accessible to</dt>
+            <dd>
+              <ul class="mb-0">
+              {% if app.is_admin_only %}
+                <li>n/a</li>
+              {% else %}
+                {% for group in list(app.visible_to.all()) %}
+                  <li>{{ group }}</li>
+                {% endfor %}
+              {% endif %}
+              </ul>
+          </dl>
+        {% endif %}
       </div>
     </div>
   </div>

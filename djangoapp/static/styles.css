@@ -189,7 +189,7 @@ h2.card-header {
 
 /* Vertical center contents */
 #login-container {
-  height: calc(100vh - 6rem);
+  height: calc(100vh - 9.5rem);
   display: flex;
   align-items: center;
 }
