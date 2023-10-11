@@ -42,15 +42,6 @@ def generate_deployment(app):
         except OSError:
             pass
 
-    # Generate Cloud Build YAML
-    with open(yaml_template) as f:
-        template_lines = f.readlines()
-        template_lines = [line.replace('$APP_SLUG', app_slug) for line in template_lines]
-    new_file = os.path.join(cloudbuild_dir, f"{app_slug}.cloudbuild.yaml")
-    with open(new_file, 'w') as f:
-        f.writelines(template_lines)
-    print("Created file: {}".format(new_file))
-
     # Generate bash script to create / update and run cloudbuild trigger
     with open(sh_template) as f:
         template_lines = f.readlines()
@@ -73,7 +64,7 @@ def generate_deployment(app):
         f.writelines(template_lines)
     print("Created file: {}".format(new_file))
 
-    # Generate Kubernetes deployment YAML
+    # Generate Kubernetes deployment YAML but don't write it to file
     app_port = "8100"
     app_image = f'northamerica-northeast1-docker.pkg.dev/phx-datadissemination/shiny-apps/{app_slug}'
     with open(k8s_template) as f:
@@ -81,7 +72,21 @@ def generate_deployment(app):
         template_lines = [line.replace('$APP_SLUG', app_slug) for line in template_lines]
         template_lines = [line.replace('$APP_IMAGE', app_image) for line in template_lines]
         template_lines = [line.replace('$APP_PORT', app_port) for line in template_lines]
-    new_file = os.path.join(k8s_dir, f"{app_slug}.shinyapp.yaml")
+    k8s_lines = template_lines
+    print("Created k8s deployment YAML")
+
+    # Generate Cloud Build YAML
+    with open(yaml_template) as f:
+        template_lines = f.readlines()
+        template_lines = [line.replace('$APP_SLUG', app_slug) for line in template_lines]
+
+    print(template_lines)
+    k8s_yaml_idx = template_lines.index('$K8S_YAML\n')
+    # Indent the k8s YAML by 6 spaces
+    k8s_lines = [' '*6 + line for line in k8s_lines]
+    template_lines = template_lines[:k8s_yaml_idx] + k8s_lines + template_lines[k8s_yaml_idx+1:]
+
+    new_file = os.path.join(cloudbuild_dir, f"{app_slug}.cloudbuild.yaml")
     with open(new_file, 'w') as f:
         f.writelines(template_lines)
     print("Created file: {}".format(new_file))

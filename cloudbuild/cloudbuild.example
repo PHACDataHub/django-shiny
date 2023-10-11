@@ -10,6 +10,20 @@ steps:
     args: ['push', 
            'northamerica-northeast1-docker.pkg.dev/phx-datadissemination/shiny-apps/${_APP_SLUG}']
 
+  # Kubectl Apply
+  - name: 'gcr.io/cloud-builders/kubectl'
+  # Set environment variables
+    env:
+    - 'CLOUDSDK_COMPUTE_REGION=northamerica-northeast1'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=django-shiny'
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - >
+      cat <<EOF | kubectl apply -f -
+$K8S_YAML
+      EOF
+
   # Kubectl Rollout Restart
   - name: 'gcr.io/cloud-builders/kubectl'
     env:
