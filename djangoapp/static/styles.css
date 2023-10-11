@@ -225,8 +225,17 @@ img.app-thumbnail {
   object-fit: contain;
 }
 
+/* Show columns at large sizes */
+@media (min-width: 768px) {
+  div#app-list {
+    column-count: 2;
+  }
+}
+
 div.app-card {
   cursor: pointer;
+  -webkit-column-break-inside: avoid;
+  break-inside: avoid;
 }
 
 div.app-card:hover {
@@ -237,4 +246,8 @@ div.app-card:hover {
   --bs-alert-color: #842029;
   --bs-alert-bg: #f8d7da;
   --bs-alert-border-color: #f5c2c7;
+}
+
+div.card-body dt {
+  font-weight: 500;
 }

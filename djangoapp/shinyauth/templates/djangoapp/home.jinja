@@ -2,21 +2,38 @@
 
 {% block content %}
 
-  <div class="container mt-3">
-    <h2 class="mb-0">R Shiny app directory</h2>
+  <div class="container mt-4">
+    <h2 class="mb-0">App directory</h2>
     {# <p class="mt-3">
       <b>Click one of the Shiny app links below.</b> If the app is protected (<i class="bi bi-lock text-muted"></i>), you will be prompted to login.
     </p> #}
+    <div class="form-check form-switch mt-3">
+      <input class="form-check-input" type="checkbox" role="switch" id="onlyShowAccessibleApps"
+      {% if request.user.is_superuser %}checked{% endif %}>
+      <label class="form-check-label" for="onlyShowAccessibleApps">
+        Only show apps that I can access
+        {% if request.user.is_anonymous %}
+        (you might see more apps if you <a href="{{ url("email_login") }}">log in</a>)
+        {% endif %}
+      </label>
+    </div>
     {% set default_card_link = "a.view-app" %}
     {% include 'components/app_list.jinja' %}
     <hr class="mt-5">
-    <h4>Technical info</h4>
+    <h4>About the PHAC Shiny app directory</h4>
     <p class="mt-3">
-      Each Shiny app runs in its own container and is proxied through Django, appearing in an iframe.
+      This is an experimental space within the Public Health Agency of Canada (PHAC).
+      It hosts interactive data apps built with R Shiny, and provides access controls.
     </p>
     <p>
-      For more information, or to add another Shiny app, see 
-<a href="https://github.com/PHACDataHub/django-shiny"><i class="bi bi-github"></i> django-shiny</a> on GitHub.
+    Some apps are publicly accessible, while others are limited to certain users.
+    </p>
+    <p>
+      For technical information, visit
+<a href="https://github.com/PHACDataHub/django-shiny"><i class="bi bi-github"></i> django-shiny</a>
+      on GitHub or
+      <a href="mailto:datascience-sciencedesdonnees@phac-aspc.gc.ca?subject=PHAC Shiny app directory">email the data science team</a>
+      at Public Health Agency of Canada (PHAC).
     </p>
   </div>
 {% endblock %}

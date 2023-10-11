@@ -16,10 +16,7 @@ User = get_user_model()
 
 
 def home(request):
-    context = {"active_tab": "index", "apps": [
-        app for app in ShinyApp.objects.all()
-        if app.check_visibility(request.user)
-    ]}
+    context = {"active_tab": "index", "apps": ShinyApp.objects.all()}
     return render(request, "djangoapp/home.jinja", context)
 
 
