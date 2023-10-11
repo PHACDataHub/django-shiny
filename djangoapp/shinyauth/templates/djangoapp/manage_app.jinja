@@ -34,7 +34,7 @@
       {% if create %}
         <p>A Cloud Build trigger will be set up for pushes to the branch of the repo, so the app deployment will remain up to date with the repo.</p>
         <p>The trigger will run immediately when the app is created. It may take several minutes for your app to start working.</p>
-        <p>The git repo must be within the PHACDataHub GitHub organization, and user "juleskuehn" must have access to the repo for the automation to succeed, due to the Cloud Build GitHub connection being created with this account. <strong>TODO: Change to a PHAC-managed bot account.</strong></p>
+        <p>GitHub user "juleskuehn" must have access to the repo for the automation to succeed, due to the Cloud Build GitHub connection being created with this account. <strong>TODO: Change to a PHAC-managed bot account.</strong></p>
       {% endif %}
 
       <h4 class="mt-3">App metadata (optional, but recommended)</h4>

@@ -38,7 +38,6 @@ Technical debt
 
 App features
 - Collapsible top bar
-- Make user management more friendly (generate regex for common use cases, add a single user in 1 step, etc.)
 - Homepage
   - Improve branding
   - Better explain what the site is
