@@ -1,0 +1,5 @@
+echo "Deleting existing build trigger $APP_SLUG-shinyapp-trigger"
+gcloud builds triggers delete $APP_SLUG-shinyapp-trigger --region=northamerica-northeast1
+
+echo "kubectl delete the kubernetes resources"
+kubectl delete -f ../k8s/$APP_SLUG.shinyapp.yaml

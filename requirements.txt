@@ -12,3 +12,4 @@ requests
 whitenoise
 Pillow
 django-extensions
+django-storages[google]

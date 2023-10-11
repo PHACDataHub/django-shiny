@@ -11,6 +11,9 @@ RUN mkdir -p /usr/local/gcloud \
 # Adding the package path to local
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
+# Install and configure minikube
+RUN gcloud components install kubectl gke-gcloud-auth-plugin --quiet
+
 ENV PYTHONUNBUFFERED 1
 RUN mkdir -p /opt/services/djangoapp/src
 WORKDIR /opt/services/djangoapp/src
@@ -20,5 +23,8 @@ RUN pip install -r requirements.txt
 
 COPY . /opt/services/djangoapp/src
 
+RUN chmod +x /opt/services/djangoapp/src/entrypoint.sh
+
 EXPOSE 8000
+ENTRYPOINT ["./entrypoint.sh"]
 CMD ["gunicorn", "-c", "config/gunicorn/conf.py", "--bind", ":8000", "--chdir", "djangoapp", "djangoapp.wsgi:application"]

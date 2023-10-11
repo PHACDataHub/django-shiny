@@ -168,6 +168,15 @@ else:
             'HOST': 'database-service'
         }
     }
+    STORAGES = {
+        "default": {"BACKEND": "storages.backends.gcloud.GoogleCloudStorage"},
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
+    GS_BUCKET_NAME = env("GS_BUCKET_NAME")
+    GS_BLOB_CHUNK_SIZE = 5 * 1024 * 1024
+    GS_FILE_OVERWRITE = False
 
 
 # Password validation

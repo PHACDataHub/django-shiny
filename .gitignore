@@ -114,6 +114,7 @@ node_modules/
 k8s/*.shinyapp.yaml
 cloudbuild/*.cloudbuild.yaml
 cloudbuild/*.cloudbuild.sh
+cloudbuild/*.delete_cloudbuild.sh
 
 djangoapp/media
 

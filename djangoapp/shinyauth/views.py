@@ -83,10 +83,19 @@ def manage_app(request, app_slug):
     app = ShinyApp.objects.get(slug=app_slug)
 
     if request.method == "POST":
+        # Keep track of original repo and branch
+        original_repo = app.repo
+        original_branch = app.branch
         form = ShinyAppForm(request.POST, request.FILES, instance=app)
         if form.is_valid():
             form.save()
-            messages.success(request, "App successfully updated. If you have changed the app hosting info, it may take a few minutes to update.")
+            app = ShinyApp.objects.get(slug=app_slug)
+            # If the repo or branch has changed, we need to update the automation
+            if app.repo != original_repo or app.branch != original_branch:
+                create_app_automation(app)
+                messages.success(request, "App hosting info updated. It may take a few minutes for changes to appear.")
+            else:
+                messages.success(request, "App successfully updated.")
             return redirect("manage_apps")
         else:
             messages.error(request, "App could not be updated.")
@@ -120,10 +129,18 @@ def create_app_automation(app):
     print(f"started automation thread for deploying app {app}")
 
 
+def delete_app_automation(app):
+    # Delete cloud build for the app
+    automation_thread = threading.Thread(target=app.delete_deployment)
+    automation_thread.start()
+    print(f"started automation thread for deleting app {app}")
+
+
 def delete_app(request, app_slug):
     if not request.user.is_superuser:
         return redirect("index")
     app = ShinyApp.objects.get(slug=app_slug)
+    delete_app_automation(app)
     app.delete()
     messages.success(request, "App successfully deleted.")
     return redirect("manage_apps")
