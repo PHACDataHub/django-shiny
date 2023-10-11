@@ -11,6 +11,10 @@ RUN mkdir -p /usr/local/gcloud \
 # Adding the package path to local
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
+# Install and configure minikube
+RUN gcloud components install kubectl --quiet
+RUN gcloud components install gke-gcloud-auth-plugin --quiet
+
 ENV PYTHONUNBUFFERED 1
 RUN mkdir -p /opt/services/djangoapp/src
 WORKDIR /opt/services/djangoapp/src
