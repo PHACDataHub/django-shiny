@@ -1,0 +1,2 @@
+echo "Deleting existing build trigger $APP_SLUG-shinyapp-trigger"
+gcloud builds triggers delete $APP_SLUG-shinyapp-trigger --region=northamerica-northeast1

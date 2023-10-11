@@ -54,6 +54,9 @@ class ShinyApp(models.Model):
 
     def deploy(self):
         devops.deploy_app(self)
+
+    def delete_deployment(self)
+        devops.delete_app(self)
     
     @property
     def is_admin_only(self):

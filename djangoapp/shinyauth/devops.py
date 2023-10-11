@@ -11,6 +11,7 @@ def generate_deployment(app):
     k8s_dir = os.path.join(parent_dir, 'k8s')
     yaml_template = os.path.join(cloudbuild_dir, 'cloudbuild.example')
     sh_template = os.path.join(cloudbuild_dir, 'cloudbuild.sh.example')
+    sh_delete_template = os.path.join(cloudbuild_dir, 'delete_cloudbuild.sh.example')
     k8s_template = os.path.join(k8s_dir, 'shinyapp.example')
 
     # This is based on an individual GitHub user.
@@ -21,6 +22,7 @@ def generate_deployment(app):
     # Delete existing *.cloudbuild.yaml and *.cloudbuild.sh files
     existing_files = [f for f in os.listdir(cloudbuild_dir) if f.endswith('.cloudbuild.yaml')]
     existing_files += [f for f in os.listdir(cloudbuild_dir) if f.endswith('.cloudbuild.sh')]
+    existing_files += [f for f in os.listdir(cloudbuild_dir) if f.endswith('.delete_cloudbuild.sh')]
     existing_files += [f for f in os.listdir(k8s_dir) if f.endswith('.shinyapp.yaml')]
 
     for f in existing_files:
@@ -65,6 +67,17 @@ def generate_deployment(app):
 
     print("Created file: {}".format(new_file))
 
+    with open(sh_delete_template) as f:
+        template_lines = f.readlines()
+        template_lines = [line.replace('$APP_SLUG', app_slug) for line in template_lines]
+
+    # Write the new file
+    new_file = os.path.join(cloudbuild_dir, f"{app_slug}.delete_cloudbuild.sh")
+    with open(new_file, 'w') as f:
+        f.writelines(template_lines)
+
+    print("Created file: {}".format(new_file))
+
     app_port = "8100"
     app_image = f'northamerica-northeast1-docker.pkg.dev/phx-datadissemination/shiny-apps/{app_slug}'
 
@@ -93,3 +106,14 @@ def deploy_app(app):
     sh_file = os.path.join(cloudbuild_dir, f"{app.slug}.cloudbuild.sh")
     os.system(f"bash {sh_file}")
     print(f"Done setting up and running cloud build triggers for {app}.")
+
+
+def delete_app(app):
+    """
+    Deploy a Shiny app to GKE using Cloud Build
+    """
+    generate_deployment(app)
+    cloudbuild_dir = os.path.join(os.path.dirname(settings.BASE_DIR), 'cloudbuild')
+    sh_file = os.path.join(cloudbuild_dir, f"{app.slug}.delete_cloudbuild.sh")
+    os.system(f"bash {sh_file}")
+    print(f"Done deleting cloud build triggers for {app}.")
