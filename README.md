@@ -30,7 +30,6 @@ When a new commit is pushed to main in this repo, Cloud Build will:
 
 Technical debt
 - Switch email service to a more reliable one (ask John Bain)
-- Django "delete app" function should also delete K8S pods
 - Better secrets management
   - The secrets.yaml file could be stored in Secret Manager. See https://cloud.google.com/kubernetes-engine/docs/tutorials/workload-identity-secrets (not sure this is the right approach).
 - Create bot account for PHACDataHub organization and use that for the Cloud Build connection (update secrets to reflect this when done)
