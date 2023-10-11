@@ -19,18 +19,8 @@ def generate_deployment(app):
     # and give the bot account admin access to all repos.
     cloudbuild_connection = settings.CLOUDBUILD_CONNECTION
 
-    # Delete existing *.cloudbuild.yaml and *.cloudbuild.sh files
-    existing_files = [f for f in os.listdir(cloudbuild_dir) if f.endswith('.cloudbuild.yaml')]
-    existing_files += [f for f in os.listdir(cloudbuild_dir) if f.endswith('.cloudbuild.sh')]
-    existing_files += [f for f in os.listdir(cloudbuild_dir) if f.endswith('.delete_cloudbuild.sh')]
-    existing_files += [f for f in os.listdir(k8s_dir) if f.endswith('.shinyapp.yaml')]
 
-    for f in existing_files:
-        try:
-            os.remove(os.path.join(cloudbuild_dir, f))
-            print("Deleted file: {}".format(f))
-        except OSError:
-            pass
+    # Set variables for the app
     app_slug = app.slug
     git_repo = app.repo
     git_branch = app.branch
@@ -40,18 +30,28 @@ def generate_deployment(app):
     # Get the git repo name from the URL
     repo_name = git_repo.split('/')[-1][:-4]
 
+    # Delete existing *.cloudbuild.yaml and *.cloudbuild.sh files
+    existing_files = [f for f in os.listdir(cloudbuild_dir) if f.endswith('.cloudbuild.yaml')]
+    existing_files += [f for f in os.listdir(cloudbuild_dir) if f.endswith('.cloudbuild.sh')]
+    existing_files += [f for f in os.listdir(cloudbuild_dir) if f.endswith('.delete_cloudbuild.sh')]
+    existing_files += [f for f in os.listdir(k8s_dir) if f.endswith('.shinyapp.yaml')]
+    for f in existing_files:
+        try:
+            os.remove(os.path.join(cloudbuild_dir, f))
+            print("Deleted file: {}".format(f))
+        except OSError:
+            pass
+
+    # Generate Cloud Build YAML
     with open(yaml_template) as f:
         template_lines = f.readlines()
-        # The variable we care about is $APP_SLUG in the template file
         template_lines = [line.replace('$APP_SLUG', app_slug) for line in template_lines]
-
-    # Write the new file
     new_file = os.path.join(cloudbuild_dir, f"{app_slug}.cloudbuild.yaml")
     with open(new_file, 'w') as f:
         f.writelines(template_lines)
-
     print("Created file: {}".format(new_file))
 
+    # Generate bash script to create / update and run cloudbuild trigger
     with open(sh_template) as f:
         template_lines = f.readlines()
         template_lines = [line.replace('$APP_SLUG', app_slug) for line in template_lines]
@@ -59,39 +59,31 @@ def generate_deployment(app):
         template_lines = [line.replace('$GIT_BRANCH', git_branch) for line in template_lines]
         template_lines = [line.replace('$CLOUDBUILD_CONNECTION', cloudbuild_connection) for line in template_lines]
         template_lines = [line.replace('$REPO_NAME', repo_name) for line in template_lines]
-
-    # Write the new file
     new_file = os.path.join(cloudbuild_dir, f"{app_slug}.cloudbuild.sh")
     with open(new_file, 'w') as f:
         f.writelines(template_lines)
-
     print("Created file: {}".format(new_file))
 
+    # Generate bash script to delete cloudbuild trigger
     with open(sh_delete_template) as f:
         template_lines = f.readlines()
         template_lines = [line.replace('$APP_SLUG', app_slug) for line in template_lines]
-
-    # Write the new file
     new_file = os.path.join(cloudbuild_dir, f"{app_slug}.delete_cloudbuild.sh")
     with open(new_file, 'w') as f:
         f.writelines(template_lines)
-
     print("Created file: {}".format(new_file))
 
+    # Generate Kubernetes deployment YAML
     app_port = "8100"
     app_image = f'northamerica-northeast1-docker.pkg.dev/phx-datadissemination/shiny-apps/{app_slug}'
-
     with open(k8s_template) as f:
         template_lines = f.readlines()
         template_lines = [line.replace('$APP_SLUG', app_slug) for line in template_lines]
         template_lines = [line.replace('$APP_IMAGE', app_image) for line in template_lines]
         template_lines = [line.replace('$APP_PORT', app_port) for line in template_lines]
-
-    # Write the new file
     new_file = os.path.join(k8s_dir, f"{app_slug}.shinyapp.yaml")
     with open(new_file, 'w') as f:
         f.writelines(template_lines)
-
     print("Created file: {}".format(new_file))
 
     print(f"Done creating cloudbuild YAML, gcloud scripts and k8s YAML files for {app}.")

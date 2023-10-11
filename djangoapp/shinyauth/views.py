@@ -140,6 +140,7 @@ def delete_app(request, app_slug):
     if not request.user.is_superuser:
         return redirect("index")
     app = ShinyApp.objects.get(slug=app_slug)
+    delete_app_automation(app)
     app.delete()
     messages.success(request, "App successfully deleted.")
     return redirect("manage_apps")

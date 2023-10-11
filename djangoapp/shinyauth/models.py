@@ -32,8 +32,13 @@ class ShinyApp(models.Model):
         for group in self.accessible_by.all():
             # Check user email against regexes for each group
             for match in group.email_matches.all():
-                if re.match(match.email_regex, user.email):
-                    return True
+                try:
+                    if re.match(match.email_regex, user.email):
+                        return True
+                except:
+                    # If the email regex is invalid, skip it
+                    print(f"Invalid email regex: {match.email_regex}")
+                    pass
         return False
     
     def check_visibility(self, user):
@@ -45,8 +50,13 @@ class ShinyApp(models.Model):
         for group in self.visible_to.all() | self.accessible_by.all():
             # Check user email against regexes for each group
             for match in group.email_matches.all():
-                if re.match(match.email_regex, user.email):
-                    return True
+                try:
+                    if re.match(match.email_regex, user.email):
+                        return True
+                except:
+                    # If the email regex is invalid, skip it
+                    print(f"Invalid email regex: {match.email_regex}")
+                    pass
         return False
     
     def generate_deployment(self):
@@ -55,7 +65,7 @@ class ShinyApp(models.Model):
     def deploy(self):
         devops.deploy_app(self)
 
-    def delete_deployment(self)
+    def delete_deployment(self):
         devops.delete_app(self)
     
     @property

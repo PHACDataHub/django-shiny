@@ -1,6 +1,9 @@
+import re
+
 from django import forms
 from shinyauth.models import ShinyApp, UserGroup, UserEmailMatch
 from django.contrib.auth import get_user_model
+
 
 User = get_user_model()
 
@@ -67,6 +70,15 @@ class UserEmailMatchForm(forms.ModelForm):
         fields = [
             "name", "email_regex"
         ]
+
+    # "email_regex" MUST be a valid regex
+    def clean_email_regex(self):
+        email_regex = self.cleaned_data["email_regex"]
+        try:
+            re.compile(email_regex)
+        except re.error:
+            raise forms.ValidationError(f"The regex {email_regex} is invalid: {re.error}")
+        return email_regex
 
 
 # Form for making a user a superuser
