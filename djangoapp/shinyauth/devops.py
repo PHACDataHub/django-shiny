@@ -80,6 +80,7 @@ def generate_deployment(app):
         template_lines = f.readlines()
         template_lines = [line.replace('$APP_SLUG', app_slug) for line in template_lines]
 
+    print(template_lines)
     k8s_yaml_idx = template_lines.index('$K8S_YAML\n')
     # Indent the k8s YAML by 6 spaces
     k8s_lines = [' '*6 + line for line in k8s_lines]
