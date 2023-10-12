@@ -251,3 +251,13 @@ div.app-card:hover {
 div.card-body dt {
   font-weight: 500;
 }
+
+body.fullscreen #skip-link,
+body.fullscreen #top-nav,
+body.fullscreen footer {
+  display: none;
+}
+
+body.fullscreen #content {
+  height: 100vh;
+}

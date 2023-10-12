@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="{{ static("thirdparty/css/bootstrap-icons.min.css") }}">
     <link rel="stylesheet" href="{{ static("styles.css") }}">
   </head>
-  <body hx-ext="morph" {% if login_form %}class="fancy-background"{% endif %}>
+  <body hx-ext="morph" {% if fullscreen %}class="fullscreen"{% endif %}>
     <a class="visually-hidden-focusable" href="#main-content" id="skip-link">Skip to main</a>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark d-print-none"
          id="top-nav">

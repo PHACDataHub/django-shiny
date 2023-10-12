@@ -18,6 +18,7 @@
             </h6>
             <p class="card-text">{{ app.description or "No description" }}</p>
             <a href="{{ url("shiny", app.slug) }}" class="card-link view-app">View app</a>
+            <a href="{{ url("shiny", app.slug) }}?fullscreen=True" class="card-link view-app">Fullscreen</a>
             {% if request.user.is_superuser %}
             <a href="{{ url("manage_app", app.slug) }}" class="card-link manage-app text-danger">Manage</a>
             {% endif %}
@@ -94,5 +95,7 @@ if (onlyShowAccessibleApps) {
     adjustCardSpacer();
   });
 }
-
+function adjustCardSpacer() {
+  // If the app list has an uneven number of 
+}
 </script>
