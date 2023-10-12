@@ -19,7 +19,7 @@
             <p class="card-text">{{ app.description or "No description" }}</p>
             <a href="{{ url("shiny", app.slug) }}" class="card-link view-app">View app</a>
             <a href="{{ url("shiny", app.slug) }}?fullscreen=True" target="blank" class="card-link view-app">Fullscreen</a>
-            {% if request.user.is_superuser %}
+            {% if request.user.is_superuser and manage %}
             <a href="{{ url("manage_app", app.slug) }}" class="card-link manage-app text-danger">Manage</a>
             {% endif %}
           </div>
