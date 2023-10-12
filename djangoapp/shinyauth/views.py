@@ -20,7 +20,7 @@ def health_check(request):
 
 
 def home(request):
-    context = {"active_tab": "index", "apps": ShinyApp.objects.all()}
+    context = {"active_tab": "index", "apps": ShinyApp.objects.all().order_by("slug")}
     return render(request, "djangoapp/home.jinja", context)
 
 
@@ -83,7 +83,7 @@ App and user management views
 def manage_apps(request):
     if not request.user.is_superuser:
         return redirect("index")
-    context = {"active_tab": "manage_apps", "apps": ShinyApp.objects.all()}
+    context = {"active_tab": "manage_apps", "apps": ShinyApp.objects.all().order_by("slug")}
     return render(request, "djangoapp/manage_apps.jinja", context)
 
 
