@@ -4,6 +4,7 @@ from shinyauth import views
 from . import magiclink_views
 
 urlpatterns = [
+    path('health_check/', views.health_check, name='health_check'),
     path('', views.home, name='index'),
 
     path("login/", magiclink_views.EmailLoginView.as_view(), name="email_login"),

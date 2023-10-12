@@ -6,7 +6,7 @@ metadata:
     app: djangoapp
 spec:
   replicas: 1
-  minReadySeconds: 180
+  # minReadySeconds: 200
   selector:
     matchLabels:
       app: djangoapp
@@ -16,6 +16,14 @@ spec:
         app: djangoapp
     spec:
       serviceAccountName: django-shiny-sa
+      initContainers:
+      - image:  gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
+        name: workload-identity-initcontainer
+        command:
+        - '/bin/bash'
+        - '-c'
+        - |
+          curl -sS -H 'Metadata-Flavor: Google' 'http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token' --retry 30 --retry-connrefused --retry-max-time 60 --connect-timeout 3 --fail --retry-all-errors > /dev/null && exit 0 || echo 'Retry limit exceeded. Failed to wait for metadata server to be available. Check if the gke-metadata-server Pod in the kube-system namespace is healthy.' >&2; exit 1
       containers:
       - name: djangoapp
         image: northamerica-northeast1-docker.pkg.dev/phx-datadissemination/django-shiny/djangoapp:latest
@@ -28,14 +36,14 @@ spec:
         readinessProbe:
           httpGet:
             scheme: HTTP
-            path: /
+            path: /health_check
             port: 8000
             httpHeaders:
             - name: Host
               value: shiny.phac.alpha.canada.ca
-          initialDelaySeconds: 15
-          periodSeconds: 10
-          successThreshold: 3
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          successThreshold: 1
 ---
 apiVersion: v1
 kind: Service
