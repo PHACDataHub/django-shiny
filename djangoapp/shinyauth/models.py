@@ -44,15 +44,30 @@ class ShinyApp(models.Model):
     def check_visibility(self, user):
         # Visible to admins and to users matching accessible_to OR visible_to
         if user.is_superuser:
-            return True
+            return "accessible"
         if user.is_anonymous:
-            return self.is_publicly_viewable
-        for group in self.visible_to.all() | self.accessible_by.all():
+            if self.is_publicly_accessible:
+                return "accessible"
+            elif self.is_publicly_viewable:
+                return "viewable"
+            else:
+                return False
+        for group in self.accessible_by.all():
             # Check user email against regexes for each group
             for match in group.email_matches.all():
                 try:
                     if re.match(match.email_regex, user.email):
-                        return True
+                        return "accessible"
+                except:
+                    # If the email regex is invalid, skip it
+                    print(f"Invalid email regex: {match.email_regex}")
+                    pass
+        for group in self.visible_to.all():
+            # Check user email against regexes for each group
+            for match in group.email_matches.all():
+                try:
+                    if re.match(match.email_regex, user.email):
+                        return "viewable"
                 except:
                     # If the email regex is invalid, skip it
                     print(f"Invalid email regex: {match.email_regex}")

@@ -1,7 +1,8 @@
-<div id="app-list" class="row">
+<div id="app-list" class="mt-3">
   {% for app in apps %}
-  <div class="col-md-6">
-    <div class="card app-card mt-3">
+  {% set access=app.check_visibility(request.user) %}
+  {% if access %}
+    <div class="card app-card mb-3 user-{{ access }}">
       <div class="card-body pt-0">
         <div class="row">
           <div class="col mt-3">
@@ -17,6 +18,7 @@
             </h6>
             <p class="card-text">{{ app.description or "No description" }}</p>
             <a href="{{ url("shiny", app.slug) }}" class="card-link view-app">View app</a>
+            <a href="{{ url("shiny", app.slug) }}?fullscreen=True" target="blank" class="card-link view-app">Fullscreen</a>
             {% if request.user.is_superuser %}
             <a href="{{ url("manage_app", app.slug) }}" class="card-link manage-app text-danger">Manage</a>
             {% endif %}
@@ -27,10 +29,45 @@
             </div>
           {% endif %}
         </div>
+        {% if manage %}
+          <hr>
+          <dl class="mb-0">
+            <dt>GitHub repo</dt>
+            <dd><a href="{{ app.repo }}" target="blank">{{ app.repo }}</a></dd>
+            <dt>Branch</dt>
+            <dd>{{ app.branch }}</dd>
+            <dt>Contact email</dt>
+            <dd><a href="mailto:{{ app.contact_email }}?subject=PHAC Shiny app: {{ app }}">{{ app.contact_email }}</a></dd>
+            <dt>Accessible and visible to</dt>
+            <dd>
+              <ul class="mb-0">
+              {% if app.is_admin_only %}
+                <li>Admins only</li>
+              {% else %}
+                {% for group in list(app.accessible_by.all()) %}
+                  <li>{{ group }}</li>
+                {% endfor %}
+              {% endif %}
+              </ul>
+            </dd>
+            <dt>Visible, but not accessible to</dt>
+            <dd>
+              <ul class="mb-0">
+              {% if app.is_admin_only or not list(app.visible_to.all()) %}
+                <li>None</li>
+              {% else %}
+                {% for group in list(app.visible_to.all()) %}
+                  <li>{{ group }}</li>
+                {% endfor %}
+              {% endif %}
+              </ul>
+          </dl>
+        {% endif %}
       </div>
     </div>
-  </div>
+  {% endif %}
   {% endfor %}
+  <div class="app-list-spacer"></div>
 </div>
 
 <script>
@@ -42,4 +79,23 @@ document.querySelectorAll('.app-card').forEach(function(card) {
     }
   });
 });
+// Filter cards based on the toggle state of "#onlyShowAccessibleApps" checkbox
+let onlyShowAccessibleApps = document.querySelector('#onlyShowAccessibleApps');
+if (onlyShowAccessibleApps) {
+  onlyShowAccessibleApps.addEventListener('change', function(e) {
+    let showAccessible = e.target.checked;
+    document.querySelectorAll('.app-card').forEach(function(card) {
+      let userAccess = card.classList.contains('user-accessible');
+      if (showAccessible && !userAccess) {
+        card.classList.add('d-none');
+      } else {
+        card.classList.remove('d-none');
+      }
+    });
+    adjustCardSpacer();
+  });
+}
+function adjustCardSpacer() {
+  // If the app list has an uneven number of 
+}
 </script>

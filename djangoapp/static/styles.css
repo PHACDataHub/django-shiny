@@ -189,7 +189,7 @@ h2.card-header {
 
 /* Vertical center contents */
 #login-container {
-  height: calc(100vh - 6rem);
+  height: calc(100vh - 9.5rem);
   display: flex;
   align-items: center;
 }
@@ -225,8 +225,17 @@ img.app-thumbnail {
   object-fit: contain;
 }
 
+/* Show columns at large sizes */
+@media (min-width: 768px) {
+  div#app-list {
+    column-count: 2;
+  }
+}
+
 div.app-card {
   cursor: pointer;
+  -webkit-column-break-inside: avoid;
+  break-inside: avoid;
 }
 
 div.app-card:hover {
@@ -237,4 +246,18 @@ div.app-card:hover {
   --bs-alert-color: #842029;
   --bs-alert-bg: #f8d7da;
   --bs-alert-border-color: #f5c2c7;
+}
+
+div.card-body dt {
+  font-weight: 500;
+}
+
+body.fullscreen #skip-link,
+body.fullscreen #top-nav,
+body.fullscreen footer {
+  display: none;
+}
+
+body.fullscreen #content {
+  height: 100vh;
 }

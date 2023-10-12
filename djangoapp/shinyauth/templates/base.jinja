@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    {% block title %}<title>PHAC Shiny apps</title>{% endblock title %}
+    {% block title %}<title>PHAC Shiny app directory</title>{% endblock title %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="{{ static('thirdparty/htmx.min.js') }}"></script>
@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="{{ static("thirdparty/css/bootstrap-icons.min.css") }}">
     <link rel="stylesheet" href="{{ static("styles.css") }}">
   </head>
-  <body hx-ext="morph" {% if login_form %}class="fancy-background"{% endif %}>
+  <body hx-ext="morph" {% if fullscreen %}class="fullscreen"{% endif %}>
     <a class="visually-hidden-focusable" href="#main-content" id="skip-link">Skip to main</a>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark d-print-none"
          id="top-nav">
@@ -24,7 +24,7 @@
         <h1 class="nav-header">
           <a href="{{ url("index") }}" class="text-reset text-decoration-none">
             {% block nav_header_text %}
-              PHAC Shiny apps
+              PHAC Shiny
             {% endblock nav_header_text %}
           </a>
         </h1>
@@ -78,7 +78,7 @@
               <a class="nav-link fw-semibold"
                  href="{{ url("email_login") }}">
                 <i class="bi bi-box-arrow-in-right me-1"></i>
-                Login
+                Log in
               </a>
             </li>
             {% endif %}

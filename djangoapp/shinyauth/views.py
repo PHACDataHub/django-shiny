@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.utils.safestring import mark_safe
 
 from shinyauth.models import ShinyApp, UserGroup, UserEmailMatch
 from shinyauth.forms import ShinyAppForm, UserGroupForm, UserEmailMatchForm, UserSuperuserForm
@@ -15,10 +16,7 @@ User = get_user_model()
 
 
 def home(request):
-    context = {"active_tab": "index", "apps": [
-        app for app in ShinyApp.objects.all()
-        if app.check_visibility(request.user)
-    ]}
+    context = {"active_tab": "index", "apps": ShinyApp.objects.all()}
     return render(request, "djangoapp/home.jinja", context)
 
 
@@ -41,12 +39,15 @@ Shiny app wrapper views
 def shiny(request, app_slug):
     app = ShinyApp.objects.get(slug=app_slug)
     if not app.check_access(request.user):
-        messages.warning(request, "You don't have permission to access this app. Please login with an authorized email.")
+        messages.warning(
+            request,
+            mark_safe(
+                f"You don't have permission to access this app. Please login with an authorized email or <a href='mailto:{app.contact_email}?subject=Access request for PHAC Shiny app: {app}'>email the app administrator</a> to request access."
+            ) if app.contact_email else "You don't have permission to access this app. Please login with an authorized email."
+        )
         return redirect(f"/login/?next=/shiny/{app_slug}/")
-    return render(
-        request, "djangoapp/shiny.jinja",
-        {"app_slug": app_slug, "app_name": app}
-    )
+    context = {"app_slug": app_slug, "app_name": app, "fullscreen": request.GET.get("fullscreen", False)}
+    return render(request, "djangoapp/shiny.jinja", context)
 
 
 def shiny_contents(request, app_slug):
