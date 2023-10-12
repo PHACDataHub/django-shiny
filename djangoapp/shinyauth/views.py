@@ -15,6 +15,10 @@ from bs4 import BeautifulSoup
 User = get_user_model()
 
 
+def health_check(request):
+    return HttpResponse(status=200)
+
+
 def home(request):
     context = {"active_tab": "index", "apps": ShinyApp.objects.all()}
     return render(request, "djangoapp/home.jinja", context)
