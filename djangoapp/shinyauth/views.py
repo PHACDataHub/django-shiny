@@ -46,7 +46,12 @@ def shiny(request, app_slug):
             ) if app.contact_email else "You don't have permission to access this app. Please login with an authorized email."
         )
         return redirect(f"/login/?next=/shiny/{app_slug}/")
-    context = {"app_slug": app_slug, "app_name": app, "fullscreen": request.GET.get("fullscreen", False)}
+    context = {
+        "app_slug": app_slug,
+        "app_name": str(app),
+        "fullscreen": request.GET.get("fullscreen", False),
+        "title": str(app),
+    }
     return render(request, "djangoapp/shiny.jinja", context)
 
 
