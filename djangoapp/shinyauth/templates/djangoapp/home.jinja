@@ -8,8 +8,7 @@
       <b>Click one of the Shiny app links below.</b> If the app is protected (<i class="bi bi-lock text-muted"></i>), you will be prompted to login.
     </p> #}
     <div class="form-check form-switch mt-3">
-      <input class="form-check-input" type="checkbox" role="switch" id="onlyShowAccessibleApps"
-      {% if request.user.is_superuser %}checked{% endif %}>
+      <input class="form-check-input" type="checkbox" role="switch" id="onlyShowAccessibleApps">
       <label class="form-check-label" for="onlyShowAccessibleApps">
         Only show apps that I can access
         {% if request.user.is_anonymous %}

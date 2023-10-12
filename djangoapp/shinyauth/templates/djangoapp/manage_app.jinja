@@ -75,11 +75,11 @@
       {% else %}
         <a href="{{ url("manage_users") }}" class="mt-3">Manage user groups</a>
         <div class="form-group mt-3">
-          <label for="app_accessible_by" class="form-label">Accessible by</label>
+          <label for="app_accessible_by" class="form-label">Accessible and visible to</label>
           {{ form.accessible_by }}
         </div>
         <div class="form-group mt-3">
-          <label for="app_visible_to" class="form-label">Visible to (additive to "Accessible by")</label>
+          <label for="app_visible_to" class="form-label">Visible, but not accessible to</label>
           {{ form.visible_to }}
         </div>
       {% endif %}
