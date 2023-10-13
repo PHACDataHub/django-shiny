@@ -32,15 +32,16 @@ Technical debt
 - Switch email service to a more reliable one (ask John Bain)
 - Better secrets management
   - The secrets.yaml file could be stored in Secret Manager. See https://cloud.google.com/kubernetes-engine/docs/tutorials/workload-identity-secrets (not sure this is the right approach).
-- Create bot account for PHACDataHub organization and use that for the Cloud Build connection (update secrets to reflect this when done)
+  - Debug workload identity issues - consider mounting account credential key JSON as a file from Secret Manager. https://github.com/GoogleCloudPlatform/secrets-store-csi-driver-provider-gcp/blob/main/examples/app-secrets.yaml.tmpl
+- ~Create bot account for PHACDataHub organization~ and use that for the Cloud Build connection (update secrets to reflect this when done)
 - Improve documentation of how to setup the GCP environment: e.g. detailed kubectl and gcloud commands
+- Best case: tutorial to recreate entire setup from scratch - then use this to create a 2nd "dev" environment (*dev*.shiny.phac.alpha.canada.ca)
 
 App features
-- Collapsible top bar
-- Homepage
-  - Improve branding
-  - Better explain what the site is
 - French translation of Django app. (Sync with Shiny app language selection? Is this possible?)
+- Improve management UX (e.g. add an email match/group without leaving the Manage App page - HTMX modal; bootstrap checkboxes)
+
+Test with non-Shiny apps, e.g. Plotly Dash
 
 ## Setting up in GCP
 

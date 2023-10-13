@@ -3,6 +3,7 @@ import re
 from django import forms
 from shinyauth.models import ShinyApp, UserGroup, UserEmailMatch
 from django.contrib.auth import get_user_model
+from django.core.validators import EmailValidator
 
 
 User = get_user_model()
@@ -57,10 +58,19 @@ class UserGroupForm(forms.ModelForm):
             "email_matches": forms.CheckboxSelectMultiple()
         }
 
-        # Set the choices
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.fields["email_matches"].queryset = UserEmailMatch.objects.all()
+    # Set the choices
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["email_matches"].queryset = UserEmailMatch.objects.all()
+
+    # At least one email_matches must be selected
+    def clean(self):
+        cleaned_data = super().clean()
+        # Check if at least one checkbox is selected
+        email_matches = cleaned_data.get("email_matches")
+        if not email_matches:
+            raise forms.ValidationError("At least one email match must be selected")
+        return cleaned_data
 
 
 # Form for managing user email matches
@@ -68,17 +78,34 @@ class UserEmailMatchForm(forms.ModelForm):
     class Meta:
         model = UserEmailMatch
         fields = [
-            "name", "email_regex"
+            "name", "match", "match_type"
         ]
+        # Specify match_type as bootstrap select widget
+        widgets = {
+            "match_type": forms.Select(attrs={"class": "form-select"})
+        }
+    def clean(self):
+        cleaned_data = super().clean()
+        match_type = cleaned_data.get("match_type")
+        match = cleaned_data.get("match")
 
-    # "email_regex" MUST be a valid regex
-    def clean_email_regex(self):
-        email_regex = self.cleaned_data["email_regex"]
-        try:
-            re.compile(email_regex)
-        except re.error:
-            raise forms.ValidationError(f"The regex {email_regex} is invalid: {re.error}")
-        return email_regex
+        # When match is regex, it must be *valid* regex
+        if match_type == "regex":
+            try:
+                re.compile(match)
+            except re.error as e:
+                raise forms.ValidationError(f"The regex {match} is invalid: {str(e)}")
+        elif match_type == "domain":
+            if not match.startswith("@"):
+                raise forms.ValidationError("Domain matches must start with @")
+        elif match_type == "exact":
+            # Must be a valid email address
+            validator = EmailValidator()
+            try:
+                validator(match)
+            except forms.ValidationError as e:
+                raise forms.ValidationError(f"{match} is not a valid email address")
+        return cleaned_data
 
 
 # Form for making a user a superuser
