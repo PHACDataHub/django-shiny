@@ -33,7 +33,8 @@ CLOUDBUILD_CONNECTION = env("CLOUDBUILD_CONNECTION", default=None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG", default=False)
-LOCAL_DEV = env("LOCAL_DEV", default=False)
+SQLITE_DB = env("SQLITE_DB", default=False)
+FAKE_EMAIL = env("FAKE_EMAIL", default=False)
 
 print("DEBUG: ", DEBUG)
 
@@ -99,17 +100,23 @@ MAGICLINK_REQUIRE_SIGNUP = False
 MAGICLINK_TOKEN_USES = 3  # M365 "clicks" links to check them, so must be > 1
 MAGICLINK_REQUIRE_SAME_IP = False  # Otherwise M365 checks will invalidate token
 MAGICLINK_REQUIRE_SAME_BROWSER = False  # As above
+MAGICLINK_EMAIL_SUBJECT = "Login link for PHAC Shiny App Directory"
 MAGICLINK_METHOD = env("MAGICLINK_METHOD", default="django_smtp")
 ALLOWED_EMAIL_DOMAINS = env.list("ALLOWED_EMAIL_DOMAINS", default=["*"])
 GC_NOTIFY_API_KEY = env("GC_NOTIFY_API_KEY", default=None)
 GC_NOTIFY_TEMPLATE_ID = env("GC_NOTIFY_TEMPLATE_ID", default=None)
 POWER_AUTOMATE_URL = env("POWER_AUTOMATE_URL", default=None)
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-# EMAIL_HOST = "smtp.gmail.com"
-# EMAIL_PORT = 587
-# EMAIL_HOST_USER = ""
+if FAKE_EMAIL:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = env("EMAIL_HOST", default=None)
+    EMAIL_PORT = env("EMAIL_PORT", default=None)
+    EMAIL_USE_TLS = env("EMAIL_USE_TLS", default=None)
+    EMAIL_HOST_USER = env("EMAIL_HOST_USER", default=None)
+    EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default=None)
+    DEFAULT_FROM_EMAIL = env("EMAIL_FROM", default="fake@email.com")
 
 ROOT_URLCONF = 'djangoapp.urls'
 
@@ -151,7 +158,7 @@ WSGI_APPLICATION = 'djangoapp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-if LOCAL_DEV:
+if SQLITE_DB:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
