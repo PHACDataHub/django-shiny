@@ -14,11 +14,7 @@ def generate_deployment(app):
     sh_delete_template = os.path.join(cloudbuild_dir, 'delete_cloudbuild.sh.example')
     k8s_template = os.path.join(k8s_dir, 'shinyapp.example')
 
-    # This is based on an individual GitHub user.
-    # TODO: Make a new connection with org-managed GitHub "bot" account
-    # and give the bot account admin access to all repos.
     cloudbuild_connection = settings.CLOUDBUILD_CONNECTION
-
 
     # Set variables for the app
     app_slug = app.slug
@@ -29,18 +25,6 @@ def generate_deployment(app):
         git_repo += '.git'
     # Get the git repo name from the URL
     repo_name = git_repo.split('/')[-1][:-4]
-
-    # Delete existing *.cloudbuild.yaml and *.cloudbuild.sh files
-    existing_files = [f for f in os.listdir(cloudbuild_dir) if f.endswith('.cloudbuild.yaml')]
-    existing_files += [f for f in os.listdir(cloudbuild_dir) if f.endswith('.cloudbuild.sh')]
-    existing_files += [f for f in os.listdir(cloudbuild_dir) if f.endswith('.delete_cloudbuild.sh')]
-    existing_files += [f for f in os.listdir(k8s_dir) if f.endswith('.shinyapp.yaml')]
-    for f in existing_files:
-        try:
-            os.remove(os.path.join(cloudbuild_dir, f))
-            print("Deleted file: {}".format(f))
-        except OSError:
-            pass
 
     # Generate Cloud Build YAML
     with open(yaml_template) as f:
