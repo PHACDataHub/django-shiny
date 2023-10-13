@@ -173,6 +173,10 @@ def manage_user_group(request, group_id):
     if not request.user.is_superuser:
         return redirect("index")
     group = UserGroup.objects.get(id=group_id)
+    if group.name == "Public":
+        # Not allowed to edit this group
+        messages.warning(request, "You cannot edit the Public group.")
+        return redirect("manage_users")
     if request.method == "POST":
         form = UserGroupForm(request.POST, instance=group)
         if form.is_valid():
@@ -180,7 +184,7 @@ def manage_user_group(request, group_id):
             messages.success(request, "User group successfully updated.")
             return redirect("manage_users")
         else:
-            messages.error(request, "User group could not be updated.")
+            messages.error(request, "User group could not be updated: " + str(form.errors))
     context = {
         "active_tab": "manage_users",
         "group": group,
@@ -227,7 +231,7 @@ def manage_email_match(request, match_id):
             messages.success(request, "Email match successfully updated.")
             return redirect("manage_users")
         else:
-            messages.error(request, "Email match could not be updated.")
+            messages.error(request, "Email match could not be updated: " + str(form.errors))
     context = {
         "active_tab": "manage_users",
         "match": match,
@@ -238,7 +242,13 @@ def manage_email_match(request, match_id):
 
 def delete_email_match(request, match_id):
     match = UserEmailMatch.objects.get(id=match_id)
+    match_groups = list(match.usergroup_set.values_list("id", flat=True))
     match.delete()
+    for group_id in match_groups:
+        group = UserGroup.objects.get(id=group_id)
+        # Delete groups that have no matches anymore
+        if group.email_matches.count() == 0:
+            group.delete()
     messages.success(request, "Email match successfully deleted.")
     return redirect("manage_users")
 
@@ -250,10 +260,18 @@ def create_email_match(request):
         form = UserEmailMatchForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Email match successfully created.")
+            if request.POST.get("create_group", False) == "on":
+                # Create a user group with the email match
+                group = UserGroup()
+                group.save()
+                group.email_matches.add(form.instance)
+                group.save()
+                messages.success(request, "Email match and user group successfully created.")
+            else:
+                messages.success(request, "Email match successfully created.")
             return redirect("manage_users")
         else:
-            messages.error(request, "Email match could not be created.")
+            messages.error(request, "Email match could not be created: " + str(form.errors))
     context = {
         "active_tab": "manage_users",
         "form": UserEmailMatchForm(),

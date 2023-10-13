@@ -3,6 +3,26 @@ from shinyauth import devops
 import re
 
 
+def check_matches(user, groups):
+    for group in groups:
+        for match in group.matches.all():
+            if match.match_type == "exact":
+                if user.email == match.email_match:
+                    return True
+            elif match.match_type == "domain":
+                if user.email.endswith(match.email_match):
+                    return True
+            elif match.match_type == "regex":
+                try:
+                    if re.match(match.email_regex, user.email):
+                        return True
+                except:
+                    # If the email regex is invalid, skip it
+                    print(f"Invalid email regex: {match.email_regex}")
+                    pass
+    return False
+
+
 class ShinyApp(models.Model):
     # Required: added from the shiny_apps.json file
     slug = models.SlugField(max_length=50, unique=True)
@@ -52,26 +72,10 @@ class ShinyApp(models.Model):
                 return "viewable"
             else:
                 return False
-        for group in self.accessible_by.all():
-            # Check user email against regexes for each group
-            for match in group.email_matches.all():
-                try:
-                    if re.match(match.email_regex, user.email):
-                        return "accessible"
-                except:
-                    # If the email regex is invalid, skip it
-                    print(f"Invalid email regex: {match.email_regex}")
-                    pass
-        for group in self.visible_to.all():
-            # Check user email against regexes for each group
-            for match in group.email_matches.all():
-                try:
-                    if re.match(match.email_regex, user.email):
-                        return "viewable"
-                except:
-                    # If the email regex is invalid, skip it
-                    print(f"Invalid email regex: {match.email_regex}")
-                    pass
+        if check_matches(user, self.accessible_by.all()):
+            return "accessible"
+        if check_matches(user, self.visible_to.all()):
+            return "viewable"
         return False
     
     def generate_deployment(self):
@@ -101,18 +105,26 @@ class ShinyApp(models.Model):
 class UserGroup(models.Model):
     # This does not include actual "User" objects, but defines
     # groups of users that can access a shiny app based on their email addresses
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, blank=True)
     email_matches = models.ManyToManyField('UserEmailMatch', blank=True)
 
     def __str__(self):
-        return self.name + ': ' + ', '.join(
-            [e.name for e in self.email_matches.all()]
-        )
+        str_value = self.name
+        if self.email_matches.count() > 0:
+            if self.name:
+                str_value += ": "
+            str_value += f"{', '.join([str(match) for match in self.email_matches.all()])}"
+        return str_value
 
 
 class UserEmailMatch(models.Model):
-    name = models.CharField(max_length=100)
-    email_regex = models.CharField(max_length=500)
+    name = models.CharField(max_length=100, blank=True)
+    match = models.CharField(max_length=500)
+    match_type = models.CharField(max_length=10, choices=[
+        ('exact', 'Exact (e.g. person@example.com)'),
+        ('domain', 'Domain (e.g. @example.com)'),
+        ('regex', 'Regular expression (e.g. .*@.*\.gc\.ca$)'),
+    ], default='exact')
 
     def __str__(self):
-        return self.name + ': ' + self.email_regex
+        return self.name or self.match

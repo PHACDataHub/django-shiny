@@ -6,22 +6,35 @@
     {% if create %}
       <h2>Create new email match</h2>
     {% else %}
-      <h2>Manage email match: {{ match.name }}</h2>
+      <h2>Manage email match: {{ match }}</h2>
     {% endif %}
     <hr>
     <form method="POST">
       {% csrf_token %}
-      <div class="form-group">
+      <div class="row mt-3">
+        <div class="col">
+          <label for="match" class="form-label">Email match (required)</label>
+          <input type="text" class="form-control" id="match" name="match"
+                 value="{{ match.match or '' }}">
+        </div>
+        <div class="col">
+          <label for="match_type" class="form-label">Match type</label>
+          {{ form.match_type }}
+        </div>
+      </div>
+      <div class="form-group mt-3">
         {# Two text inputs: name and match #}
-        <label for="name" class="form-label">Name</label>
+        <label for="name" class="form-label">Display name (optional)</label>
         <input type="text" class="form-control" id="name" name="name"
                value="{{ match.name }}">
       </div>
-      <div class="form-group mt-3">
-        <label for="email_regex" class="form-label">Match email regex</label>
-        <input type="text" class="form-control" id="match" name="email_regex"
-               value="{{ match.email_regex }}">
-      </div>
+      {# Checkbox to also create a user group with this match #}
+      {% if create %}
+        <div class="form-group mt-3">
+          <input type="checkbox" class="form-check-input" id="create_group" name="create_group" checked>
+          <label for="create_group" class="form-check-label">Create user group (recommended)</label>
+        </div>
+      {% endif %}
       <div class="row mt-3">
         <div class="col">
           <button type="submit" class="btn btn-primary">Submit</button>
