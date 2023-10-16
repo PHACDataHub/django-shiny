@@ -27,8 +27,28 @@
         <label for="app_branch" class="form-label">Branch</label>
         <input required type="text" class="form-control" id="app_branch" name="branch" value="{{ form.instance.branch }}">
       </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group mt-3">
+            <label for="id_port" class="form-label">Port</label>
+            {{ form.port }}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group mt-3">
+            <label for="id_mem_min" class="form-label">Minimum memory (GiB)</label>
+            {{ form.mem_min }}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group mt-3">
+            <label for="id_mem_min" class="form-label">Maximum memory (GiB)</label>
+            {{ form.mem_max }}
+          </div>
+        </div>
+      </div>
       <p class="mt-3">
-        Ensure your app's Dockerfile exposes <strong>port 8100</strong>.
+        Ensure your app's Dockerfile exposes the specified port.
         See the <a href="https://github.com/PHACDataHub/django-shiny/tree/main/shinyapp_example/wastewater">example Wastewater R Shiny app</a> in this repo.
       </p>
       {% if create %}

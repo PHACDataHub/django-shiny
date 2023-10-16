@@ -34,14 +34,30 @@
           <dl class="mb-0">
             <dt>GitHub repo</dt>
             <dd><a href="{{ app.repo }}" target="blank">{{ app.repo }}</a></dd>
-            <dt>Branch</dt>
-            <dd>{{ app.branch }}</dd>
+            <div class="row">
+              <div class="col-md-3">
+                <dt>Branch</dt>
+                <dd>{{ app.branch }}</dd>
+              </div>
+              <div class="col-md-3">
+                <dt>Port</dt>
+                <dd>{{ app.port }}</dd>
+              </div>
+                 <div class="col-md-3">
+                <dt>Memory (min)</dt>
+                <dd>{{ app.mem_min }} GiB</dd>
+              </div>
+                 <div class="col-md-3">
+                <dt>Memory (max)</dt>
+                <dd>{{ app.mem_max }} GiB</dd>
+              </div>
+            </div>
             <dt>Contact email</dt>
             <dd><a href="mailto:{{ app.contact_email }}?subject=PHAC Shiny app: {{ app }}">{{ app.contact_email }}</a></dd>
             <dt>Accessible and visible to</dt>
             <dd>
               <ul class="mb-0">
-              {% if app.is_admin_only %}
+              {% if app.is_admin_only or not list(app.accessible_by.all()) %}
                 <li>Admins only</li>
               {% else %}
                 {% for group in list(app.accessible_by.all()) %}

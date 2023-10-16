@@ -15,13 +15,17 @@ class ShinyAppForm(forms.ModelForm):
         model = ShinyApp
         fields = [
             "slug", "repo", "branch", "display_name", "description",
-            "contact_email", "thumbnail", "accessible_by", "visible_to"
+            "contact_email", "thumbnail", "accessible_by", "visible_to",
+            "port", "mem_min", "mem_max"
         ]
         # Choices for the accessible_by and visible_to fields
         # are from the UserGroup model
         widgets = {
             "accessible_by": forms.CheckboxSelectMultiple(),
-            "visible_to": forms.CheckboxSelectMultiple()
+            "visible_to": forms.CheckboxSelectMultiple(),
+            "port": forms.NumberInput(attrs={"class": "form-control", "min": 1024, "max": 65535, "value": 8100}),
+            "mem_min": forms.NumberInput(attrs={"class": "form-control", "min": 1, "max": 16, "value": 1}),
+            "mem_max": forms.NumberInput(attrs={"class": "form-control", "min": 1, "max": 16, "value": 2}),
         }
 
         # Set the choices

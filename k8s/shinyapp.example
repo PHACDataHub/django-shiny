@@ -19,6 +19,11 @@ spec:
       - name: $APP_SLUG
         image: $APP_IMAGE
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "$MEM_MINGi"
+          limits:
+            memory: "$MEM_MAXGi"
         ports:
         - containerPort: $APP_PORT
 ---
