@@ -20,6 +20,10 @@ def generate_deployment(app):
     app_slug = app.slug
     git_repo = app.repo
     git_branch = app.branch
+    app_port = str(app.port)
+    mem_min = str(app.mem_min)
+    mem_max = str(app.mem_max)
+
     # Ensure git repo ends in ".git"; if not, append it
     if not git_repo.endswith('.git'):
         git_repo += '.git'
@@ -58,13 +62,14 @@ def generate_deployment(app):
     print("Created file: {}".format(new_file))
 
     # Generate Kubernetes deployment YAML
-    app_port = "8100"
     app_image = f'northamerica-northeast1-docker.pkg.dev/phx-datadissemination/shiny-apps/{app_slug}'
     with open(k8s_template) as f:
         template_lines = f.readlines()
         template_lines = [line.replace('$APP_SLUG', app_slug) for line in template_lines]
         template_lines = [line.replace('$APP_IMAGE', app_image) for line in template_lines]
         template_lines = [line.replace('$APP_PORT', app_port) for line in template_lines]
+        template_lines = [line.replace('$MEM_MIN', mem_min) for line in template_lines]
+        template_lines = [line.replace('$MEM_MAX', mem_max) for line in template_lines]
     new_file = os.path.join(k8s_dir, f"{app_slug}.shinyapp.yaml")
     with open(new_file, 'w') as f:
         f.writelines(template_lines)

@@ -96,12 +96,21 @@ def manage_app(request, app_slug):
         # Keep track of original repo and branch
         original_repo = app.repo
         original_branch = app.branch
+        original_port = app.port
+        original_mem_max = app.mem_max
+        original_mem_min = app.mem_min
         form = ShinyAppForm(request.POST, request.FILES, instance=app)
         if form.is_valid():
             form.save()
             app = ShinyApp.objects.get(slug=app_slug)
             # If the repo or branch has changed, we need to update the automation
-            if app.repo != original_repo or app.branch != original_branch:
+            if (
+                app.repo != original_repo
+                or app.branch != original_branch
+                or app.port != original_port
+                or app.mem_max != original_mem_max
+                or app.mem_min != original_mem_min
+            ):
                 create_app_automation(app)
                 messages.success(request, "App hosting info updated. It may take a few minutes for changes to appear.")
             else:

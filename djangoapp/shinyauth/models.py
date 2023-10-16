@@ -24,10 +24,13 @@ def check_matches(user, groups):
 
 
 class ShinyApp(models.Model):
-    # Required: added from the shiny_apps.json file
+    # Required for hosting
     slug = models.SlugField(max_length=50, unique=True)
     repo = models.CharField(max_length=500)
     branch = models.CharField(max_length=100, default="main")
+    port = models.IntegerField(default=8100)
+    mem_min = models.IntegerField(default=1) # Gi
+    mem_max = models.IntegerField(default=2) # Gi
 
     # Optional: edited manually in the admin interface
     display_name = models.CharField(max_length=100, blank=True)
