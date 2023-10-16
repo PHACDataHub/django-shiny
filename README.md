@@ -26,6 +26,8 @@ When a new commit is pushed to main in this repo, Cloud Build will:
 2. Generate and apply the k8s configuration for the Django app.
 3. Restart the k8s pod for the Django app.
 
+See [cloudbuild.yaml](https://github.com/PHACDataHub/django-shiny/blob/main/cloudbuild.yaml).
+
 ## To do
 
 Technical debt
@@ -39,6 +41,12 @@ App features
 - French translation of Django app. (Sync with Shiny app language selection? Is this possible?)
 - Improve management UX (e.g. add an email match/group without leaving the Manage App page - HTMX modal; bootstrap checkboxes)
 
+Unsolved process issues
+- Connect data to Shiny apps
+  - Google cloud storage
+  - Azure blob storage
+  - Databricks SQL?
+
 Test with non-Shiny apps, e.g. Plotly Dash
 
 ## Setting up in GCP
@@ -49,6 +57,7 @@ You will need the following resources:
 * IAM
 * Secret Manager
 * Cloud Build
+* Cloud DNS
 * Google Kubernetes Engine (GKE)
 
 1. Create a bucket in cloud storage for the Django media directory.
@@ -64,11 +73,11 @@ You will need the following resources:
    gcloud secrets create gcp_service_account_key --data-file=gcp_service_account_key.json --locations=northamerica-northeast1 --replication-policy=user-managed
    ```
 5. In Cloud Build, set up a 2nd gen connection to GitHub. Every Shiny app repo needs to grant owner permissions to the provider auth account of this connection, or else setting up cloud build for the shiny apps won't work!
-6. In GKE, create a new cluster with the default settings. You will need to access the cluster somehow, so install gcloud CLI and kubectl on your local machine or use cloud shell for that.
+6. In Cloud DNS, set up a zone which is a subdomain of "phac.alpha.canada.ca". Make a pull request to [PHACDataHub/dns repo](https://github.com/PHACDataHub/dns) to complete setup.
+7. In GKE, create a new cluster with the default settings. You will need to access the cluster somehow, so install gcloud CLI and kubectl on your local machine or use cloud shell for that.
 
 For the most part, setting up the GKE cluster is straightforward, using GKE Autopilot. There are a few extra / unusual steps:
 
 * Create a k8s service account, and associate this with the IAM service account. See https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity
 * Install ingress-nginx on the cluster
 * Set up cert-manager on the cluster: `helm install cert-manager jetstack/cert-manager   --namespace cert-manager   --create-namespace   --version v1.13.1   --set installCRDs=true --set global.leaderElection.namespace=cert-manager`
-
