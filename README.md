@@ -6,18 +6,28 @@ This is based on [Django Auth Server for Shiny](https://pawamoy.github.io/posts/
 
 [https://shiny.phac.alpha.canada.ca/](https://shiny.phac.alpha.canada.ca/)
 
-## Adding apps
+## Adding Shiny apps
 
 In your Shiny app repo:
-1. Containerize your app similarly to the example Shiny app in `/shinyapp_example/`.
-2. Make sure you **expose port 8100**.
+1. Containerize your app similarly to the example Shiny app in [`/shinyapp_example/`](https://github.com/PHACDataHub/django-shiny/tree/main/shinyapp_example/wastewater).
+2. Take note of what port you are exposing. 8100 is expected, but can be changed in the django-shiny GUI.
 
 In the django-shiny application:
 1. You must be made an "app admin" to add apps.
    1. You must login once before being added as an app admin (for a user account to be created).
    2. If you have kubectl access, you can add yourself from the django shell.
    3. If not, Asma, Emma, Liza and Alex all have "app admin" role and can add you.
-2. Go to Manage Apps and Add App.
+2. In the header toolbar, click "Manage Apps" then click "Add App".
+
+## Adding Plotly Dash apps
+
+The process is the same as for Shiny apps, with one exception. You have to define the `DASH_REQUESTS_PATHNAME_PREFIX` environment variable to reflect how NGINX has been configured.
+
+Add this to your Dockerfile:
+```
+ENV DASH_REQUESTS_PATHNAME_PREFIX /shiny/<your-app-slug>/
+```
+See [`/dashapp_example/`](https://github.com/PHACDataHub/django-shiny/tree/main/dashapp_example/dash-example).
   
 ## Cloud build automation (CI/CD)
 
