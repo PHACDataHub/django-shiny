@@ -3,13 +3,22 @@
 {% block content %}
 
   <div class="container mt-3 mb-5">
-    <h2>
     {% if create %}
-      Create new app
+      <h2>
+        Create new app
+      </h2>
     {% else %}
-      Manage app: {{ app|capitalize }}
+      <div class="row">
+        <div class="col">
+          <h2>
+            Manage app: {{ app }}
+          </h2>
+        </div>
+        <div class="col-auto">
+          <a href="{{ url("shiny", app.slug) }}" class="mt-1 btn btn-primary">View app</a>
+        </div>
+      </div>
     {% endif %}
-    </h2>
     <hr>
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
