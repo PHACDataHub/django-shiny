@@ -23,4 +23,4 @@ steps:
     env:
     - 'CLOUDSDK_COMPUTE_REGION=northamerica-northeast1'
     - 'CLOUDSDK_CONTAINER_CLUSTER=django-shiny'
-    args: ['rollout', 'restart', 'deployment', 'djangoapp']
+    args: ['rollout', 'restart', 'deployment', 'djangoapp-deployment']
