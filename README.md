@@ -12,6 +12,11 @@ In your Shiny app repo:
 1. Containerize your app similarly to the example Shiny app in [`/shinyapp_example/`](https://github.com/PHACDataHub/django-shiny/tree/main/shinyapp_example/wastewater).
 2. Take note of what port you are exposing. 8100 is expected, but can be changed in the django-shiny GUI.
 
+For flexdashboard apps using R markdown, the Dockerfile is similar except you will need to install the `flexdashboard` R package and change the command, e.g.:
+```
+CMD ["R", "-e", "rmarkdown::run('shinyapp/app.Rmd', shiny_args = list(port = 8100, host = '0.0.0.0'))"]
+```
+
 In the django-shiny application:
 1. You must be made an "app admin" to add apps.
    1. You must login once before being added as an app admin (for a user account to be created).
@@ -83,7 +88,8 @@ You will need the following resources:
    ```
 5. In Cloud Build, set up a 2nd gen connection to GitHub. Every Shiny app repo needs to grant owner permissions to the provider auth account of this connection, or else setting up cloud build for the shiny apps won't work!
 6. In Cloud DNS, set up a zone which is a subdomain of "phac.alpha.canada.ca". Make a pull request to [PHACDataHub/dns repo](https://github.com/PHACDataHub/dns) to complete setup.
-7. In GKE, create a new cluster with the default settings. You will need to access the cluster somehow, so install gcloud CLI and kubectl on your local machine or use cloud shell for that.
+7. Create a VPC network and subnet. See [Use Public NAT with GKE](https://cloud.google.com/nat/docs/gke-example).
+8. In GKE, create a new private cluster following the steps in the link above. You will need to access the cluster somehow, so install gcloud CLI and kubectl on your local machine or use cloud shell for that.
 
 For the most part, setting up the GKE cluster is straightforward, using GKE Autopilot. There are a few extra / unusual steps:
 
