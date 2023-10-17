@@ -34,16 +34,28 @@
             {{ form.port }}
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-2">
           <div class="form-group mt-3">
-            <label for="id_mem_min" class="form-label">Minimum memory (GiB)</label>
+            <label for="id_mem_min" class="form-label">Minimum memory (MiB)</label>
             {{ form.mem_min }}
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-2">
           <div class="form-group mt-3">
-            <label for="id_mem_min" class="form-label">Maximum memory (GiB)</label>
+            <label for="id_mem_min" class="form-label">Maximum memory (MiB)</label>
             {{ form.mem_max }}
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group mt-3">
+            <label for="id_cpu_min" class="form-label">Minimum vCPU</label>
+            {{ form.cpu_min }}
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group mt-3">
+            <label for="id_cpu_min" class="form-label">Maximum vCPU</label>
+            {{ form.cpu_max }}
           </div>
         </div>
       </div>
@@ -72,7 +84,7 @@
         value="{% if create %}{{ request.user.email }}{% else %}{{ form.instance.contact_email }}{% endif %}">
       </div>
       <div class="form-group mt-3">
-        <label for="app_thumbnail" class="form-label">Thumbnail</label>
+        <label for="id_thumbnail" class="form-label">Thumbnail</label>
         <div class="row">
           {% if form.instance.thumbnail %}
           <div class="col-auto pe-0">
@@ -87,6 +99,12 @@
         </div>
       </div>
 
+      <h4 class="mt-3">App display options</h4>
+      <div class="form-check mt-3">
+        <input type="checkbox" class="form-check-input" id="app_full_width" name="full_width" {% if form.instance.full_width %}checked{% endif %}>
+        <label for="app_full_width" class="form-label">Display at full width</label>
+      </div>
+      
       <h4 class="mt-3">Access controls</h4>
       {% if create %}
         <p>
@@ -95,14 +113,15 @@
       {% else %}
         <a href="{{ url("manage_users") }}" class="mt-3">Manage user groups</a>
         <div class="form-group mt-3">
-          <label for="app_accessible_by" class="form-label">Accessible and visible to</label>
+          <label for="id_accessible_by" class="form-label">Accessible and visible to</label>
           {{ form.accessible_by }}
         </div>
         <div class="form-group mt-3">
-          <label for="app_visible_to" class="form-label">Visible, but not accessible to</label>
+          <label for="id_visible_to" class="form-label">Visible, but not accessible to</label>
           {{ form.visible_to }}
         </div>
       {% endif %}
+
       
       <div class="row mt-3">
         <div class="col">

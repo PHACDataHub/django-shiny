@@ -54,6 +54,7 @@ def shiny(request, app_slug):
         "app_slug": app_slug,
         "app_name": str(app),
         "fullscreen": request.GET.get("fullscreen", False),
+        "full_width": app.full_width,
         "title": str(app),
     }
     return render(request, "djangoapp/shiny.jinja", context)
@@ -117,7 +118,8 @@ def manage_app(request, app_slug):
                 messages.success(request, "App successfully updated.")
             return redirect("manage_apps")
         else:
-            messages.error(request, "App could not be updated.")
+            # Show the errors in a message
+            messages.error(request, "App could not be updated: " + str(form.errors))
 
     form = ShinyAppForm(instance=app)
     context = {"active_tab": "manage_apps", "app": app, "form": form}
@@ -136,7 +138,7 @@ def create_app(request):
             messages.success(request, "App successfully created. It may take a few minutes to deploy.")
             return redirect("manage_apps")
         else:
-            messages.error(request, "App could not be created.")
+            messages.error(request, "App could not be created: " + str(form.errors))
     context = {"active_tab": "manage_apps", "form": ShinyAppForm(), "create": True}
     return render(request, "djangoapp/manage_app.jinja", context)
 

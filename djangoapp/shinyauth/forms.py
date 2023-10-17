@@ -16,7 +16,7 @@ class ShinyAppForm(forms.ModelForm):
         fields = [
             "slug", "repo", "branch", "display_name", "description",
             "contact_email", "thumbnail", "accessible_by", "visible_to",
-            "port", "mem_min", "mem_max"
+            "port", "mem_min", "mem_max", "cpu_min", "cpu_max", "full_width",
         ]
         # Choices for the accessible_by and visible_to fields
         # are from the UserGroup model
@@ -24,8 +24,11 @@ class ShinyAppForm(forms.ModelForm):
             "accessible_by": forms.CheckboxSelectMultiple(),
             "visible_to": forms.CheckboxSelectMultiple(),
             "port": forms.NumberInput(attrs={"class": "form-control", "min": 1024, "max": 65535, "value": 8100}),
-            "mem_min": forms.NumberInput(attrs={"class": "form-control", "min": 1, "max": 16, "value": 1}),
-            "mem_max": forms.NumberInput(attrs={"class": "form-control", "min": 1, "max": 16, "value": 2}),
+            "mem_min": forms.NumberInput(attrs={"class": "form-control", "min": 128, "max": 16384, "value": 1024, "step": 128}),
+            "mem_max": forms.NumberInput(attrs={"class": "form-control", "min": 128, "max": 16384, "value": 2048, "step": 128}),
+            "cpu_min": forms.NumberInput(attrs={"class": "form-control", "min": 0.25, "max": 2, "value": 0.25, "step": 0.25}),
+            "cpu_max": forms.NumberInput(attrs={"class": "form-control", "min": 0.25, "max": 2, "value": 1, "step": 0.25}),
+            "full_width": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }
 
         # Set the choices

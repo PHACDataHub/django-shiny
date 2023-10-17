@@ -5,7 +5,7 @@
 {# https://realpython.com/blog/python/getting-started-with-django-channels/ #}
 
 {% block content %}
-  <div id="content">
+  <div id="content" {% if not full_width %}class="container"{% endif %}>
     <div id="loading-spinner" class="mt-5 text-center">
       <div class="spinner-border text-secondary" role="status">
         <span class="visually-hidden">Loading...</span>
