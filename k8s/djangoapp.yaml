@@ -5,7 +5,7 @@ metadata:
   labels:
     app: djangoapp
 spec:
-  replicas: 2
+  replicas: 1
   # minReadySeconds: 200
   selector:
     matchLabels:
