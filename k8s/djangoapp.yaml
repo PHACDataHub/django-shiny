@@ -5,7 +5,7 @@ metadata:
   labels:
     app: djangoapp
 spec:
-  replicas: 1
+  replicas: 2
   # minReadySeconds: 200
   selector:
     matchLabels:
@@ -28,11 +28,21 @@ spec:
       - name: djangoapp
         image: northamerica-northeast1-docker.pkg.dev/phx-datadissemination/django-shiny/djangoapp:latest
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "1"
+          limits:
+            memory: "1024Mi"
+            cpu: "1"
         ports:
         - containerPort: 8000
         envFrom:
         - secretRef:
             name: secrets
+        env:
+        - name: CHANGE_VALUE_TO_TRIGGER_RESTART
+          value: "1"
         readinessProbe:
           httpGet:
             scheme: HTTP
