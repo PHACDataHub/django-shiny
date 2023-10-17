@@ -6,7 +6,7 @@ metadata:
     app: $APP_SLUG
 spec:
   replicas: 1
-  minReadySeconds: 60
+  minReadySeconds: 120
   selector:
     matchLabels:
       app: $APP_SLUG
