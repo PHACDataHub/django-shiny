@@ -34,7 +34,8 @@ See [`/dashapp_example/`](https://github.com/PHACDataHub/django-shiny/tree/main/
 When a new commit is pushed to main in this repo, Cloud Build will:
 1. Rebuild the image for this repo and push to the Artifact Registry.
 2. Generate and apply the k8s configuration for the Django app.
-3. Restart the k8s pod for the Django app.
+   * **IMPORTANT!** You must make an edit to `k8s/djangoapp.yaml` for the container to restart. An environment variable `CHANGE_VALUE_TO_TRIGGER_RESTART` is in the YAML for this purpose.
+   * This is because `kubectl rollout restart` does not use the initContainers, which means that restarting will fail to get service account credentials and you'll see a 500 error until manually deleting & applying the YAML.
 
 See [cloudbuild.yaml](https://github.com/PHACDataHub/django-shiny/blob/main/cloudbuild.yaml).
 
@@ -56,8 +57,6 @@ Unsolved process issues
   - Google cloud storage
   - Azure blob storage
   - Databricks SQL?
-
-Test with non-Shiny apps, e.g. Plotly Dash
 
 ## Setting up in GCP
 
