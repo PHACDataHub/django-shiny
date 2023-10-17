@@ -21,9 +21,11 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: "$MEM_MINGi"
+            memory: "$MEM_MINMi"
+            cpu: "$CPU_MIN"
           limits:
-            memory: "$MEM_MAXGi"
+            memory: "$MEM_MAXMi"
+            cpu: "$CPU_MAX"
         ports:
         - containerPort: $APP_PORT
 ---

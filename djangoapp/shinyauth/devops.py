@@ -23,6 +23,8 @@ def generate_deployment(app):
     app_port = str(app.port)
     mem_min = str(app.mem_min)
     mem_max = str(app.mem_max)
+    cpu_min = str(app.cpu_min)
+    cpu_max = str(app.cpu_max)
 
     # Ensure git repo ends in ".git"; if not, append it
     if not git_repo.endswith('.git'):
@@ -70,6 +72,8 @@ def generate_deployment(app):
         template_lines = [line.replace('$APP_PORT', app_port) for line in template_lines]
         template_lines = [line.replace('$MEM_MIN', mem_min) for line in template_lines]
         template_lines = [line.replace('$MEM_MAX', mem_max) for line in template_lines]
+        template_lines = [line.replace('$CPU_MIN', cpu_min) for line in template_lines]
+        template_lines = [line.replace('$CPU_MAX', cpu_max) for line in template_lines]
     new_file = os.path.join(k8s_dir, f"{app_slug}.shinyapp.yaml")
     with open(new_file, 'w') as f:
         f.writelines(template_lines)

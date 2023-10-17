@@ -29,14 +29,18 @@ class ShinyApp(models.Model):
     repo = models.CharField(max_length=500)
     branch = models.CharField(max_length=100, default="main")
     port = models.IntegerField(default=8100)
-    mem_min = models.IntegerField(default=1) # Gi
-    mem_max = models.IntegerField(default=2) # Gi
+    mem_min = models.IntegerField(default=1024) # Mi
+    mem_max = models.IntegerField(default=2048) # Mi
+    cpu_min = models.FloatField(default=0.5) # vCPU
+    cpu_max = models.FloatField(default=1) # vCPU
 
     # Optional: edited manually in the admin interface
     display_name = models.CharField(max_length=100, blank=True)
     description = models.CharField(max_length=500, blank=True)
     contact_email = models.EmailField(blank=True)
     thumbnail = models.ImageField(upload_to='thumbnails', null=True, blank=True)
+    full_width = models.BooleanField(default=True)
+    full_width_header = models.BooleanField(default=False)
 
     # When there are no user groups, only admins can access the app
     accessible_by = models.ManyToManyField('UserGroup', related_name='accessible_by', blank=True)

@@ -43,13 +43,13 @@
                 <dt>Port</dt>
                 <dd>{{ app.port }}</dd>
               </div>
-                 <div class="col-md-3">
-                <dt>Memory (min)</dt>
-                <dd>{{ app.mem_min }} GiB</dd>
+              <div class="col-md-3">
+                <dt>Memory (MiB)</dt>
+                <dd>{{ app.mem_min }} to {{ app.mem_max }}</dd>
               </div>
-                 <div class="col-md-3">
-                <dt>Memory (max)</dt>
-                <dd>{{ app.mem_max }} GiB</dd>
+              <div class="col-md-3">
+                <dt>vCPU</dt>
+                <dd>{{ app.cpu_min }} to {{ app.cpu_max }}</dd>
               </div>
             </div>
             <dt>Contact email</dt>
