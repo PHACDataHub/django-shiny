@@ -15,15 +15,6 @@ spec:
       labels:
         app: djangoapp
     spec:
-      serviceAccountName: django-shiny-sa
-      initContainers:
-      - image:  gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
-        name: workload-identity-initcontainer
-        command:
-        - '/bin/bash'
-        - '-c'
-        - |
-          curl -sS -H 'Metadata-Flavor: Google' 'http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token' --retry 30 --retry-connrefused --retry-max-time 60 --connect-timeout 3 --fail --retry-all-errors > /dev/null && exit 0 || echo 'Retry limit exceeded. Failed to wait for metadata server to be available. Check if the gke-metadata-server Pod in the kube-system namespace is healthy.' >&2; exit 1
       containers:
       - name: djangoapp
         image: northamerica-northeast1-docker.pkg.dev/phx-datadissemination/django-shiny/djangoapp:latest
@@ -40,9 +31,6 @@ spec:
         envFrom:
         - secretRef:
             name: secrets
-        env:
-        - name: CHANGE_VALUE_TO_TRIGGER_RESTART
-          value: "1"
         readinessProbe:
           httpGet:
             scheme: HTTP

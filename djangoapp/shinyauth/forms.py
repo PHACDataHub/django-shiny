@@ -34,8 +34,8 @@ class ShinyAppForm(forms.ModelForm):
         # Set the choices
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.fields["accessible_by"].queryset = UserGroup.objects.all()
-            self.fields["visible_to"].queryset = UserGroup.objects.all()
+            self.fields["accessible_by"].queryset = UserGroup.objects.all().order_by("id")
+            self.fields["visible_to"].queryset = UserGroup.objects.all().order_by("id")
 
         # "slug" MUST NOT be one of the following: "database", "djangoapp"
         def clean_slug(self):
@@ -68,7 +68,7 @@ class UserGroupForm(forms.ModelForm):
     # Set the choices
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["email_matches"].queryset = UserEmailMatch.objects.all()
+        self.fields["email_matches"].queryset = UserEmailMatch.objects.all().order_by("id")
 
     # At least one email_matches must be selected
     def clean(self):
