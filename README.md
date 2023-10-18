@@ -49,7 +49,6 @@ See [cloudbuild.yaml](https://github.com/PHACDataHub/django-shiny/blob/main/clou
 Technical debt
 - Better secrets management
   - The secrets.yaml file could be stored in Secret Manager. See https://cloud.google.com/kubernetes-engine/docs/tutorials/workload-identity-secrets (not sure this is the right approach).
-  - Debug workload identity issues - consider mounting account credential key JSON as a file from Secret Manager. https://github.com/GoogleCloudPlatform/secrets-store-csi-driver-provider-gcp/blob/main/examples/app-secrets.yaml.tmpl
 - Improve documentation of how to setup the GCP environment: e.g. detailed kubectl and gcloud commands
 - Best case: tutorial to recreate entire setup from scratch - then use this to create a 2nd "dev" environment (*dev*.shiny.phac.alpha.canada.ca)
 
