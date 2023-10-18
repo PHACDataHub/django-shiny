@@ -7,18 +7,18 @@ def check_matches(user, groups):
     for group in groups:
         for match in group.email_matches.all():
             if match.match_type == "exact":
-                if user.email == match.email_match:
+                if user.email == match.match:
                     return True
             elif match.match_type == "domain":
-                if user.email.endswith(match.email_match):
+                if user.email.endswith(match.match):
                     return True
             elif match.match_type == "regex":
                 try:
-                    if re.match(match.email_regex, user.email):
+                    if re.match(match.match, user.email):
                         return True
                 except:
                     # If the email regex is invalid, skip it
-                    print(f"Invalid email regex: {match.email_regex}")
+                    print(f"Invalid email regex: {match.match}")
                     pass
     return False
 
