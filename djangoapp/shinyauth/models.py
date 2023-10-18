@@ -5,7 +5,7 @@ import re
 
 def check_matches(user, groups):
     for group in groups:
-        for match in group.matches.all():
+        for match in group.email_matches.all():
             if match.match_type == "exact":
                 if user.email == match.email_match:
                     return True
