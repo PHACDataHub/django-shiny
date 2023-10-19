@@ -46,6 +46,8 @@ ALLOWED_HOSTS = [
     '34.95.50.116',
     'djangoapp-service.default.svc.cluster.local',
     'shiny.phac.alpha.canada.ca',
+    'test.shiny.phac.alpha.canada.ca',
+    'dev.shiny.phac.alpha.canada.ca',
 ]
 
 INTERNAL_IPS = [

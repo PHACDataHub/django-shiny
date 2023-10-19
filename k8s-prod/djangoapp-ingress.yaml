@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: djangoapp-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: django-shiny-ip-prod
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    kubernetes.io/ingress.allow-http: "true"
+  labels:
+    app: djangoapp
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - test.shiny.phac.alpha.canada.ca
+    secretName: django-shiny-tls-prod
+  rules:
+  - host: test.shiny.phac.alpha.canada.ca
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: djangoapp-service
+            port:
+              number: 8000
