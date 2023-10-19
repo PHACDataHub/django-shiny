@@ -50,13 +50,13 @@ metadata:
     nginx.ingress.kubernetes.io/configuration-snippet: |-
       rewrite ^/shiny/$APP_SLUG/(.+)$ /$1 break;
     nginx.ingress.kubernetes.io/auth-url: "http://djangoapp-service.default.svc.cluster.local:8000/shiny_auth/$APP_SLUG/"
-    kubernetes.io/ingress.global-static-ip-name: django-shiny-ip
+    kubernetes.io/ingress.global-static-ip-name: django-shiny-ip-prod
   labels:
     app: $APP_SLUG
 spec:
   ingressClassName: nginx
   rules:
-  - host: shiny.phac.alpha.canada.ca
+  - host: test.shiny.phac.alpha.canada.ca
     http:
       paths:
       - path: /shiny/$APP_SLUG/.+
