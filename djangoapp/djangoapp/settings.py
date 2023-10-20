@@ -35,6 +35,7 @@ CLOUDBUILD_CONNECTION = env("CLOUDBUILD_CONNECTION", default=None)
 DEBUG = env("DEBUG", default=False)
 SQLITE_DB = env("SQLITE_DB", default=False)
 FAKE_EMAIL = env("FAKE_EMAIL", default=False)
+ENVIRONMENT = env("ENVIRONMENT", default="dev")
 
 print("DEBUG: ", DEBUG)
 

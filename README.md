@@ -62,6 +62,13 @@ Unsolved process issues
   - Azure blob storage
   - Databricks SQL?
 
+Automated deployment and dev/test/prod environments
+TODO:
+- Parameterize all the shinyapp automation for dev/test/prod
+ - parameterize cloudbuild.sh.example and cloudbuild.example
+ - update devops.py to pass the parameters in
+- See `gcp-setup.sh` and `manual-setup.md`
+
 ## Setting up in GCP
 
 You will need the following resources:

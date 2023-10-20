@@ -3,11 +3,11 @@ kind: Ingress
 metadata:
   name: djangoapp-ingress
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: django-shiny-ip-prod
+    kubernetes.io/ingress.regional-static-ip-name: django-shiny-ip-prod
     cert-manager.io/cluster-issuer: "letsencrypt-production"
     kubernetes.io/ingress.allow-http: "true"
   labels:
-    app: djangoapp
+    app: djangoapp-prod
 spec:
   ingressClassName: nginx
   tls:
