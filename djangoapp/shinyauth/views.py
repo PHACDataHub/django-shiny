@@ -308,7 +308,7 @@ def manage_user(request, user_id):
             messages.error(request, "User could not be updated.")
     context = {
         "active_tab": "manage_users",
-        "user": user,
+        "target_user": user,
         "form": UserSuperuserForm(instance=user),
     }
     return render(request, "djangoapp/manage_user.jinja", context)
