@@ -35,7 +35,7 @@ gcloud iam service-accounts create $SA_NAME \
 var=${ROLES:="cloudbuild.connectionAdmin cloudbuild.connectionViewer cloudbuild.builds.editor cloudbuild.builds.viewer container.admin secretmanager.secretAccessor storage.objectUser"}
 for ROLE_NAME in $ROLES
     do
-        gcloud projects add-iam-policy-binding $PROJECT_ID --member="serviceAccount:$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com" --role="$ROLE_NAME"
+        gcloud projects add-iam-policy-binding $PROJECT_ID --member="serviceAccount:$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com" --role="roles/$ROLE_NAME"
     done
 
 # Save the account key file to the current directory
