@@ -34,7 +34,7 @@ gcloud iam service-accounts create $SA_NAME \
 # Add IAM Roles to the Service Account
 var=${ROLES:="cloudbuild.connectionAdmin cloudbuild.connectionViewer cloudbuild.builds.editor cloudbuild.builds.viewer container.admin secretmanager.secretAccessor storage.objectUser"}
 for ROLE_NAME in $ROLES
-do
+    do
         gcloud projects add-iam-policy-binding $PROJECT_ID --member="serviceAccount:$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com" --role="$ROLE_NAME"
     done
 
@@ -175,6 +175,20 @@ gcloud builds submit --config=cloudbuild.yaml
 
 # Set up static incoming IP for pointing DNS to the app
 # (TODO - can't get this working!)
+# # https://cloud.google.com/kubernetes-engine/docs/tutorials/configuring-domain-name-static-ip
+
+# Set up kubernetes cluster (TODO)
+# ingress-nginx and cert-manager:
+# https://github.com/GoogleCloudPlatform/community/blob/master/archived/nginx-ingress-gke/index.md
+# https://cert-manager.io/docs/tutorials/acme/nginx-ingress/
+
+# helm repo add jetstack https://charts.jetstack.io
+# helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+
+# helm repo update
+
+# helm install cert-manager jetstack/cert-manager   --namespace cert-manager   --create-namespace   --version v1.13.1   --set installCRDs=true --set global.leaderElection.namespace=cert-manager
+# helm install nginx-ingress ingress-nginx/ingress-nginx
 
 # Deploy the kubernetes yaml files
 # (TODO - could automate the modification of these files?)
