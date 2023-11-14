@@ -6,6 +6,10 @@ This is based on [Django Auth Server for Shiny](https://pawamoy.github.io/posts/
 
 [https://shiny.phac.alpha.canada.ca/](https://shiny.phac.alpha.canada.ca/)
 
+## Video Demo
+
+[<img src="https://github-production-user-asset-6210df.s3.amazonaws.com/367922/276718725-1b6f1333-5e35-4999-9b34-1f33b7531761.png">](https://www.youtube.com/watch?v=O-p3oKCu4rg)
+
 ## Adding Shiny apps
 
 In your Shiny app repo:

@@ -100,6 +100,8 @@ def manage_app(request, app_slug):
         original_port = app.port
         original_mem_max = app.mem_max
         original_mem_min = app.mem_min
+        original_cpu_min = app.cpu_min
+        original_cpu_max = app.cpu_max
         form = ShinyAppForm(request.POST, request.FILES, instance=app)
         if form.is_valid():
             form.save()
@@ -111,6 +113,8 @@ def manage_app(request, app_slug):
                 or app.port != original_port
                 or app.mem_max != original_mem_max
                 or app.mem_min != original_mem_min
+                or app.cpu_min != original_cpu_min
+                or app.cpu_max != original_cpu_max
             ):
                 create_app_automation(app)
                 messages.success(request, "App hosting info updated. It may take a few minutes for changes to appear.")
@@ -308,7 +312,7 @@ def manage_user(request, user_id):
             messages.error(request, "User could not be updated.")
     context = {
         "active_tab": "manage_users",
-        "user": user,
+        "target_user": user,
         "form": UserSuperuserForm(instance=user),
     }
     return render(request, "djangoapp/manage_user.jinja", context)
