@@ -42,7 +42,7 @@ resource "google_service_account" "app_service_account" {
 
 resource "google_project_iam_binding" "app_service_accounts_iam_binding" {
   project = var.project_id
-  role    = "roles/cloudbuild.connectionAdmin cloudbuild.connectionViewer cloudbuild.builds.editor cloudbuild.builds.viewer container.admin secretmanager.secretAccessor storage.objectUser"
+  role    = "roles/cloudbuild.connectionAdmin cloudbuild.connectionViewer cloudbuild.builds.editor cloudbuild.builds.viewer container.admin container.developer secretmanager.secretAccessor storage.objectUser"
 
   members = [
     "serviceAccount:${google_service_account.app_service_account.name}",
