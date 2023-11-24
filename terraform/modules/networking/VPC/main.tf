@@ -3,6 +3,10 @@ variable "app_name" {}
 variable "region" {}
 variable "zone" {}
 variable "project_id" {}
+variable "worker_pool_address" { 
+  description = "The IP address range for the worker pool"
+  default = "192.168.0.0"
+}
 
 # Network for cloudbuild pool and GKE
 resource "google_compute_network" "cloudbuild_private_pool_vpc_network" {
@@ -46,6 +50,6 @@ resource "google_compute_global_address" "cloudbuild_worker_range" {
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
   network       = google_compute_network.cloudbuild_private_pool_network.id
-  address       = "192.168.0.0"
+  address       = var.worker_pool_address
   prefix_length = 20
 }

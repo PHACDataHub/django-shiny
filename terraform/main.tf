@@ -73,7 +73,7 @@ resource "google_container_cluster" "app_cluster" {
 
   master_authorized_networks_config {
     cidr_blocks {
-      cidr_block = "134.117.132.128/32" # this can be arbitrary afaict
+      cidr_block = VPC_MODULE.var.worker_pool_address
     }
   }
 
