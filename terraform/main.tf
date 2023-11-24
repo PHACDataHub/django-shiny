@@ -16,7 +16,7 @@ module "VPN_MODULE" {
   gke_vpc_id        = module.VPC_MODULE.gke_network_id
 }
 
-# Buckets Setup
+###################### Buckets Setup ######################
 resource "google_storage_bucket" "app_media_bucket" {
   name                        = "${var.app_name}-app-media"
   location                    = var.region
@@ -26,14 +26,14 @@ resource "google_storage_bucket" "app_media_bucket" {
   force_destroy               = false
 }
 
-# Artifact Registry Setup
+###################### Artifact Registry Setup ######################
 resource "google_artifact_registry_repository" "app_artifact_repo" {
   repository_id = "${var.app_name}-app-repo"
   location      = var.region
   format        = "DOCKER"
 }
 
-# IAM Service Account Setup
+###################### IAM Service Account Setup ######################
 resource "google_service_account" "app_service_account" {
   account_id   = "${var.app_name}-app-sa"
   display_name = "${var.app_name}-app-sa"
@@ -59,7 +59,7 @@ resource "local_file" "app_sa_key_file" {
   filename = "../${var.app_name}-key.json"
 }
 
-# GKE k8s cluster
+###################### GKE k8s cluster ######################
 resource "google_container_cluster" "app_cluster" {
   name       = "${var.app_name}-app-cluster"
   location   = var.region
@@ -91,7 +91,7 @@ module "cloud-nat" {
   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
 }
 
-# Cloud build worker pool
+###################### Cloud build worker pool ######################
 resource "google_cloudbuild_worker_pool" "app_worker_pool" {
   name     = "${var.app_name}-app-worker-pool"
   location = var.region
@@ -101,9 +101,43 @@ resource "google_cloudbuild_worker_pool" "app_worker_pool" {
   }
 }
 
-# Cloud DNS
+###################### Cloud DNS ######################
 resource "google_dns_managed_zone" "app_dns_zone" {
   name        = "${var.app_name}-app-dns-zone"
-  dns_name    = "${var.app_name}-app-dns-zone"
-  description = "DNS zone for ${var.app_name}.shiny.phac.alpha.canada.ca"
+  dns_name    = "${var.subdomain_name}.phac.alpha.canada.ca"
+  description = "DNS zone for ${var.app_name} at ${var.subdomain_name}.phac.alpha.canada.ca"
+}
+
+###################### Point to SSC DNS to GKE app ######################
+resource "google_dns_record_set" "app_tld_dns_record" {
+  name         = "${var.subdomain_name}.phac.alpha.canada.ca"
+  type         = "NS"
+  ttl          = 21600
+  managed_zone = google_dns_managed_zone.app_dns_zone.name
+  rrdatas = [
+    "ns-cloud-d1.googledomains.com.",
+    "ns-cloud-d2.googledomains.com.",
+    "ns-cloud-d3.googledomains.com.",
+    "ns-cloud-d4.googledomains.com.",
+  ]
+}
+
+resource "google_dns_record_set" "app_dns_a_record" {
+  name         = "${var.app_name}.phac.alpha.canada.ca"
+  type         = "A"
+  ttl          = 300
+  managed_zone = google_dns_managed_zone.app_dns_zone.name
+  rrdatas = [
+    module.VPC_MODULE.gke_network_id, # this is wrong and is not the frontend IP but leave it for now
+  ]
+}
+
+resource "google_dns_record_set" "app_dns_soa_record" {
+  name         = "${var.subdomain_name}.phac.alpha.canada.ca"
+  type         = "SOA"
+  ttl          = 21600
+  managed_zone = google_dns_managed_zone.app_dns_zone.name
+  rrdatas = [
+    "ns-cloud-d1.googledomains.com. cloud-dns-hostmaster.google.com. 1 21600 3600 259200 300",
+  ]
 }

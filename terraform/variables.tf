@@ -15,3 +15,7 @@ variable "zone" {
 variable "app_name" {
   description = "The name of the app"
 }
+
+variable "subdomain_name" {
+  description = "The name of the DNS zone"
+}
