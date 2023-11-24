@@ -118,4 +118,4 @@ cloudbuild/*.delete_cloudbuild.sh
 
 djangoapp/media
 
-gcp_service_account_key.json
+*-key.json

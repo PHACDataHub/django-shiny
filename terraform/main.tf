@@ -12,8 +12,8 @@ module "VPN_MODULE" {
   region     = var.region
   zone       = var.zone
   project_id = var.project_id
-  cloudbuild_vpc_id = module.VPC_MODULE.google_computer_network.cloudbuild_private_pool_vpc_network
-  gke_vpc_id = module.VPC_MODULE.google_compute_network.gke_peering_vpc_network
+  cloudbuild_vpc_id = module.VPC_MODULE.cloudbuild_network_id
+  gke_vpc_id = module.VPC_MODULE.gke_network_id
 }
 
 # Buckets Setup
@@ -37,7 +37,7 @@ resource "google_artifact_registry_repository" "app_artifact_repo" {
 resource "google_service_account" "app_service_account" {
   account_id   = "${var.app_name}-app-sa"
   display_name = "${var.app_name}-app-sa"
-  description  = "Used by the ${var.app_name} app (prod) to set up cloud builds, k8s, and storage"
+  description  = "Used by the ${var.app_name} app to set up cloud builds, k8s, and storage"
 }
 
 resource "google_project_iam_binding" "app_service_accounts_iam_binding" {
@@ -51,7 +51,7 @@ resource "google_project_iam_binding" "app_service_accounts_iam_binding" {
 
 # These .json keys need to be saved in root dir for django app I think
 resource "google_service_account_key" "app_sa_key" {
-  service_account_id = google_service_account.prod_service_account.name
+  service_account_id = google_service_account.app_service_account.name
 }
 
 resource "local_file" "app_sa_key_file" {
@@ -63,8 +63,8 @@ resource "local_file" "app_sa_key_file" {
 resource "google_container_cluster" "app_cluster" {
   name       = "${var.app_name}-app-cluster"
   location   = var.region
-  network    = google_compute_network.custom.id
-  subnetwork = google_compute_subnetwork.custom.id
+  network    =  module.VPC_MODULE.gke_peering_vpc_network_name
+  subnetwork =  module.VPC_MODULE.gke_clusters_subnetwork_name 
 
   private_cluster_config {
     enable_private_nodes   = true
@@ -73,7 +73,7 @@ resource "google_container_cluster" "app_cluster" {
 
   master_authorized_networks_config {
     cidr_blocks {
-      cidr_block = VPC_MODULE.var.worker_pool_address
+      cidr_block = module.VPC_MODULE.worker_pool_address
     }
   }
 
@@ -86,7 +86,7 @@ resource "google_cloudbuild_worker_pool" "app_worker_pool" {
   location = var.region
 
   network_config {
-    peered_network = VPC_MODULE.gke_peering_vpc_network.name
+    peered_network = module.VPC_MODULE.gke_peering_vpc_network_name
   } 
 }
 
