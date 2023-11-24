@@ -18,7 +18,7 @@ module "VPN_MODULE" {
 
 # Buckets Setup
 resource "google_storage_bucket" "app_media_bucket" {
-  name                        = "${var.app_name}_app_media"
+  name                        = "${var.app_name}-app-media"
   location                    = var.region
   storage_class               = "STANDARD"
   public_access_prevention    = "enforced"
@@ -28,15 +28,15 @@ resource "google_storage_bucket" "app_media_bucket" {
 
 # Artifact Registry Setup
 resource "google_artifact_registry_repository" "app_artifact_repo" {
-  repository_id = "${var.app_name}_app_repo"
+  repository_id = "${var.app_name}-app-repo"
   location      = var.region
   format        = "DOCKER"
 }
 
 # IAM Service Account Setup
 resource "google_service_account" "app_service_account" {
-  account_id   = "${var.app_name}_app_sa"
-  display_name = "${var.app_name}_app_sa"
+  account_id   = "${var.app_name}-app-sa"
+  display_name = "${var.app_name}-app-sa"
   description  = "Used by the ${var.app_name} app (prod) to set up cloud builds, k8s, and storage"
 }
 
@@ -56,12 +56,12 @@ resource "google_service_account_key" "app_sa_key" {
 
 resource "local_file" "app_sa_key_file" {
   content  = base64decode(google_service_account_key.app_sa_key.private_key)
-  filename = "../${var.app_name}_key.json"
+  filename = "../${var.app_name}-key.json"
 }
 
 # GKE k8s cluster
 resource "google_container_cluster" "app_cluster" {
-  name       = "${var.app_name}_app_cluster"
+  name       = "${var.app_name}-app-cluster"
   location   = var.region
   network    = google_compute_network.custom.id
   subnetwork = google_compute_subnetwork.custom.id
@@ -82,7 +82,7 @@ resource "google_container_cluster" "app_cluster" {
 
 # Cloud build worker pool
 resource "google_cloudbuild_worker_pool" "app_worker_pool" {
-  name = "${var.app_name}_app_worker_pool"
+  name = "${var.app_name}-app-worker-pool"
   location = var.region
 
   network_config {
@@ -92,7 +92,7 @@ resource "google_cloudbuild_worker_pool" "app_worker_pool" {
 
 # Cloud DNS
 resource "google_dns_managed_zone" "app_dns_zone" {
-  name        = "${var.app_name}_app_dns_zone"
-  dns_name    = "${var.app_name}_app_dns_zone"
+  name        = "${var.app_name}-app-dns-zone"
+  dns_name    = "${var.app_name}-app-dns-zone"
   description = "DNS zone for ${var.app_name}.shiny.phac.alpha.canada.ca"
 }

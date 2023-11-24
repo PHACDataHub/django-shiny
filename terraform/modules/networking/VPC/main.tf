@@ -6,18 +6,18 @@ variable "project_id" {}
 
 # Network for cloudbuild pool and GKE
 resource "google_compute_network" "cloudbuild_private_pool_vpc_network" {
-  name                    = "${var.app_name}_cloudbuild_network"
+  name                    = "${var.app_name}-cloudbuild-network"
   auto_create_subnetworks = false
 }
 
 resource "google_computer_network" "gke_peering_vpc_network" {
-  name                    = "${var.app_name}_gke_network"
+  name                    = "${var.app_name}-gke-network"
   auto_create_subnetworks = false
 }
 
 # GKE Subnetwork
 resource "google_compute_subnetwork" "gke_clusters_subnetwork" {
-  name          = "${var.app_name}_cloudbuild_subnetwork"
+  name          = "${var.app_name}-cloudbuild-subnetwork"
   network       = google_compute_network.gke_network.id
   ip_cidr_range = "10.244.252.0/22"
   region        = var.region
@@ -25,7 +25,7 @@ resource "google_compute_subnetwork" "gke_clusters_subnetwork" {
 
 # Peering by creating two VPCs between cloudbuild and GKE networks (these should be in the same region/zone)
 resource "google_compute_network_peering" "cloudbuild_gke_peering" {
-  name                                = "${var.app_name}_cloudbuild_gke_peering"
+  name                                = "${var.app_name}-cloudbuild-gke-peering"
   network                             = google_compute_network.cloudbuild_network.id
   peer_network                        = google_compute_network.gke_network.id
   export_custom_routes                = true
@@ -33,7 +33,7 @@ resource "google_compute_network_peering" "cloudbuild_gke_peering" {
 }
 
 resource "google_compute_network_peering" "gke_cloudbuild_peering" {
-  name                                = "${var.app_name}_gke_cloudbuild_peering"
+  name                                = "${var.app_name}-gke-cloudbuild-peering"
   network                             = google_compute_network.gke_network.id
   peer_network                        = google_compute_network.cloudbuild_network.id
   export_custom_routes                = true
@@ -42,7 +42,7 @@ resource "google_compute_network_peering" "gke_cloudbuild_peering" {
 
 # Create named IP range for cloudbuild pool and connect
 resource "google_compute_global_address" "cloudbuild_worker_range" {
-  name          = "${var.app_name}_cloudbuild_worker_range" 
+  name          = "${var.app_name}-cloudbuild-worker-range" 
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
   network       = google_compute_network.cloudbuild_private_pool_network.id
