@@ -4,12 +4,12 @@ variable "project_id" {
 
 variable "region" {
   description = "The region to deploy to"
-  default = "northamerica-northeast1"
+  default     = "northamerica-northeast1"
 }
 
 variable "zone" {
   description = "The zone to deploy to"
-  default = "northamerica-northeast1-a"
+  default     = "northamerica-northeast1-a"
 }
 
 variable "app_name" {
