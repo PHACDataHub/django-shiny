@@ -49,7 +49,7 @@ resource "google_project_iam_binding" "app_service_accounts_iam_binding" {
   ]
 }
 
-# These .json keys need to be saved in root dir for django app I think
+# Save .json service account key to be used by django app
 resource "google_service_account_key" "app_sa_key" {
   service_account_id = google_service_account.app_service_account.name
 }
@@ -78,6 +78,17 @@ resource "google_container_cluster" "app_cluster" {
   }
 
   deletion_protection = true
+}
+
+# Create cloud NAT for GKE for a static outgoing IP (TODO Print and whilelist the django app??)
+module "cloud-nat" {
+  source                             = "terraform-google-modules/cloud-nat/google"
+  version                            = "~> 4.0"
+  project_id                         = var.project_id
+  region                             = var.region
+  router                             = module.VPN_MODULE.gke_router_name
+  name                               = "gke-nat-config"
+  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
 }
 
 # Cloud build worker pool
