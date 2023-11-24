@@ -1,3 +1,11 @@
+module "networking" {
+  source     = "./modules/networking"
+  app_name   = var.app_name
+  region     = var.region
+  zone       = var.zone
+  project_id = var.project_id
+}
+
 # Buckets Setup
 resource "google_storage_bucket" "app_media_bucket" {
   name                        = "${var.app_name}_app_media"
@@ -36,31 +44,9 @@ resource "google_service_account_key" "app_sa_key" {
   service_account_id = google_service_account.prod_service_account.name
 }
 
-# Network for cloudbuild pool and GKE
-resource "google_compute_network" "cloudbuild_network" {
-  name                    = "${var.app_name}_cloudbuild_network"
-  auto_create_subnetworks = false
-}
-resource "google_computer_network" "gke_network" {
-  name                    = "${var.app_name}_gke_network"
-  auto_create_subnetworks = false
-}
-
-# GKE Subnetwork
-resource "google_compute_subnetwork" "gke_clusters_subnetwork" {
-  network       = google_compute_network.gke_network.name
-  name          = "${var.app_name}_cloudbuild_subnetwork"
-  ip_cidr_range = "10.244.252.0/22"
-  region        = var.region
-}
-
-# Peering between cloudbuild and GKE networks
-resource "google_compute_network_peering" "cloudbuild_gke_peering" {
-  name                                = "${var.app_name}_cloudbuild_gke_peering"
-  network                             = google_compute_network.cloudbuild_network.name
-  peer_network                        = google_compute_network.gke_network.name
-  export_custom_routes                = true
-  export_subnet_routes_with_public_ip = false
+resource "local_file" "app_sa_key_file" {
+  content  = base64decode(google_service_account_key.app_sa_key.private_key)
+  filename = "../${var.app_name}_key.json"
 }
 
 # GKE k8s cluster
