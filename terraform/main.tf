@@ -69,3 +69,13 @@ resource "google_container_cluster" "app_cluster" {
 
   deletion_protection = true
 }
+
+# Cloud build worker pool
+resource "google_cloudbuild_worker_pool" "app_worker_pool" {
+  name = "${var.app_name}_app_worker_pool"
+  location = var.region
+
+  network_config {
+    peered_network = networking.gke_peering_vpc_network.name
+  } 
+}
