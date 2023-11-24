@@ -1,9 +1,19 @@
-module "networking" {
-  source     = "./modules/networking"
+module "VPC_MODULE" {
+  source     = "./modules/networking/VPC"
   app_name   = var.app_name
   region     = var.region
   zone       = var.zone
   project_id = var.project_id
+}
+
+module "VPN_MODULE" {
+  source     = "./modules/networking/VPN"
+  app_name   = var.app_name
+  region     = var.region
+  zone       = var.zone
+  project_id = var.project_id
+  cloudbuild_vpc_id = module.VPC_MODULE.google_computer_network.cloudbuild_private_pool_vpc_network
+  gke_vpc_id = module.VPC_MODULE.google_compute_network.gke_peering_vpc_network
 }
 
 # Buckets Setup
@@ -76,6 +86,13 @@ resource "google_cloudbuild_worker_pool" "app_worker_pool" {
   location = var.region
 
   network_config {
-    peered_network = networking.gke_peering_vpc_network.name
+    peered_network = VPC_MODULE.gke_peering_vpc_network.name
   } 
+}
+
+# Cloud DNS
+resource "google_dns_managed_zone" "app_dns_zone" {
+  name        = "${var.app_name}_app_dns_zone"
+  dns_name    = "${var.app_name}_app_dns_zone"
+  description = "DNS zone for ${var.app_name}.shiny.phac.alpha.canada.ca"
 }
