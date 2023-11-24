@@ -7,13 +7,13 @@ module "VPC_MODULE" {
 }
 
 module "VPN_MODULE" {
-  source     = "./modules/networking/VPN"
-  app_name   = var.app_name
-  region     = var.region
-  zone       = var.zone
-  project_id = var.project_id
+  source            = "./modules/networking/VPN"
+  app_name          = var.app_name
+  region            = var.region
+  zone              = var.zone
+  project_id        = var.project_id
   cloudbuild_vpc_id = module.VPC_MODULE.cloudbuild_network_id
-  gke_vpc_id = module.VPC_MODULE.gke_network_id
+  gke_vpc_id        = module.VPC_MODULE.gke_network_id
 }
 
 # Buckets Setup
@@ -63,8 +63,8 @@ resource "local_file" "app_sa_key_file" {
 resource "google_container_cluster" "app_cluster" {
   name       = "${var.app_name}-app-cluster"
   location   = var.region
-  network    =  module.VPC_MODULE.gke_peering_vpc_network_name
-  subnetwork =  module.VPC_MODULE.gke_clusters_subnetwork_name 
+  network    = module.VPC_MODULE.gke_peering_vpc_network_name
+  subnetwork = module.VPC_MODULE.gke_clusters_subnetwork_name
 
   private_cluster_config {
     enable_private_nodes   = true
@@ -83,7 +83,7 @@ resource "google_container_cluster" "app_cluster" {
 # Create cloud NAT for GKE for a static outgoing IP (TODO Print and whilelist the django app??)
 module "cloud-nat" {
   source                             = "terraform-google-modules/cloud-nat/google"
-  version                            = "~> 4.0"
+  version                            = "~> 5.0"
   project_id                         = var.project_id
   region                             = var.region
   router                             = module.VPN_MODULE.gke_router_name
@@ -93,12 +93,12 @@ module "cloud-nat" {
 
 # Cloud build worker pool
 resource "google_cloudbuild_worker_pool" "app_worker_pool" {
-  name = "${var.app_name}-app-worker-pool"
+  name     = "${var.app_name}-app-worker-pool"
   location = var.region
 
   network_config {
     peered_network = module.VPC_MODULE.gke_peering_vpc_network_name
-  } 
+  }
 }
 
 # Cloud DNS
