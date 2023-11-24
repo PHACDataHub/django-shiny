@@ -1,17 +1,11 @@
 module "VPC_MODULE" {
-  source     = "./modules/networking/VPC"
-  app_name   = var.app_name
-  region     = var.region
-  zone       = var.zone
-  project_id = var.project_id
+  source   = "./modules/networking/VPC"
+  app_name = var.app_name
 }
 
 module "VPN_MODULE" {
   source            = "./modules/networking/VPN"
   app_name          = var.app_name
-  region            = var.region
-  zone              = var.zone
-  project_id        = var.project_id
   cloudbuild_vpc_id = module.VPC_MODULE.cloudbuild_network_id
   gke_vpc_id        = module.VPC_MODULE.gke_network_id
 }

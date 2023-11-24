@@ -1,8 +1,6 @@
 # based on this guide: https://cloud.google.com/build/docs/private-pools/accessing-private-gke-clusters-with-cloud-build-private-pools
 variable "app_name" {}
-variable "region" {}
-variable "zone" {}
-variable "project_id" {}
+data "google_client_config" "default" {}
 variable "worker_pool_address" {
   description = "The IP address range for the worker pool"
   default     = "192.168.0.0"
@@ -24,7 +22,7 @@ resource "google_compute_subnetwork" "gke_clusters_subnetwork" {
   name          = "${var.app_name}-cloudbuild-subnetwork"
   network       = google_compute_network.gke_peering_vpc_network.id
   ip_cidr_range = "10.244.252.0/22"
-  region        = var.region
+  region        = data.google_client_config.default.region
 }
 
 # Peering by creating two VPCs between cloudbuild and GKE networks (these should be in the same region/zone)
