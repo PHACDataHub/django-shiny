@@ -5,6 +5,11 @@ variable "gke_vpc_id" {}
 variable "cloudbuild_vpc_id" {}
 data "google_client_config" "default" {}
 
+resource "random_password" "vpn_shared_secret" {
+  length  = 16
+  special = true
+}
+
 resource "google_compute_ha_vpn_gateway" "gke_vpn_gateway" {
   region  = data.google_client_config.default.region
   name    = "${var.app_name}-gke-vpn-gateway"
@@ -41,7 +46,7 @@ resource "google_compute_vpn_tunnel" "gke_tunnel1" {
   region                = data.google_client_config.default.region
   vpn_gateway           = google_compute_ha_vpn_gateway.cloudbuild_vpn_gateway.id
   peer_gcp_gateway      = google_compute_ha_vpn_gateway.gke_vpn_gateway.id
-  shared_secret         = "a secret message"
+  shared_secret         = random_password.vpn_shared_secret.result
   router                = google_compute_router.gke_router.id
   vpn_gateway_interface = 0
   ike_version           = 2
@@ -52,7 +57,7 @@ resource "google_compute_vpn_tunnel" "gke_tunnel2" {
   region                = data.google_client_config.default.region
   vpn_gateway           = google_compute_ha_vpn_gateway.cloudbuild_vpn_gateway.id
   peer_gcp_gateway      = google_compute_ha_vpn_gateway.gke_vpn_gateway.id
-  shared_secret         = "a secret message"
+  shared_secret         = random_password.vpn_shared_secret.result
   router                = google_compute_router.gke_router.id
   vpn_gateway_interface = 1
   ike_version           = 2
@@ -63,7 +68,7 @@ resource "google_compute_vpn_tunnel" "cloudbuild_tunnel1" {
   region                = data.google_client_config.default.region
   vpn_gateway           = google_compute_ha_vpn_gateway.gke_vpn_gateway.id
   peer_gcp_gateway      = google_compute_ha_vpn_gateway.cloudbuild_vpn_gateway.id
-  shared_secret         = "a secret message"
+  shared_secret         = random_password.vpn_shared_secret.result
   router                = google_compute_router.cloudbuild_router.id
   vpn_gateway_interface = 0
   ike_version           = 2
@@ -74,7 +79,7 @@ resource "google_compute_vpn_tunnel" "cloudbuild_tunnel2" {
   region                = data.google_client_config.default.region
   vpn_gateway           = google_compute_ha_vpn_gateway.gke_vpn_gateway.id
   peer_gcp_gateway      = google_compute_ha_vpn_gateway.cloudbuild_vpn_gateway.id
-  shared_secret         = "a secret message"
+  shared_secret         = random_password.vpn_shared_secret.result
   router                = google_compute_router.cloudbuild_router.id
   vpn_gateway_interface = 1
   ike_version           = 2
