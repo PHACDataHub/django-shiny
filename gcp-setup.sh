@@ -173,6 +173,8 @@ gcloud builds submit --config=cloudbuild.yaml
 # Cloud NAT  https://cloud.google.com/nat/docs/gke-example#create-nat
 # Start at step 6!
 
+# DONE UP TO HERE (except allowlisting iP)
+
 # Set up static incoming IP for pointing DNS to the app
 # (TODO - can't get this working!)
 # # https://cloud.google.com/kubernetes-engine/docs/tutorials/configuring-domain-name-static-ip

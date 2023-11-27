@@ -10,6 +10,13 @@ module "VPN_MODULE" {
   gke_vpc_id        = module.VPC_MODULE.gke_network_id
 }
 
+module "K8S_MODULE" {
+  source            = "./modules/k8s"
+  cluster_name      = google_container_cluster.app_cluster.name
+  cluster_endpoint  = google_container_cluster.app_cluster.endpoint
+  cluster_ca_certificate =  google_container_cluster.app_cluster.master_auth[0].cluster_ca_certificate
+}
+
 ###################### Buckets Setup ######################
 resource "google_storage_bucket" "app_media_bucket" {
   name                        = "${var.app_name}-app-media"
@@ -71,6 +78,12 @@ resource "google_container_cluster" "app_cluster" {
     }
   }
 
+  master_auth {
+    client_certificate_config {
+      issue_client_certificate = true
+    }
+  }
+
   lifecycle {
     ignore_changes = [
       node_config,
@@ -128,7 +141,7 @@ resource "google_dns_record_set" "app_dns_a_record" {
   ttl          = 300
   managed_zone = google_dns_managed_zone.app_dns_zone.name
   rrdatas = [
-    module.VPC_MODULE.gke_network_id, # this is wrong and is not the frontend IP but leave it for now
+    module.K8S_MODULE.ingress_ipv4_address,
   ]
 }
 
