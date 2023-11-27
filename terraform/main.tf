@@ -71,6 +71,12 @@ resource "google_container_cluster" "app_cluster" {
     }
   }
 
+  lifecycle {
+    ignore_changes = [
+      node_config,
+    ]
+  }
+
   deletion_protection = true
 }
 
