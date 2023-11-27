@@ -74,7 +74,7 @@ resource "google_container_cluster" "app_cluster" {
 
   master_authorized_networks_config {
     cidr_blocks {
-      cidr_block = module.VPC_MODULE.worker_pool_address
+      cidr_block = "${module.VPC_MODULE.worker_pool_address}/28"
     }
   }
 
@@ -123,7 +123,7 @@ resource "google_dns_managed_zone" "app_dns_zone" {
 
 ###################### Point to SSC DNS to GKE app ######################
 resource "google_dns_record_set" "app_tld_dns_record" {
-  name         = "${var.subdomain_name}.phac.alpha.canada.ca"
+  name         = "${var.subdomain_name}.phac.alpha.canada.ca."
   type         = "NS"
   ttl          = 21600
   managed_zone = google_dns_managed_zone.app_dns_zone.name
@@ -136,7 +136,7 @@ resource "google_dns_record_set" "app_tld_dns_record" {
 }
 
 resource "google_dns_record_set" "app_dns_a_record" {
-  name         = "${var.app_name}.phac.alpha.canada.ca"
+  name         = "${var.app_name}.phac.alpha.canada.ca."
   type         = "A"
   ttl          = 300
   managed_zone = google_dns_managed_zone.app_dns_zone.name
@@ -146,7 +146,7 @@ resource "google_dns_record_set" "app_dns_a_record" {
 }
 
 resource "google_dns_record_set" "app_dns_soa_record" {
-  name         = "${var.subdomain_name}.phac.alpha.canada.ca"
+  name         = "${var.subdomain_name}.phac.alpha.canada.ca."
   type         = "SOA"
   ttl          = 21600
   managed_zone = google_dns_managed_zone.app_dns_zone.name
