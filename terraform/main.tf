@@ -11,20 +11,64 @@ module "VPN_MODULE" {
 }
 
 module "K8S_MODULE" {
-  source            = "./modules/k8s"
-  cluster_name      = google_container_cluster.app_cluster.name
-  cluster_endpoint  = google_container_cluster.app_cluster.endpoint
-  cluster_ca_certificate =  google_container_cluster.app_cluster.master_auth[0].cluster_ca_certificate
+  source                 = "./modules/k8s"
+  cluster_name           = google_container_cluster.app_cluster.name
+  cluster_endpoint       = google_container_cluster.app_cluster.endpoint
+  cluster_ca_certificate = google_container_cluster.app_cluster.master_auth[0].cluster_ca_certificate
 }
 
 ###################### Buckets Setup ######################
 resource "google_storage_bucket" "app_media_bucket" {
-  name                        = "${var.app_name}-app-media"
+  name                        = "${var.app_name}-app-media-bucket"
   location                    = var.region
   storage_class               = "STANDARD"
   public_access_prevention    = "enforced"
   uniform_bucket_level_access = true
   force_destroy               = false
+}
+
+###################### Terraform State Bucket Setup ######################
+
+resource "google_kms_key_ring" "default" {
+  name     = "${var.app_name}-app-tfstate"
+  location = var.region
+}
+
+resource "google_kms_crypto_key" "tfstate_bucket_key" {
+  name            = "app-tfstate-bucket-key"
+  key_ring        = google_kms_key_ring.terraform_state.id
+  rotation_period = "86400s"
+
+  lifecycle {
+    prevent_destroy = false
+  }
+}
+
+# Enable the Cloud Storage service account to encrypt/decrypt Cloud KMS keys
+data "google_project" "project" {}
+
+resource "google_project_iam_member" "crypto_key_sa" {
+  project = data.google_project.project.project_id
+  role    = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+  member  = "serviceAccount:service-${data.google_project.project.number}@gs-project-accounts.iam.gserviceaccount.com"
+}
+
+resource "google_storage_bucket" "app_tfstate" {
+  name                        = "app-tfstate-bucket"
+  location                    = var.region
+  storage_class               = "STANDARD"
+  public_access_prevention    = "enforced"
+  uniform_bucket_level_access = true
+  force_destroy               = false
+  versioning {
+    enabled = true
+  }
+  encryption {
+    default_kms_key_name = google_kms_crypto_key.tfstate_bucket_key.id
+  }
+  depends_on = [
+    google_project_iam_member.crypto_key_sa
+  ]
 }
 
 ###################### Artifact Registry Setup ######################

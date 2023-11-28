@@ -101,6 +101,12 @@ resource "google_compute_backend_service" "gke_backend_service" {
   #   max_rate_per_endpoint = "1"
   # }
   # check the NEGs here: https://console.cloud.google.com/compute/networkendpointgroups/list?referrer=search&project=phx-datadissemination&supportedpurview=project&rapt=AEjHL4PmEk_3NQoD_wy5ILVksZVixACvFYMDKyJ3zDiwrI7VuPbBPZalyGTX7k8AyNZTQQreXXBityY7PMCIq3V7FbSGxfYAlgi6OyLT8ssKwrqHicr39wY
+  # backend {
+  #   group           = google_compute_instance_group_manager.default.instance_group
+  #   balancing_mode  = "UTILIZATION"
+  #   max_utilization = 1.0
+  #   capacity_scaler = 1.0
+  # }
 }
 
 resource "google_compute_url_map" "url_map" {
@@ -124,4 +130,60 @@ resource "google_compute_global_forwarding_rule" "forwarding_rule" {
   target                = google_compute_target_http_proxy.http_proxy.self_link
   ip_address            = google_compute_global_address.ingress-ipv4.address
   project               = data.google_client_config.default.project
+}
+
+
+# Self-signed regional SSL certificate for testing
+resource "tls_private_key" "default" {
+  algorithm = "RSA"
+  rsa_bits  = 2048
+}
+
+resource "tls_self_signed_cert" "default" {
+  private_key_pem = tls_private_key.default.private_key_pem
+
+  # Certificate expires after 12 hours.
+  validity_period_hours = 12
+
+  # Generate a new certificate if Terraform is run within three
+  # hours of the certificate's expiration time.
+  early_renewal_hours = 3
+
+  # Reasonable set of uses for a server SSL certificate.
+  allowed_uses = [
+    "key_encipherment",
+    "digital_signature",
+    "server_auth",
+  ]
+
+  dns_names = ["example.com"]
+
+  subject {
+    common_name  = "example.com"
+    organization = "ACME Examples, Inc"
+  }
+}
+
+###### HTTPS stuff (WIP) ######
+resource "google_compute_ssl_certificate" "default" {
+  name        = "default-cert"
+  private_key = tls_private_key.default.private_key_pem
+  certificate = tls_self_signed_cert.default.cert_pem
+}
+
+resource "google_compute_target_ssl_proxy" "default" {
+  name             = "test-proxy"
+  backend_service  = google_compute_backend_service.gke_backend_service.id
+  ssl_certificates = [google_compute_ssl_certificate.default.id]
+}
+
+# forwarding rule
+resource "google_compute_global_forwarding_rule" "default" {
+  name                  = "ssl-proxy-xlb-forwarding-rule"
+  provider              = google
+  ip_protocol           = "TCP"
+  load_balancing_scheme = "EXTERNAL"
+  port_range            = "443"
+  target                = google_compute_target_ssl_proxy.default.id
+  ip_address            = google_compute_global_address.ingress-ipv4.id
 }
