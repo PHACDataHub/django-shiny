@@ -3,6 +3,7 @@
 variable "app_name" {}
 variable "gke_vpc_id" {}
 variable "cloudbuild_vpc_id" {}
+variable "gke_clusters_subnetwork_id" {}
 data "google_client_config" "default" {}
 
 resource "random_password" "vpn_shared_secret" {
@@ -38,6 +39,28 @@ resource "google_compute_router" "cloudbuild_router" {
   bgp {
     asn = 65002
   }
+}
+
+resource "google_compute_router_nat" "nat" {
+  name   = "gke-nat-config"
+  router = google_compute_router.gke_router.name
+  region = data.google_client_config.default.region
+
+  source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
+  nat_ip_allocate_option             = "MANUAL_ONLY" # for whitelisting
+
+  subnetwork {
+    name                    = var.gke_clusters_subnetwork_id
+    source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
+  }
+
+  nat_ips = [google_compute_address.nat.self_link]
+}
+
+resource "google_compute_address" "nat" {
+  name         = "gke-nat"
+  address_type = "EXTERNAL"
+  network_tier = "PREMIUM"
 }
 
 # Create two VPN tunnels for each gateway direction (for HA)

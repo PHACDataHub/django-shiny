@@ -9,20 +9,35 @@ variable "worker_pool_address" {
 # Network for cloudbuild pool and GKE
 resource "google_compute_network" "cloudbuild_private_pool_vpc_network" {
   name                    = "${var.app_name}-cloudbuild-network"
+  routing_mode            = "REGIONAL"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_network" "gke_peering_vpc_network" {
   name                    = "${var.app_name}-gke-network"
+  routing_mode            = "REGIONAL"
   auto_create_subnetworks = false
 }
 
 # GKE Subnetwork
+variable "clusters_ip_range_name" { default = "k8s-pod-range" }
+variable "services_ip_range_name" { default = "k8s-service-range" }
 resource "google_compute_subnetwork" "gke_clusters_subnetwork" {
-  name          = "${var.app_name}-cloudbuild-subnetwork"
-  network       = google_compute_network.gke_peering_vpc_network.id
-  ip_cidr_range = "10.244.252.0/22"
-  region        = data.google_client_config.default.region
+  name                     = "${var.app_name}-cloudbuild-subnetwork"
+  network                  = google_compute_network.gke_peering_vpc_network.id
+  ip_cidr_range            = "10.244.252.0/22"
+  region                   = data.google_client_config.default.region
+  private_ip_google_access = true
+
+  secondary_ip_range {
+    range_name    = var.clusters_ip_range_name
+    ip_cidr_range = "10.48.0.0/14"
+  }
+
+  secondary_ip_range {
+    range_name    = var.services_ip_range_name
+    ip_cidr_range = "10.52.0.0/20"
+  }
 }
 
 # Peering by creating two VPCs between cloudbuild and GKE networks (these should be in the same region/zone)
