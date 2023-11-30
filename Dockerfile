@@ -25,6 +25,6 @@ COPY . /opt/services/djangoapp/src
 
 RUN chmod +x /opt/services/djangoapp/src/entrypoint.sh
 
-EXPOSE 8000
+EXPOSE 80
 ENTRYPOINT ["./entrypoint.sh"]
-CMD ["gunicorn", "-c", "config/gunicorn/conf.py", "--bind", ":8000", "--chdir", "djangoapp", "djangoapp.wsgi:application"]
+CMD ["gunicorn", "-c", "config/gunicorn/conf.py", "--bind", ":80", "--chdir", "djangoapp", "djangoapp.wsgi:application"]

@@ -12,12 +12,12 @@ resource "kubectl_manifest" "nginx_ingress_controller" {
 ###################### Static IP ingress setup ######################
 # (https://awstip.com/gke-load-balancing-with-custom-ingress-controller-using-nginx-terraform-helm-dd7c604995e)
 
-# Static IPv4 address for Ingress Load Balancing
-resource "google_compute_global_address" "ingress-ipv4" {
-  name         = "${var.cluster_name}-ingress-ipv4"
-  address_type = "EXTERNAL"
-  ip_version   = "IPV4"
-}
+# # Static IPv4 address for Ingress Load Balancing
+# resource "google_compute_global_address" "ingress-ipv4" {
+#   name         = "${var.cluster_name}-ingress-ipv4"
+#   address_type = "EXTERNAL"
+#   ip_version   = "IPV4"
+# }
 
 resource "google_compute_firewall" "gke_health_check_rules" {
   project       = data.google_client_config.default.project

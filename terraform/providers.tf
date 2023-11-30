@@ -10,6 +10,7 @@ terraform {
 }
 
 provider "google" {
+  credentials = file("/Users/aguo/keys/gcp/phx-01hgge58cfn-1315132c2405.json")
   project = var.project_id
   region  = var.region
   zone    = var.zone
