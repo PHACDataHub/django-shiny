@@ -8,8 +8,8 @@ module "VPC_MODULE" {
 module "VPN_MODULE" {
   source                     = "./modules/networking/VPN"
   app_name                   = var.app_name
-  cloudbuild_vpc_id          = module.VPC_MODULE.cloudbuild_network_id
-  gke_vpc_id                 = module.VPC_MODULE.gke_network_id
+  cloudbuild_vpc_name          = module.VPC_MODULE.cloudbuild_network_name
+  gke_vpc_name                 = module.VPC_MODULE.gke_network_name
   gke_clusters_subnetwork_id = module.VPC_MODULE.gke_clusters_subnetwork_id
   depends_on                 = [module.VPC_MODULE]
 }
@@ -63,7 +63,7 @@ module "project-services" {
   project_id = var.project_id
 
   activate_apis = [
-    "serviceusage.googleapis.com",
+    "serviceusage.googleapis.com", # redundant since we enabled it above but here so it will be disabled when we destroy the project
     "cloudresourcemanager.googleapis.com",
     "compute.googleapis.com",
     "container.googleapis.com",

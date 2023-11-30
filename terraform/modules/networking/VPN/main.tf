@@ -1,8 +1,8 @@
 # based on this guide: https://cloud.google.com/build/docs/private-pools/accessing-private-gke-clusters-with-cloud-build-private-pools
 # plus this article: https://cloud.google.com/network-connectivity/docs/vpn/how-to/automate-vpn-setup-with-terraform
 variable "app_name" {}
-variable "gke_vpc_id" {}
-variable "cloudbuild_vpc_id" {}
+variable "gke_vpc_name" {}
+variable "cloudbuild_vpc_name" {}
 variable "gke_clusters_subnetwork_id" {}
 data "google_client_config" "default" {}
 
@@ -26,7 +26,7 @@ resource "google_compute_ha_vpn_gateway" "cloudbuild_vpn_gateway" {
 resource "google_compute_router" "gke_router" {
   name    = "${var.app_name}-gke-router"
   region  = data.google_client_config.default.region
-  network = var.gke_vpc_id
+  network = var.gke_vpc_name
   bgp {
     asn = 65001
   }
@@ -35,7 +35,7 @@ resource "google_compute_router" "gke_router" {
 resource "google_compute_router" "cloudbuild_router" {
   name    = "${var.app_name}-cloudbuild-router"
   region  = data.google_client_config.default.region
-  network = var.cloudbuild_vpc_id
+  network = var.cloudbuild_vpc_name
   bgp {
     asn = 65002
   }

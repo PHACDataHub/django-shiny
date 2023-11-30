@@ -1,4 +1,4 @@
-project_id     = "phx-andrewguo"
+project_id     = "phx-01hgge58cfn"
 app_name       = "django-shiny-platform"
 subdomain_name = "shiny"
 # dns_name   = "wasterwater-riskmodeling"
