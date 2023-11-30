@@ -67,8 +67,8 @@ resource "google_compute_address" "nat" {
 resource "google_compute_vpn_tunnel" "gke_tunnel1" {
   name                  = "${var.app_name}-gke-to-cloudbuild-tunnel1"
   region                = data.google_client_config.default.region
-  vpn_gateway           = google_compute_ha_vpn_gateway.cloudbuild_vpn_gateway.id
-  peer_gcp_gateway      = google_compute_ha_vpn_gateway.gke_vpn_gateway.id
+  vpn_gateway           = google_compute_ha_vpn_gateway.gke_vpn_gateway.id
+  peer_gcp_gateway      = google_compute_ha_vpn_gateway.cloudbuild_vpn_gateway.id
   shared_secret         = random_password.vpn_shared_secret.result
   router                = google_compute_router.gke_router.id
   vpn_gateway_interface = 0
@@ -78,8 +78,8 @@ resource "google_compute_vpn_tunnel" "gke_tunnel1" {
 resource "google_compute_vpn_tunnel" "gke_tunnel2" {
   name                  = "${var.app_name}-gke-to-cloudbuild-tunnel2"
   region                = data.google_client_config.default.region
-  vpn_gateway           = google_compute_ha_vpn_gateway.cloudbuild_vpn_gateway.id
-  peer_gcp_gateway      = google_compute_ha_vpn_gateway.gke_vpn_gateway.id
+  vpn_gateway           = google_compute_ha_vpn_gateway.gke_vpn_gateway.id
+  peer_gcp_gateway      = google_compute_ha_vpn_gateway.cloudbuild_vpn_gateway.id
   shared_secret         = random_password.vpn_shared_secret.result
   router                = google_compute_router.gke_router.id
   vpn_gateway_interface = 1
@@ -89,8 +89,8 @@ resource "google_compute_vpn_tunnel" "gke_tunnel2" {
 resource "google_compute_vpn_tunnel" "cloudbuild_tunnel1" {
   name                  = "${var.app_name}-cloudbuild-to-gke-tunnel1"
   region                = data.google_client_config.default.region
-  vpn_gateway           = google_compute_ha_vpn_gateway.gke_vpn_gateway.id
-  peer_gcp_gateway      = google_compute_ha_vpn_gateway.cloudbuild_vpn_gateway.id
+  vpn_gateway           = google_compute_ha_vpn_gateway.cloudbuild_vpn_gateway.id
+  peer_gcp_gateway      = google_compute_ha_vpn_gateway.gke_vpn_gateway.id
   shared_secret         = random_password.vpn_shared_secret.result
   router                = google_compute_router.cloudbuild_router.id
   vpn_gateway_interface = 0
@@ -100,8 +100,8 @@ resource "google_compute_vpn_tunnel" "cloudbuild_tunnel1" {
 resource "google_compute_vpn_tunnel" "cloudbuild_tunnel2" {
   name                  = "${var.app_name}-cloudbuild-to-gke-tunnel2"
   region                = data.google_client_config.default.region
-  vpn_gateway           = google_compute_ha_vpn_gateway.gke_vpn_gateway.id
-  peer_gcp_gateway      = google_compute_ha_vpn_gateway.cloudbuild_vpn_gateway.id
+  vpn_gateway           = google_compute_ha_vpn_gateway.cloudbuild_vpn_gateway.id
+  peer_gcp_gateway      = google_compute_ha_vpn_gateway.gke_vpn_gateway.id
   shared_secret         = random_password.vpn_shared_secret.result
   router                = google_compute_router.cloudbuild_router.id
   vpn_gateway_interface = 1

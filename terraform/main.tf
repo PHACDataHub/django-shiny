@@ -8,8 +8,8 @@ module "VPC_MODULE" {
 module "VPN_MODULE" {
   source                     = "./modules/networking/VPN"
   app_name                   = var.app_name
-  cloudbuild_vpc_name          = module.VPC_MODULE.cloudbuild_network_name
-  gke_vpc_name                 = module.VPC_MODULE.gke_network_name
+  cloudbuild_vpc_name        = module.VPC_MODULE.cloudbuild_network_name
+  gke_vpc_name               = module.VPC_MODULE.gke_network_name
   gke_clusters_subnetwork_id = module.VPC_MODULE.gke_clusters_subnetwork_id
   depends_on                 = [module.VPC_MODULE]
 }
@@ -74,5 +74,5 @@ module "project-services" {
     #"servicenetworking.googleapis.com",
   ]
 
-  depends_on = [ time_sleep.wait_project_init ]
+  depends_on = [time_sleep.wait_project_init]
 }
