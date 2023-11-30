@@ -14,13 +14,13 @@ resource "random_password" "vpn_shared_secret" {
 resource "google_compute_ha_vpn_gateway" "gke_vpn_gateway" {
   region  = data.google_client_config.default.region
   name    = "${var.app_name}-gke-vpn-gateway"
-  network = var.gke_vpc_id
+  network = var.gke_vpc_name
 }
 
 resource "google_compute_ha_vpn_gateway" "cloudbuild_vpn_gateway" {
   region  = data.google_client_config.default.region
   name    = "${var.app_name}-cloudbuild-vpn-gateway"
-  network = var.cloudbuild_vpc_id
+  network = var.cloudbuild_vpc_name
 }
 
 resource "google_compute_router" "gke_router" {
