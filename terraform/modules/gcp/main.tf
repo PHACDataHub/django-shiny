@@ -19,46 +19,17 @@ resource "google_storage_bucket" "app_media_bucket" {
   force_destroy               = false
 }
 
-###################### Terraform State Bucket Setup ######################
-
-resource "google_kms_key_ring" "default" {
-  name     = "${data.google_project.default.name}-app-tfstate"
-  location = data.google_client_config.default.region
-}
-
-resource "google_kms_crypto_key" "tfstate_bucket_key" {
-  name            = "app-tfstate-bucket-key"
-  key_ring        = google_kms_key_ring.default.id
-  rotation_period = "86400s"
-
-  lifecycle {
-    prevent_destroy = false
-  }
-}
-
-# Enable the Cloud Storage service account to encrypt/decrypt Cloud KMS keys
-resource "google_project_iam_member" "crypto_key_sa" {
-  project = data.google_project.default.number
-  role    = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-  member  = "serviceAccount:service-${data.google_project.default.number}@gs-project-accounts.iam.gserviceaccount.com"
-}
-
+# ###################### Terraform State Bucket Setup ######################
 resource "google_storage_bucket" "app_tfstate" {
-  name                        = "app-tfstate-bucket"
+  name                        = "app-tfstate-bucket" # make sure this is same as in backend.tf
   location                    = data.google_client_config.default.region
   storage_class               = "STANDARD"
   public_access_prevention    = "enforced"
   uniform_bucket_level_access = true
-  force_destroy               = false
+  force_destroy               = true
   versioning {
     enabled = true
   }
-  encryption {
-    default_kms_key_name = google_kms_crypto_key.tfstate_bucket_key.id
-  }
-  depends_on = [
-    google_project_iam_member.crypto_key_sa
-  ]
 }
 
 ###################### Artifact Registry Setup ######################
@@ -75,12 +46,22 @@ resource "google_service_account" "app_service_account" {
   description  = "Used by the ${data.google_project.default.name} app to set up cloud builds, k8s, and storage"
 }
 
-resource "google_service_account_iam_member" "app_service_account_iam" {
-  service_account_id = google_service_account.app_service_account.id
-  role               = "roles/cloudbuild.connectionAdmin cloudbuild.connectionViewer cloudbuild.builds.editor cloudbuild.builds.viewer container.admin container.developer secretmanager.secretAccessor storage.objectUser"
-  member             = "serviceAccount:${google_service_account.app_service_account.name}"
+resource "google_project_iam_member" "app_service_account_iam" {
+  project = data.google_project.default.project_id
+  # probably can clean a few of these roles up 🤷‍♂️
+  for_each = toset([
+    "roles/cloudbuild.connectionAdmin",
+    "roles/cloudbuild.connectionViewer",
+    "roles/cloudbuild.builds.editor",
+    "roles/cloudbuild.builds.viewer",
+    "roles/container.admin",
+    "roles/container.developer",
+    "roles/secretmanager.secretAccessor",
+    "roles/storage.objectViewer",
+  ])
+  role               = each.key
+  member             = "serviceAccount:${google_service_account.app_service_account.email}"
 }
-
 
 # Save .json service account key to be used by django app
 resource "google_service_account_key" "app_sa_key" {
@@ -89,7 +70,7 @@ resource "google_service_account_key" "app_sa_key" {
 
 resource "local_file" "app_sa_key_file" {
   content  = base64decode(google_service_account_key.app_sa_key.private_key)
-  filename = "../${data.google_project.default.name}-key.json"
+  filename = "${path.root}/${data.google_project.default.name}-key.json"
 }
 
 ###################### GKE k8s cluster ######################
@@ -101,7 +82,7 @@ resource "google_container_cluster" "app_cluster" {
   remove_default_node_pool = true
   initial_node_count       = 1
   networking_mode          = "VPC_NATIVE"
-  deletion_protection      = true
+  deletion_protection      = false
   # logging_service = "logging.googleapis.com/kubernetes" apparently this is expensive so left it out for now
   # monitoring_service = "monitoring.googleapis.com/kubernetes" also expensive, we can just deploy our own prometheus in k8s
 
@@ -173,6 +154,9 @@ resource "google_dns_managed_zone" "app_dns_zone" {
   name        = "${data.google_project.default.name}-app-dns-zone"
   dns_name    = "${var.subdomain_name}.phac.alpha.canada.ca."
   description = "DNS zone for ${data.google_project.default.name} at ${var.subdomain_name}.phac.alpha.canada.ca"
+  dnssec_config {
+    state = "on"
+  }
 }
 
 ###################### Point to SSC DNS to GKE app ######################
@@ -196,7 +180,7 @@ resource "google_compute_global_address" "ingress-ipv4" {
 }
 
 resource "google_dns_record_set" "app_dns_a_record" {
-  name         = "${data.google_project.default.name}.phac.alpha.canada.ca."
+  name         = "andrew.shiny.phac.alpha.canada.ca."
   type         = "A"
   ttl          = 300
   managed_zone = google_dns_managed_zone.app_dns_zone.name

@@ -1,3 +1,13 @@
+# Prequsites: 
+# - Enable serviceusage and cloudresourcemanager APIs here:
+#   https://console.cloud.google.com/apis/library/serviceusage.googleapis.com
+#   https://console.cloud.google.com/apis/library/cloudresourcemanager.googleapis.com
+# - Create a service account for the terraform with roles: 
+#   - Editor
+#   - Project IAM Admin
+#   - Quota Administrator
+#   - Service Usage Admin
+#   and enter the path to json key in the provider
 
 module "VPC_MODULE" {
   source     = "./modules/networking/VPC"
@@ -36,27 +46,6 @@ module "GCP_MODULE" {
 # }
 
 ###################### Enable APIs #####################
-# Hack to enable serviceusage (sort of a chicken before the egg problem)
-# based on: https://stackoverflow.com/questions/59055395/can-i-automatically-enable-apis-when-using-gcp-cloud-with-terraform
-# You can also just enable this manually at https://console.cloud.google.com/apis/library/serviceusage.googleapis.com
-# Use `gcloud` to enable:
-# - serviceusage.googleapis.com
-# - cloudresourcemanager.googleapis.com
-resource "null_resource" "enable_service_usage_api" {
-  provisioner "local-exec" {
-    command = "gcloud services enable serviceusage.googleapis.com cloudresourcemanager.googleapis.com --project ${var.project_id}"
-  }
-}
-
-# Wait for the new configuration to propagate
-# (might be redundant)
-resource "time_sleep" "wait_project_init" {
-  create_duration = "30s"
-
-  depends_on = [null_resource.enable_service_usage_api]
-}
-
-
 module "project-services" {
   source  = "terraform-google-modules/project-factory/google//modules/project_services"
   version = "~> 14.4"
@@ -64,17 +53,15 @@ module "project-services" {
   project_id = var.project_id
 
   activate_apis = [
-    "serviceusage.googleapis.com", # redundant since we enabled it above but here so it will be disabled when we destroy the project
     "cloudresourcemanager.googleapis.com",
     "compute.googleapis.com",
     "container.googleapis.com",
     "cloudbuild.googleapis.com",
     "iam.googleapis.com",
     "cloudkms.googleapis.com",
+    "servicenetworking.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
     #"dns.googleapis.com",
     #"artifactregistry.googleapis.com",
-    #"servicenetworking.googleapis.com",
   ]
-
-  depends_on = [time_sleep.wait_project_init]
 }
