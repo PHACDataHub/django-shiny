@@ -121,7 +121,7 @@ resource "google_compute_router_peer" "gke_to_cloudbuild_bgp_peer_1" {
   router                    = google_compute_router.gke_router.name
   region                    = data.google_client_config.default.region
   peer_ip_address           = "169.254.0.2"
-  peer_asn                  = google_compute_router.gke_router.bgp[0].asn
+  peer_asn                  = google_compute_router.cloudbuild_router.bgp[0].asn
   advertised_route_priority = 100
   interface                 = google_compute_router_interface.gke_to_cloudbuild_bgp_if_1.name
 }
@@ -139,7 +139,7 @@ resource "google_compute_router_peer" "gke_to_cloudbuild_bgp_peer_2" {
   router                    = google_compute_router.gke_router.name
   region                    = data.google_client_config.default.region
   peer_ip_address           = "169.254.1.1"
-  peer_asn                  = google_compute_router.gke_router.bgp[0].asn
+  peer_asn                  = google_compute_router.cloudbuild_router.bgp[0].asn
   advertised_route_priority = 100
   interface                 = google_compute_router_interface.gke_to_cloudbuild_bgp_if_2.name
 }
@@ -157,7 +157,7 @@ resource "google_compute_router_peer" "cloudbuild_to_gke_bgp_peer_1" {
   router                    = google_compute_router.cloudbuild_router.name
   region                    = data.google_client_config.default.region
   peer_ip_address           = "169.254.0.1"
-  peer_asn                  = google_compute_router.cloudbuild_router.bgp[0].asn
+  peer_asn                  = google_compute_router.gke_router.bgp[0].asn
   advertised_route_priority = 100
   interface                 = google_compute_router_interface.cloudbuild_to_gke_bgp_if_1.name
 }
@@ -175,7 +175,7 @@ resource "google_compute_router_peer" "cloudbuild_to_gke_bgp_peer_2" {
   router                    = google_compute_router.cloudbuild_router.name
   region                    = data.google_client_config.default.region
   peer_ip_address           = "169.254.1.2"
-  peer_asn                  = google_compute_router.cloudbuild_router.bgp[0].asn
+  peer_asn                  = google_compute_router.gke_router.bgp[0].asn
   advertised_route_priority = 100
   interface                 = google_compute_router_interface.cloudbuild_to_gke_bgp_if_2.name
 }
