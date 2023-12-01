@@ -14,16 +14,17 @@ module "VPN_MODULE" {
   depends_on                 = [module.VPC_MODULE]
 }
 
-# module "GCP_MODULE" {
-#   source         = "./modules/gcp"
-#   subdomain_name = var.subdomain_name
-#   gke_peering_vpc_network_name = module.VPC_MODULE.gke_peering_vpc_network_name
-#   gke_clusters_subnetwork_name = module.VPC_MODULE.gke_clusters_subnetwork_name
-#   k8s_clusters_ip_range_name   = module.VPC_MODULE.k8s_clusters_ip_range_name
-#   k8s_services_ip_range_name   = module.VPC_MODULE.k8s_services_ip_range_name
-#   worker_pool_address          = module.VPC_MODULE.worker_pool_address
-#   depends_on                   = [module.VPC_MODULE]
-# }
+module "GCP_MODULE" {
+  source         = "./modules/gcp"
+  subdomain_name = var.subdomain_name
+  gke_peering_vpc_network_name = module.VPC_MODULE.gke_peering_vpc_network_name
+  gke_peering_vpc_network_id   = module.VPC_MODULE.gke_peering_vpc_network_id
+  gke_clusters_subnetwork_name = module.VPC_MODULE.gke_clusters_subnetwork_name
+  k8s_clusters_ip_range_name   = module.VPC_MODULE.k8s_clusters_ip_range_name
+  k8s_services_ip_range_name   = module.VPC_MODULE.k8s_services_ip_range_name
+  worker_pool_address          = module.VPC_MODULE.worker_pool_address
+  depends_on                   = [module.VPC_MODULE]
+}
 
 # # This is probably broken, https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs#stacking-with-managed-kubernetes-cluster-resources
 # module "K8S_MODULE" {
@@ -69,6 +70,7 @@ module "project-services" {
     "container.googleapis.com",
     "cloudbuild.googleapis.com",
     "iam.googleapis.com",
+    "cloudkms.googleapis.com",
     #"dns.googleapis.com",
     #"artifactregistry.googleapis.com",
     #"servicenetworking.googleapis.com",

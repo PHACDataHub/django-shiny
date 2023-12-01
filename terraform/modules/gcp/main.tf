@@ -3,6 +3,7 @@ data "google_client_config" "default" {}
 ### Get from VPC outputs ###
 variable "subdomain_name" {}
 variable "gke_peering_vpc_network_name" {}
+variable "gke_peering_vpc_network_id" {}
 variable "gke_clusters_subnetwork_name" {}
 variable "k8s_clusters_ip_range_name" {}
 variable "k8s_services_ip_range_name" {}
@@ -37,7 +38,7 @@ resource "google_kms_crypto_key" "tfstate_bucket_key" {
 
 # Enable the Cloud Storage service account to encrypt/decrypt Cloud KMS keys
 resource "google_project_iam_member" "crypto_key_sa" {
-  project = data.google_project.default.project_id
+  project = data.google_project.default.number
   role    = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
   member  = "serviceAccount:service-${data.google_project.default.number}@gs-project-accounts.iam.gserviceaccount.com"
 }
@@ -98,6 +99,7 @@ resource "google_container_cluster" "app_cluster" {
   network                  = var.gke_peering_vpc_network_name
   subnetwork               = var.gke_clusters_subnetwork_name
   remove_default_node_pool = true
+  initial_node_count       = 1
   networking_mode          = "VPC_NATIVE"
   deletion_protection      = true
   # logging_service = "logging.googleapis.com/kubernetes" apparently this is expensive so left it out for now
@@ -162,14 +164,14 @@ resource "google_cloudbuild_worker_pool" "app_worker_pool" {
   location = data.google_client_config.default.region
 
   network_config {
-    peered_network = var.gke_peering_vpc_network_name
+    peered_network = var.gke_peering_vpc_network_id
   }
 }
 
 ###################### Cloud DNS ######################
 resource "google_dns_managed_zone" "app_dns_zone" {
   name        = "${data.google_project.default.name}-app-dns-zone"
-  dns_name    = "${var.subdomain_name}.phac.alpha.canada.ca"
+  dns_name    = "${var.subdomain_name}.phac.alpha.canada.ca."
   description = "DNS zone for ${data.google_project.default.name} at ${var.subdomain_name}.phac.alpha.canada.ca"
 }
 
