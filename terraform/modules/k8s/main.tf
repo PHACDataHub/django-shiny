@@ -1,6 +1,13 @@
 variable "cluster_name" {}
-data "google_client_config" "default" {}
-
+variable "project_id" {
+  description = "The id of the project"
+}
+variable "project_name" {
+  description = "The name of the project"
+}
+variable "app_name" {
+  description = "The name of the app to made in the project. (Mostly used as a prefix for resources)"
+}
 resource "kubectl_manifest" "cert_manager_cluster_issuer" {
   yaml_body = file("../${path.root}/k8s/issuer-lets-encrypt-production.yaml")
 }
@@ -20,7 +27,7 @@ resource "kubectl_manifest" "nginx_ingress_controller" {
 # }
 
 resource "google_compute_firewall" "gke_health_check_rules" {
-  project       = data.google_client_config.default.project
+  project       = var.project_id
   name          = "gke-health-check"
   network       = "default"
   description   = "A firewall rule to allow health check from Google Cloud to GKE"
@@ -46,7 +53,7 @@ resource "helm_release" "nginx_ingress_controller" {
 resource "google_compute_health_check" "backend_service_http_health_check" {
   name                = "gke-${var.cluster_name}-backend-http-health-check"
   description         = "Health check via http"
-  project             = data.google_client_config.default.project
+  project             = var.project_id
   timeout_sec         = 1
   check_interval_sec  = 60
   healthy_threshold   = 4
@@ -67,7 +74,7 @@ resource "google_compute_backend_service" "gke_backend_service" {
   affinity_cookie_ttl_sec = "0"
   name                    = "gke-${var.cluster_name}-backend-service"
   port_name               = "http"
-  project                 = data.google_client_config.default.project
+  project                 = var.project_id
   protocol                = "HTTP"
   session_affinity        = "NONE"
   timeout_sec             = "30"
@@ -111,14 +118,14 @@ resource "google_compute_backend_service" "gke_backend_service" {
 
 resource "google_compute_url_map" "url_map" {
   name    = "gke-${var.cluster_name}-url-map"
-  project = data.google_client_config.default.project
+  project = var.project_id
 
   default_service = google_compute_backend_service.gke_backend_service.self_link
 }
 
 resource "google_compute_target_http_proxy" "http_proxy" {
   name    = "gke-${var.cluster_name}-http-proxy"
-  project = data.google_client_config.default.project
+  project = var.project_id
   url_map = google_compute_url_map.url_map.self_link
 }
 
@@ -129,7 +136,7 @@ resource "google_compute_global_forwarding_rule" "forwarding_rule" {
   port_range            = "80"
   target                = google_compute_target_http_proxy.http_proxy.self_link
   ip_address            = google_compute_global_address.ingress-ipv4.address
-  project               = data.google_client_config.default.project
+  project               = var.project_id
 }
 
 

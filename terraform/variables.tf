@@ -1,5 +1,13 @@
 variable "project_id" {
+  description = "The id of the project"
+}
+
+variable "project_name" {
   description = "The name of the project"
+}
+
+variable "app_name" {
+  description = "The name of the app to made in the project. (Mostly used as a prefix for resources)"
 }
 
 variable "region" {
@@ -12,10 +20,6 @@ variable "zone" {
   default     = "northamerica-northeast1-a"
 }
 
-variable "app_name" {
-  description = "The name of the app"
-}
-
 variable "subdomain_name" {
-  description = "The name of the DNS zone"
+  description = "The name of the DNS zone (must end with a period character)"
 }

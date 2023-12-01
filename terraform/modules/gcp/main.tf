@@ -1,9 +1,20 @@
-data "google_project" "default" {}
-data "google_client_config" "default" {}
+variable "project_id" {
+  description = "The id of the project"
+}
+variable "project_name" {
+  description = "The name of the project"
+}
+variable "app_name" {
+  description = "The name of the app to made in the project. (Mostly used as a prefix for resources)"
+}
+variable "region" {
+  description = "The region to deploy to"
+  default     = "northamerica-northeast1"
+}
 ### Get from VPC outputs ###
 variable "subdomain_name" {}
 variable "gke_peering_vpc_network_name" {}
-variable "gke_peering_vpc_network_id" {}
+variable "cloudbuild_private_pool_vpc_network_id" {}
 variable "gke_clusters_subnetwork_name" {}
 variable "k8s_clusters_ip_range_name" {}
 variable "k8s_services_ip_range_name" {}
@@ -11,8 +22,8 @@ variable "worker_pool_address" {}
 
 ###################### Buckets Setup ######################
 resource "google_storage_bucket" "app_media_bucket" {
-  name                        = "${data.google_project.default.name}-app-media-bucket"
-  location                    = data.google_client_config.default.region
+  name                        = "${var.app_name}-app-media-bucket"
+  location                    = var.region
   storage_class               = "STANDARD"
   public_access_prevention    = "enforced"
   uniform_bucket_level_access = true
@@ -22,11 +33,11 @@ resource "google_storage_bucket" "app_media_bucket" {
 # ###################### Terraform State Bucket Setup ######################
 resource "google_storage_bucket" "app_tfstate" {
   name                        = "app-tfstate-bucket" # make sure this is same as in backend.tf
-  location                    = data.google_client_config.default.region
+  location                    = var.region
   storage_class               = "STANDARD"
   public_access_prevention    = "enforced"
   uniform_bucket_level_access = true
-  force_destroy               = true
+  force_destroy               = false
   versioning {
     enabled = true
   }
@@ -34,20 +45,20 @@ resource "google_storage_bucket" "app_tfstate" {
 
 ###################### Artifact Registry Setup ######################
 resource "google_artifact_registry_repository" "app_artifact_repo" {
-  repository_id = "${data.google_project.default.name}-app-repo"
-  location      = data.google_client_config.default.region
+  repository_id = "${var.app_name}-app-repo"
+  location      = var.region
   format        = "DOCKER"
 }
 
 ###################### IAM Service Account Setup ######################
 resource "google_service_account" "app_service_account" {
-  account_id   = "${data.google_project.default.name}-app-sa"
-  display_name = "${data.google_project.default.name}-app-sa"
-  description  = "Used by the ${data.google_project.default.name} app to set up cloud builds, k8s, and storage"
+  account_id   = "${var.app_name}-app-sa"
+  display_name = "${var.app_name}-app-sa"
+  description  = "Used by the ${var.app_name} app to set up cloud builds, k8s, and storage"
 }
 
 resource "google_project_iam_member" "app_service_account_iam" {
-  project = data.google_project.default.project_id
+  project = var.project_id
   # probably can clean a few of these roles up 🤷‍♂️
   for_each = toset([
     "roles/cloudbuild.connectionAdmin",
@@ -59,8 +70,8 @@ resource "google_project_iam_member" "app_service_account_iam" {
     "roles/secretmanager.secretAccessor",
     "roles/storage.objectViewer",
   ])
-  role               = each.key
-  member             = "serviceAccount:${google_service_account.app_service_account.email}"
+  role   = each.key
+  member = "serviceAccount:${google_service_account.app_service_account.email}"
 }
 
 # Save .json service account key to be used by django app
@@ -70,13 +81,13 @@ resource "google_service_account_key" "app_sa_key" {
 
 resource "local_file" "app_sa_key_file" {
   content  = base64decode(google_service_account_key.app_sa_key.private_key)
-  filename = "${path.root}/${data.google_project.default.name}-key.json"
+  filename = "../${path.root}/${var.app_name}-key.json"
 }
 
 ###################### GKE k8s cluster ######################
 resource "google_container_cluster" "app_cluster" {
-  name                     = "${data.google_project.default.name}-app-cluster"
-  location                 = data.google_client_config.default.region
+  name                     = "${var.app_name}-app-cluster"
+  location                 = var.region
   network                  = var.gke_peering_vpc_network_name
   subnetwork               = var.gke_clusters_subnetwork_name
   remove_default_node_pool = true
@@ -105,7 +116,7 @@ resource "google_container_cluster" "app_cluster" {
   }
 
   workload_identity_config {
-    workload_pool = "${data.google_client_config.default.project}.svc.id.goog"
+    workload_pool = "${var.project_id}.svc.id.goog"
   }
 
   ip_allocation_policy {
@@ -141,19 +152,19 @@ resource "google_container_cluster" "app_cluster" {
 
 ###################### Cloud build worker pool ######################
 resource "google_cloudbuild_worker_pool" "app_worker_pool" {
-  name     = "${data.google_project.default.name}-app-worker-pool"
-  location = data.google_client_config.default.region
+  name     = "${var.app_name}-app-worker-pool"
+  location = var.region
 
   network_config {
-    peered_network = var.gke_peering_vpc_network_id
+    peered_network = var.cloudbuild_private_pool_vpc_network_id
   }
 }
 
 ###################### Cloud DNS ######################
 resource "google_dns_managed_zone" "app_dns_zone" {
-  name        = "${data.google_project.default.name}-app-dns-zone"
+  name        = "${var.app_name}-app-dns-zone"
   dns_name    = "${var.subdomain_name}.phac.alpha.canada.ca."
-  description = "DNS zone for ${data.google_project.default.name} at ${var.subdomain_name}.phac.alpha.canada.ca"
+  description = "DNS zone for ${var.app_name} at ${var.subdomain_name}.phac.alpha.canada.ca"
   dnssec_config {
     state = "on"
   }
@@ -171,6 +182,10 @@ resource "google_dns_record_set" "app_tld_dns_record" {
     "ns-cloud-d3.googledomains.com.",
     "ns-cloud-d4.googledomains.com.",
   ]
+
+  lifecycle {
+    prevent_destroy = true # GCP errors if you try to destroy this record, just remove it from tf state before destroying the zone
+  }
 }
 
 resource "google_compute_global_address" "ingress-ipv4" {
@@ -198,4 +213,8 @@ resource "google_dns_record_set" "app_dns_soa_record" {
   rrdatas = [
     "ns-cloud-d1.googledomains.com. cloud-dns-hostmaster.google.com. 1 21600 3600 259200 300",
   ]
+
+  lifecycle {
+    prevent_destroy = true # GCP errors if you try to destroy this record, just remove it from tf state before destroying the zone
+  }
 }
