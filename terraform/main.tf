@@ -25,8 +25,8 @@ module "VPN_MODULE" {
   region                     = var.region
   project_id                 = var.project_id
   project_name               = var.project_name
-  cloudbuild_vpc_name        = module.VPC_MODULE.cloudbuild_network_name
-  gke_vpc_name               = module.VPC_MODULE.gke_network_name
+  cloudbuild_vpc_name        = module.VPC_MODULE.cloudbuild_private_pool_vpc_network_name
+  gke_vpc_name               = module.VPC_MODULE.gke_peering_vpc_network_name
   gke_clusters_subnetwork_id = module.VPC_MODULE.gke_clusters_subnetwork_id
   depends_on                 = [module.VPC_MODULE]
 }
@@ -39,6 +39,7 @@ module "GCP_MODULE" {
   project_name                           = var.project_name
   subdomain_name                         = var.subdomain_name
   gke_peering_vpc_network_name           = module.VPC_MODULE.gke_peering_vpc_network_name
+  gke_peering_vpc_network_id             = module.VPC_MODULE.gke_peering_vpc_network_id
   cloudbuild_private_pool_vpc_network_id = module.VPC_MODULE.cloudbuild_private_pool_vpc_network_id
   gke_clusters_subnetwork_name           = module.VPC_MODULE.gke_clusters_subnetwork_name
   k8s_clusters_ip_range_name             = module.VPC_MODULE.k8s_clusters_ip_range_name

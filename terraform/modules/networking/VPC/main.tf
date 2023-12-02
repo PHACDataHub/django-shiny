@@ -30,35 +30,6 @@ resource "google_compute_network" "gke_peering_vpc_network" {
   auto_create_subnetworks = false
 }
 
-# Add peering to service network api (for terraform)
-resource "google_compute_global_address" "cloudbuild_service_api_private_ip_alloc" {
-  name          = "cloudbuild-service-api-private-ip-alloc"
-  purpose       = "VPC_PEERING"
-  address_type  = "INTERNAL"
-  prefix_length = 16
-  network       = google_compute_network.cloudbuild_private_pool_vpc_network.id
-}
-
-resource "google_compute_global_address" "gke_service_api_private_ip_alloc" {
-  name          = "gke-service-api-private-ip-alloc"
-  purpose       = "VPC_PEERING"
-  address_type  = "INTERNAL"
-  prefix_length = 16
-  network       = google_compute_network.gke_peering_vpc_network.id
-}
-
-resource "google_service_networking_connection" "cloudbuild_service_networking_connection" {
-  network                 = google_compute_network.cloudbuild_private_pool_vpc_network.id
-  service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = [google_compute_global_address.cloudbuild_service_api_private_ip_alloc.name]
-}
-
-resource "google_service_networking_connection" "gke_service_networking_connection" {
-  network                 = google_compute_network.gke_peering_vpc_network.id
-  service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = [google_compute_global_address.gke_service_api_private_ip_alloc.name]
-}
-
 # GKE Subnetwork
 variable "clusters_ip_range_name" { default = "k8s-pod-range" }
 variable "services_ip_range_name" { default = "k8s-service-range" }

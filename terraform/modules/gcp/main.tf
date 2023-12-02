@@ -14,6 +14,7 @@ variable "region" {
 ### Get from VPC outputs ###
 variable "subdomain_name" {}
 variable "gke_peering_vpc_network_name" {}
+variable "gke_peering_vpc_network_id" {}
 variable "cloudbuild_private_pool_vpc_network_id" {}
 variable "gke_clusters_subnetwork_name" {}
 variable "k8s_clusters_ip_range_name" {}
@@ -217,4 +218,34 @@ resource "google_dns_record_set" "app_dns_soa_record" {
   lifecycle {
     prevent_destroy = true # GCP errors if you try to destroy this record, just remove it from tf state before destroying the zone
   }
+}
+
+###################### Add peering to service network api (for terraform) ######################
+# needs to be in this file so the destroy order is correct
+resource "google_compute_global_address" "cloudbuild_service_api_private_ip_alloc" {
+  name          = "cloudbuild-service-api-private-ip-alloc"
+  purpose       = "VPC_PEERING"
+  address_type  = "INTERNAL"
+  prefix_length = 16
+  network       = var.cloudbuild_private_pool_vpc_network_id
+}
+
+resource "google_compute_global_address" "gke_service_api_private_ip_alloc" {
+  name          = "gke-service-api-private-ip-alloc"
+  purpose       = "VPC_PEERING"
+  address_type  = "INTERNAL"
+  prefix_length = 16
+  network       = var.gke_peering_vpc_network_id
+}
+
+resource "google_service_networking_connection" "cloudbuild_service_networking_connection" {
+  network                 = var.cloudbuild_private_pool_vpc_network_id
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [google_compute_global_address.cloudbuild_service_api_private_ip_alloc.name]
+}
+
+resource "google_service_networking_connection" "gke_service_networking_connection" {
+  network                 = var.gke_peering_vpc_network_id
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [google_compute_global_address.gke_service_api_private_ip_alloc.name]
 }
