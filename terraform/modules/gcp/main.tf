@@ -21,7 +21,7 @@ variable "k8s_clusters_ip_range_name" {}
 variable "k8s_services_ip_range_name" {}
 variable "worker_pool_address" {}
 
-###################### Buckets Setup ######################
+###################### Bucket Setup ######################
 resource "google_storage_bucket" "app_media_bucket" {
   name                        = "${var.app_name}-app-media-bucket"
   location                    = var.region
@@ -29,19 +29,6 @@ resource "google_storage_bucket" "app_media_bucket" {
   public_access_prevention    = "enforced"
   uniform_bucket_level_access = true
   force_destroy               = false
-}
-
-# ###################### Terraform State Bucket Setup ######################
-resource "google_storage_bucket" "app_tfstate" {
-  name                        = "app-tfstate-bucket" # make sure this is same as in backend.tf
-  location                    = var.region
-  storage_class               = "STANDARD"
-  public_access_prevention    = "enforced"
-  uniform_bucket_level_access = true
-  force_destroy               = false
-  versioning {
-    enabled = true
-  }
 }
 
 ###################### Artifact Registry Setup ######################

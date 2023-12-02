@@ -1,5 +1,31 @@
 #!/bin/bash
-echo "Warning: This script is intended for the first setup of the project. Ensure it's the initial setup before proceeding."
+echo "WARNING: This script is for ONLY the first setup of the project. Ensure your gcloud is logged in and it's the initial setup before proceeding."
+# it's probably fine if you run this script multiple times, but it's not necessary and you get a lot of errors if you do
+# you can do with from the web console instead if you want
+
+# Prequsites: 
+# - Enable serviceusage and cloudresourcemanager APIs here:
+#   https://console.cloud.google.com/apis/library/serviceusage.googleapis.com
+#   https://console.cloud.google.com/apis/library/cloudresourcemanager.googleapis.com
+# - Create a service account for the terraform with roles: 
+#   - Editor
+#   - Project IAM Admin
+#   - Quota Administrator
+#   - Service Usage Admin
+#   - Service Networking Admin
+#   and enter the path to json key in the provider
+# - Create a storage bucket for the terraform state
+# resource "google_storage_bucket" "app_tfstate" {
+#   name                        = "app-tfstate-bucket"
+#   location                    = var.region
+#   storage_class               = "STANDARD"
+#   public_access_prevention    = "enforced"
+#   uniform_bucket_level_access = true
+#   force_destroy               = false
+#   versioning {
+#     enabled = true
+#   }
+# }
 
 read -p "Do you want to proceed with the setup? (Y/n): " confirmation
 if [ "$confirmation" != "Y" ]; then
@@ -7,11 +33,19 @@ if [ "$confirmation" != "Y" ]; then
     exit 0
 fi
 
-parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
-cd "$parent_path/terraform"
+var=${REGION:=northamerica-northeast1}
+var=${PROJECT_ID:=phx-datadissemination}
+var=${SA_NAME:=terraform-sa}
 
-terraform init -backend=false
-# terraform plan
-terraform apply -auto-approve
-terraform init -backend=true -migrate-state
-terraform apply -auto-approve -refresh-only
+gcloud services enable serviceusage.googleapis.com
+gcloud services enable cloudresourcemanager.googleapis.com
+gcloud storage buckets create gs://app-tfstate-bucket --location=$REGION --project=$PROJECT_ID --default-storage-class=STANDARD \
+    --uniform-bucket-level-access --public-access-prevention
+gcloud storage buckets update gs://app-tfstate-bucket --versioning
+gcloud iam service-accounts create $SA_NAME --description="Service account for Terraform" --display-name=$SA_NAME
+var=${ROLES:="editor resourcemanager.projectIamAdmin servicemanagement.quotaAdmin servicenetworking.networksAdmin serviceusage.serviceUsageAdmin storage.objectAdmin"}
+for ROLE_NAME in $ROLES
+    do
+        gcloud projects add-iam-policy-binding $PROJECT_ID --member="serviceAccount:$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com" --role="roles/$ROLE_NAME"
+    done
+gcloud iam service-accounts keys create terraform-service-account-key.json --iam-account=$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com

@@ -12,10 +12,10 @@ cd "$parent_path/terraform"
 
 terraform init
 if terraform state list | grep -q "module\.GCP_MODULE\.google_dns_record_set\.app_tld_dns_record"; then
-    terraform state rm "module.GCP_MODULE.google_dns_record_set.app_tld_dns_record"
+    terraform state rm "module.GCP_MODULE.google_dns_record_set.app_tld_dns_record"  # still gets removed from the project when the managed zone is deleted
 fi
 if terraform state list | grep -q "module\.GCP_MODULE\.google_dns_record_set\.app_dns_soa_record"; then
-    terraform state rm "module.GCP_MODULE.google_dns_record_set.app_dns_soa_record"
+    terraform state rm "module.GCP_MODULE.google_dns_record_set.app_dns_soa_record" # still gets removed from the project when the managed zone is deleted
 fi
 # terraform plan -destroy
 terraform destroy -auto-approve

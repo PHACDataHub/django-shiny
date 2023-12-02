@@ -2,8 +2,8 @@ terraform {
   required_version = ">= 0.13"
 
   backend "gcs" {
-    bucket  = "app-tfstate-bucket"
-    prefix  = "terraform/state"
+    bucket      = "app-tfstate-bucket"
+    prefix      = "terraform/state"
     credentials = "/Users/aguo/keys/gcp/phx-01hgge58cfn-1315132c2405.json" # any account with Storage Object Admin role
   }
 
@@ -16,7 +16,7 @@ terraform {
 }
 
 provider "google" {
-  credentials = file("/Users/aguo/keys/gcp/phx-01hgge58cfn-1315132c2405.json")
+  credentials = file("${path.root}/terraform-service-account-key.json")
   project     = var.project_id
   region      = var.region
   zone        = var.zone
