@@ -33,7 +33,7 @@ module "GCP_MODULE" {
   k8s_clusters_ip_range_name             = module.VPC_MODULE.k8s_clusters_ip_range_name
   k8s_services_ip_range_name             = module.VPC_MODULE.k8s_services_ip_range_name
   worker_pool_address                    = module.VPC_MODULE.worker_pool_address
-  depends_on                             = [module.VPC_MODULE]
+  depends_on                             = [module.VPN_MODULE]
 }
 
 # # This is probably broken, https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs#stacking-with-managed-kubernetes-cluster-resources

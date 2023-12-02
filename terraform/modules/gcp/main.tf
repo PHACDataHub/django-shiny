@@ -146,6 +146,8 @@ resource "google_cloudbuild_worker_pool" "app_worker_pool" {
   network_config {
     peered_network = var.cloudbuild_private_pool_vpc_network_id
   }
+
+  depends_on = [google_service_networking_connection.cloudbuild_service_networking_connection]
 }
 
 ###################### Cloud DNS ######################
