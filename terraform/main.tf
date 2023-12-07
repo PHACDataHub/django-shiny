@@ -36,13 +36,26 @@ module "GCP_MODULE" {
   depends_on                             = [module.VPN_MODULE]
 }
 
+module "CLOUDBUILD_MODULE" {
+  source                 = "./modules/cloudbuild"
+  app_name               = var.app_name
+  region                 = var.region
+  project_id             = var.project_id
+  project_name           = var.project_name
+  depends_on             = [module.GCP_MODULE]
+  repo_name = "django-shiny"
+  repo_uri = "https://github.com/PHACDataHub/django-shiny.git"
+}
+
 # # This is probably broken, https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs#stacking-with-managed-kubernetes-cluster-resources
 # module "K8S_MODULE" {
 #   source                 = "./modules/k8s"
-#   cluster_name           = google_container_cluster.app_cluster.name
-#   cluster_endpoint       = google_container_cluster.app_cluster.endpoint
-#   cluster_ca_certificate = google_container_cluster.app_cluster.master_auth[0].cluster_ca_certificate
-#   depends_on             = [module.VPN_MODULE]
+#   cluster_name           = module.GCP_MODULE.cluster_name
+#   cluster_endpoint       = module.GCP_MODULE.cluster_endpoint
+#   cluster_ca_certificate = module.GCP_MODULE.cluster_ca_certificate
+#   app_name               = var.app_name
+#   project_id             = var.project_id
+#   project_name           = var.project_name
 # }
 
 ###################### Enable APIs #####################
@@ -61,6 +74,7 @@ module "project-services" {
     "cloudkms.googleapis.com",
     "servicenetworking.googleapis.com",
     "cloudresourcemanager.googleapis.com",
+    "secretmanager.googleapis.com",
     #"dns.googleapis.com",
     #"artifactregistry.googleapis.com",
   ]
