@@ -42,21 +42,40 @@ module "CLOUDBUILD_MODULE" {
   region                 = var.region
   project_id             = var.project_id
   project_name           = var.project_name
-  depends_on             = [module.GCP_MODULE]
   repo_name = "django-shiny"
   repo_uri = "https://github.com/PHACDataHub/django-shiny.git"
+  depends_on             = [module.GCP_MODULE]
 }
 
-# # This is probably broken, https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs#stacking-with-managed-kubernetes-cluster-resources
-# module "K8S_MODULE" {
-#   source                 = "./modules/k8s"
-#   cluster_name           = module.GCP_MODULE.cluster_name
-#   cluster_endpoint       = module.GCP_MODULE.cluster_endpoint
-#   cluster_ca_certificate = module.GCP_MODULE.cluster_ca_certificate
-#   app_name               = var.app_name
-#   project_id             = var.project_id
-#   project_name           = var.project_name
-# }
+# This is probably broken, https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs#stacking-with-managed-kubernetes-cluster-resources
+data "google_client_config" "current" {}
+provider "kubernetes" {
+  host                   = "https://${ module.GCP_MODULE.cluster_endpoint}"
+  token                  = data.google_client_config.current.access_token
+  cluster_ca_certificate = base64decode(module.GCP_MODULE.cluster_ca_certificate)
+}
+
+provider "helm" {
+  kubernetes {
+    host                   = "https://${module.GCP_MODULE.cluster_endpoint}"
+    token                  = data.google_client_config.current.access_token
+    cluster_ca_certificate = base64decode(module.GCP_MODULE.cluster_ca_certificate)
+  }
+}
+
+module "K8S_MODULE" {
+  source                 = "./modules/k8s"
+  cluster_name           = module.GCP_MODULE.cluster_name
+  cluster_endpoint       = module.GCP_MODULE.cluster_endpoint
+  app_name               = var.app_name
+  project_id             = var.project_id
+  project_name           = var.project_name
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
+  depends_on = [ module.VPN_MODULE ]
+}
 
 ###################### Enable APIs #####################
 module "project-services" {

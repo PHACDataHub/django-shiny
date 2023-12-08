@@ -1,6 +1,0 @@
-controller:
-  service:
-    type: ClusterIP
-    annotations:
-      cloud.google.com/neg: '{"exposed_ports": {"80":{"name": "ingress-nginx-controller-neg"}}}'
-  replicaCount: 1
