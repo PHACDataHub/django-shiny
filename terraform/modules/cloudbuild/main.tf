@@ -17,7 +17,7 @@ variable "repo_name" {
   description = "The name of the app repo"
 }
 variable "repo_uri" {
-    description = "The URI of the app repo"
+  description = "The URI of the app repo"
 }
 
 # Cloud Build Connection
@@ -26,33 +26,33 @@ resource "google_secret_manager_secret" "github_token_secret" {
 
   replication {
     user_managed {
-        replicas {
-            location = var.region
-        }
+      replicas {
+        location = var.region
+      }
     }
   }
 }
 
 resource "google_secret_manager_secret_version" "github_token_secret_version" {
-  secret = google_secret_manager_secret.github_token_secret.id
+  secret      = google_secret_manager_secret.github_token_secret.id
   secret_data = file("datahub-automation-github-oauthtoken.txt")
 }
 
 data "google_iam_policy" "p4sa-secretAccessor" {
   binding {
-    role = "roles/secretmanager.secretAccessor"
+    role    = "roles/secretmanager.secretAccessor"
     members = ["serviceAccount:service-${data.google_project.project.number}@gcp-sa-cloudbuild.iam.gserviceaccount.com"]
   }
 }
 
 resource "google_secret_manager_secret_iam_policy" "policy" {
-  secret_id = google_secret_manager_secret.github_token_secret.secret_id
+  secret_id   = google_secret_manager_secret.github_token_secret.secret_id
   policy_data = data.google_iam_policy.p4sa-secretAccessor.policy_data
 }
 
 resource "google_cloudbuildv2_connection" "datahub_automation_connection" {
   location = var.region
-  name = "datahub-automation-connection"
+  name     = "datahub-automation-connection"
 
   github_config {
     app_installation_id = 29060113 # install id in the PHACDataHub org and authorized GitHub app under datahub-automation account
@@ -61,20 +61,20 @@ resource "google_cloudbuildv2_connection" "datahub_automation_connection" {
     }
   }
 
-  depends_on = [ google_secret_manager_secret_iam_policy.policy ]
+  depends_on = [google_secret_manager_secret_iam_policy.policy]
 }
 
 resource "google_cloudbuildv2_repository" "app_repo" {
-  name = "${var.repo_name}-repo"
-  location = var.region
+  name              = "${var.repo_name}-repo"
+  location          = var.region
   parent_connection = google_cloudbuildv2_connection.datahub_automation_connection.id
-  remote_uri = var.repo_uri
+  remote_uri        = var.repo_uri
 }
 
 # Cloud Build Trigger
 resource "google_cloudbuild_trigger" "filename-trigger" {
   location = var.region
-  name = "${var.repo_name}-repo-trigger"
+  name     = "${var.repo_name}-repo-trigger"
 
   repository_event_config {
     repository = google_cloudbuildv2_repository.app_repo.id
@@ -83,6 +83,6 @@ resource "google_cloudbuild_trigger" "filename-trigger" {
     }
   }
 
-  filename = "cloudbuild.yaml"
-  depends_on = [ google_cloudbuildv2_connection.datahub_automation_connection ]
+  filename   = "cloudbuild.yaml"
+  depends_on = [google_cloudbuildv2_connection.datahub_automation_connection]
 }

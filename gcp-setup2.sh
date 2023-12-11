@@ -4,15 +4,14 @@ echo "WARNING: This script is for ONLY the first setup of the project. Ensure yo
 # you can probably do the same thing as this script from the web console instead if you want
 
 # Prequsites: 
-# - Enable serviceusage and cloudresourcemanager APIs here:
-#   https://console.cloud.google.com/apis/library/serviceusage.googleapis.com
-#   https://console.cloud.google.com/apis/library/cloudresourcemanager.googleapis.com
+# - Enable serviceusage API here: https://console.cloud.google.com/apis/library/serviceusage.googleapis.com
 # - Create a service account for the terraform with roles: 
 #   - Editor
 #   - Project IAM Admin
 #   - Quota Administrator
 #   - Service Usage Admin
 #   - Service Networking Admin
+#   - Secret Manager Admin
 #   and enter the path to json key in the provider
 # - Create a storage bucket for the terraform state remotely:
 # resource "google_storage_bucket" "app_tfstate" {
@@ -33,12 +32,12 @@ if [ "$confirmation" != "Y" ]; then
     exit 0
 fi
 
+# Set these according to your project:
 var=${REGION:=northamerica-northeast1}
 var=${PROJECT_ID:=phx-datadissemination}
 var=${SA_NAME:=terraform-sa}
 
 gcloud services enable serviceusage.googleapis.com
-# gcloud services enable cloudresourcemanager.googleapis.com
 gcloud storage buckets create gs://app-tfstate-bucket --location=$REGION --project=$PROJECT_ID --default-storage-class=STANDARD \
     --uniform-bucket-level-access --public-access-prevention
 gcloud storage buckets update gs://app-tfstate-bucket --versioning

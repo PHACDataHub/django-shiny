@@ -120,3 +120,5 @@ djangoapp/media
 
 *-key.json
 *github-oauthtoken*
+*secrets.json
+*env.sh

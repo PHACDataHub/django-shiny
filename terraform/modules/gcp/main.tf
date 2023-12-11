@@ -67,21 +67,14 @@ resource "google_service_account_key" "app_sa_key" {
   service_account_id = google_service_account.app_service_account.name
 }
 
-resource "local_file" "app_sa_key_file" {
-  content  = base64decode(google_service_account_key.app_sa_key.private_key)
-  filename = "../${path.root}/${var.app_name}-key.json"
-}
-
 ###################### GKE k8s cluster ######################
 resource "google_container_cluster" "app_cluster" {
-  name                     = "${var.app_name}-app-cluster"
-  location                 = var.region
-  network                  = var.gke_peering_vpc_network_name
-  subnetwork               = var.gke_clusters_subnetwork_name
-  remove_default_node_pool = true
-  initial_node_count       = 1
-  networking_mode          = "VPC_NATIVE"
-  deletion_protection      = false
+  name                = "${var.app_name}-app-cluster"
+  location            = var.region
+  network             = var.gke_peering_vpc_network_name
+  subnetwork          = var.gke_clusters_subnetwork_name
+  networking_mode     = "VPC_NATIVE"
+  deletion_protection = false
   # logging_service = "logging.googleapis.com/kubernetes" apparently this is expensive so left it out for now
   # monitoring_service = "monitoring.googleapis.com/kubernetes" also expensive, we can just deploy our own prometheus in k8s
 
@@ -90,22 +83,38 @@ resource "google_container_cluster" "app_cluster" {
   #   "northamerica-northeast1b",
   # ]
 
-  addons_config {
-    http_load_balancing {
-      disabled = true # we are using nginx-ingress, don't give google more money
-    }
-    horizontal_pod_autoscaling {
-      disabled = false
-    }
-  }
+
+  # # Too Private: https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept
+  # master_authorized_networks_config {
+  #   cidr_blocks {
+  #     cidr_block   = "${var.worker_pool_address}/28"
+  #     display_name = "private-subnet-cloud-build-worker-pool"
+  #   }
+  # }
+
+
+  enable_autopilot = true
+
+  # # The following are illegal under autopilot
+  # workload_identity_config {
+  #   workload_pool = "${var.project_id}.svc.id.goog"
+  # }
+
+  # remove_default_node_pool = true
+  # initial_node_count       = 1
+  # addons_config {
+  #   http_load_balancing {
+  #     disabled = true
+  #   }
+  #   horizontal_pod_autoscaling {
+  #     disabled = false
+  #   }
+  # }
 
   release_channel {
     channel = "REGULAR"
   }
 
-  workload_identity_config {
-    workload_pool = "${var.project_id}.svc.id.goog"
-  }
 
   ip_allocation_policy {
     cluster_secondary_range_name  = var.k8s_clusters_ip_range_name
@@ -114,20 +123,13 @@ resource "google_container_cluster" "app_cluster" {
 
   private_cluster_config {
     enable_private_nodes    = true
-    enable_private_endpoint = true # fine since we got a VPN
+    enable_private_endpoint = false # enable public endpoint as well
     master_ipv4_cidr_block  = "172.16.0.32/28"
-  }
-
-  master_authorized_networks_config {
-    cidr_blocks {
-      cidr_block   = "${var.worker_pool_address}/28"
-      display_name = "private-subnet-cloud-build-worker-pool"
-    }
   }
 
   master_auth {
     client_certificate_config {
-      issue_client_certificate = true
+      issue_client_certificate = false
     }
   }
 

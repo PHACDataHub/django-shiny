@@ -37,20 +37,20 @@ module "GCP_MODULE" {
 }
 
 module "CLOUDBUILD_MODULE" {
-  source                 = "./modules/cloudbuild"
-  app_name               = var.app_name
-  region                 = var.region
-  project_id             = var.project_id
-  project_name           = var.project_name
-  repo_name = "django-shiny"
-  repo_uri = "https://github.com/PHACDataHub/django-shiny.git"
-  depends_on             = [module.GCP_MODULE]
+  source       = "./modules/cloudbuild"
+  app_name     = var.app_name
+  region       = var.region
+  project_id   = var.project_id
+  project_name = var.project_name
+  repo_name    = "django-shiny"
+  repo_uri     = "https://github.com/PHACDataHub/django-shiny.git"
+  depends_on   = [module.GCP_MODULE]
 }
 
 # This is probably broken, https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs#stacking-with-managed-kubernetes-cluster-resources
 data "google_client_config" "current" {}
 provider "kubernetes" {
-  host                   = "https://${ module.GCP_MODULE.cluster_endpoint}"
+  host                   = "https://${module.GCP_MODULE.cluster_endpoint}"
   token                  = data.google_client_config.current.access_token
   cluster_ca_certificate = base64decode(module.GCP_MODULE.cluster_ca_certificate)
 }
@@ -64,17 +64,20 @@ provider "helm" {
 }
 
 module "K8S_MODULE" {
-  source                 = "./modules/k8s"
-  cluster_name           = module.GCP_MODULE.cluster_name
-  cluster_endpoint       = module.GCP_MODULE.cluster_endpoint
-  app_name               = var.app_name
-  project_id             = var.project_id
-  project_name           = var.project_name
+  source           = "./modules/k8s"
+  cluster_name     = module.GCP_MODULE.cluster_name
+  cluster_endpoint = module.GCP_MODULE.cluster_endpoint
+  app_name         = var.app_name
+  app_storage_bucket_name = module.GCP_MODULE.app_storage_bucket_name
+  project_id       = var.project_id
+  project_name     = var.project_name
+  cloudbuild_connection_name = module.CLOUDBUILD_MODULE.cloudbuild_github_connection_name
+  app_service_account_json = module.GCP_MODULE.app_service_account_json
   providers = {
     kubernetes = kubernetes
     helm       = helm
   }
-  depends_on = [ module.VPN_MODULE ]
+  depends_on = [module.CLOUDBUILD_MODULE]
 }
 
 ###################### Enable APIs #####################
