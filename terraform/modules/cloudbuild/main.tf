@@ -11,6 +11,9 @@ variable "repo_name" {
 variable "repo_uri" {
   description = "The URI of the app repo"
 }
+variable "repo_branch" {
+  description = "The branch of the app repo to trigger on"
+}
 
 # Cloud Build Connection
 resource "google_secret_manager_secret" "github_token_secret" {
@@ -80,7 +83,7 @@ resource "google_cloudbuild_trigger" "filename-trigger" {
   repository_event_config {
     repository = google_cloudbuildv2_repository.app_repo.id
     push {
-      branch = "main"
+      branch = var.repo_branch
     }
   }
 

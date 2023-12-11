@@ -1,8 +1,8 @@
 module "VPC_MODULE" {
-  source       = "./modules/networking/VPC"
-  app_name     = var.app_name
-  region       = var.region
-  depends_on   = [module.project-services]
+  source     = "./modules/networking/VPC"
+  app_name   = var.app_name
+  region     = var.region
+  depends_on = [module.project-services]
 }
 
 module "VPN_MODULE" {
@@ -32,12 +32,13 @@ module "GCP_MODULE" {
 }
 
 module "CLOUDBUILD_MODULE" {
-  source       = "./modules/cloudbuild"
-  region       = var.region
+  source         = "./modules/cloudbuild"
+  region         = var.region
   project_number = var.project_number
-  repo_name    = "django-shiny"
-  repo_uri     = "https://github.com/PHACDataHub/django-shiny.git"
-  depends_on   = [module.GCP_MODULE]
+  repo_name      = "django-shiny"
+  repo_uri       = "https://github.com/PHACDataHub/django-shiny.git"
+  repo_branch    = "add-terraform"
+  depends_on     = [module.GCP_MODULE]
 }
 
 # This is probably broken, https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs#stacking-with-managed-kubernetes-cluster-resources
@@ -57,19 +58,19 @@ provider "helm" {
 }
 
 module "K8S_MODULE" {
-  source           = "./modules/k8s"
-  cluster_name     = module.GCP_MODULE.cluster_name
-  cluster_endpoint = module.GCP_MODULE.cluster_endpoint
-  app_storage_bucket_name = module.GCP_MODULE.app_storage_bucket_name
+  source                     = "./modules/k8s"
+  cluster_name               = module.GCP_MODULE.cluster_name
+  cluster_endpoint           = module.GCP_MODULE.cluster_endpoint
+  app_storage_bucket_name    = module.GCP_MODULE.app_storage_bucket_name
   cloudbuild_connection_name = module.CLOUDBUILD_MODULE.cloudbuild_github_connection_name
-  app_service_account_json = module.GCP_MODULE.app_service_account_json
+  app_service_account_json   = module.GCP_MODULE.app_service_account_json
   providers = {
     kubernetes = kubernetes
     helm       = helm
   }
-  email_host_user = var.email_host_user
+  email_host_user     = var.email_host_user
   email_host_password = var.email_host_password
-  depends_on = [module.CLOUDBUILD_MODULE]
+  depends_on          = [module.CLOUDBUILD_MODULE]
 }
 
 ###################### Enable APIs #####################
