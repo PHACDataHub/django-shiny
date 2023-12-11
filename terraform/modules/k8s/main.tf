@@ -16,22 +16,22 @@ resource "kubernetes_secret" "default" {
   metadata {
     name = "app-secrets"
   }
-  data = {
+  data = { # need to all be plaintext
     # these are real secrets:
-    POSTGRES_PASSWORD : base64encode(random_password.postgres.result)
-    GCP_SA_KEY_JSON : var.app_service_account_json
-    GOOGLE_APPLICATION_CREDENTIALS : base64encode("./gcp_service_account_key.json")
-    EMAIL_HOST_USER : base64encode(var.email_host_user)
-    EMAIL_HOST_PASSWORD : base64encode(var.email_host_password)
+    POSTGRES_PASSWORD : random_password.postgres.result
+    GCP_SA_KEY_JSON : base64decode(var.app_service_account_json)
+    GOOGLE_APPLICATION_CREDENTIALS : "./gcp_service_account_key.json"
+    EMAIL_HOST_USER : var.email_host_user
+    EMAIL_HOST_PASSWORD : var.email_host_password
     # not really real secrets below, more like env vars:
-    GS_BUCKET_NAME : base64encode(var.app_storage_bucket_name)
-    CLOUDBUILD_CONNECTION : base64encode(var.cloudbuild_connection_name)
-    DEBUG : base64encode("True")
-    MAGICLINK_METHOD : base64encode("django_smtp")
-    EMAIL_FROM : base64encode("phac.shiny.donotreply-nepasrepondre.shiny.aspc@phac-aspc.gc.ca")
-    EMAIL_HOST : base64encode("email-smtp.ca-central-1.amazonaws.com")
-    EMAIL_PORT : base64encode("587")
-    EMAIL_USE_TLS : base64encode("True") 
+    GS_BUCKET_NAME : var.app_storage_bucket_name
+    CLOUDBUILD_CONNECTION : var.cloudbuild_connection_name
+    DEBUG : "True"
+    MAGICLINK_METHOD : "django_smtp"
+    EMAIL_FROM : "phac.shiny.donotreply-nepasrepondre.shiny.aspc@phac-aspc.gc.ca"
+    EMAIL_HOST : "email-smtp.ca-central-1.amazonaws.com"
+    EMAIL_PORT : "587"
+    EMAIL_USE_TLS : "True"
     # deprecated
     # "POWER_AUTOMATE_URL" :
   }
