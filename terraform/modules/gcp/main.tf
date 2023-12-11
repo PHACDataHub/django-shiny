@@ -30,7 +30,13 @@ resource "google_storage_bucket" "app_media_bucket" {
 
 ###################### Artifact Registry Setup ######################
 resource "google_artifact_registry_repository" "app_artifact_repo" {
-  repository_id = "${var.app_name}-app-repo"
+  repository_id = "${var.app_name}"
+  location      = var.region
+  format        = "DOCKER"
+}
+
+resource "google_artifact_registry_repository" "hosted_apps_artifact_repo" {
+  repository_id = "${var.app_name}-hosted-apps"
   location      = var.region
   format        = "DOCKER"
 }
