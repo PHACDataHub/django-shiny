@@ -1,10 +1,6 @@
-variable "project_number" {
-  description = "The project number of the project ()"
-}
-variable "region" {
-  description = "The region to deploy to"
-  default     = "northamerica-northeast1"
-}
+variable "project_id" {}
+variable "project_number" {}
+variable "region" {}
 variable "repo_name" {
   description = "The name of the app repo"
 }
@@ -45,13 +41,20 @@ resource "google_secret_manager_secret_version" "github_token_secret_version" {
 #   policy_data = data.google_iam_policy.p4sa-secretAccessor.policy_data
 # }
 
-resource "google_secret_manager_secret_iam_binding" "secret_access" {
-  secret_id = google_secret_manager_secret.github_token_secret.secret_id
-  role      = "roles/secretmanager.secretAccessor"
-
-  members = [
-    "serviceAccount:service-${var.project_number}@gcp-sa-cloudbuild.iam.gserviceaccount.com"
-  ]
+resource "google_project_iam_member" "secret_access" {
+  project = var.project_id
+  for_each = toset([
+    "roles/cloudbuild.connectionAdmin",
+    "roles/cloudbuild.builds.editor",
+    "roles/cloudbuild.builds.builder",
+    "roles/cloudbuild.workerPoolUser",
+    "roles/run.admin", # required for Cloud Run
+    "roles/container.developer",
+    "roles/iam.serviceAccountUser",
+  ])
+  role   = each.key
+  member = "serviceAccount:${var.project_number}@cloudbuild.gserviceaccount.com"
+  
 }
 
 resource "google_cloudbuildv2_connection" "datahub_automation_connection" {
@@ -65,7 +68,7 @@ resource "google_cloudbuildv2_connection" "datahub_automation_connection" {
     }
   }
 
-  depends_on = [google_secret_manager_secret_iam_binding.secret_access]
+  depends_on = [google_project_iam_member.secret_access]
 }
 
 resource "google_cloudbuildv2_repository" "app_repo" {
@@ -90,3 +93,32 @@ resource "google_cloudbuild_trigger" "filename-trigger" {
   filename   = "cloudbuild.yaml"
   depends_on = [google_cloudbuildv2_connection.datahub_automation_connection]
 }
+
+# YAML encode and output one of these:
+
+# steps:
+#   # Docker Build
+#   - name: 'gcr.io/cloud-builders/docker'
+#     args: ['build', '-t', 
+#            'northamerica-northeast1-docker.pkg.dev/phx-andrewguo/django-shiny-platform/djangoapp', 
+#            '.']
+
+#   # Docker Push
+#   - name: 'gcr.io/cloud-builders/docker'
+#     args: ['push', 
+#            'northamerica-northeast1-docker.pkg.dev/phx-andrewguo/django-shiny-platform/djangoapp']
+
+#   # Kubectl Apply
+#   - name: 'gcr.io/cloud-builders/kubectl'
+#   # Set environment variables
+#     env:
+#     - 'CLOUDSDK_COMPUTE_REGION=northamerica-northeast1'
+#     - 'CLOUDSDK_CONTAINER_CLUSTER=django-shiny-platform-app-cluster'
+#     args: ['apply', '-f', 'k8s']
+
+#   # Kubectl rollout restart
+#   - name: 'gcr.io/cloud-builders/kubectl'
+#     env:
+#     - 'CLOUDSDK_COMPUTE_REGION=northamerica-northeast1'
+#     - 'CLOUDSDK_CONTAINER_CLUSTER=django-shiny-platform-app-cluster'
+#     args: ['rollout', 'restart', 'deployment', 'djangoapp-deployment']

@@ -34,6 +34,7 @@ module "GCP_MODULE" {
 module "CLOUDBUILD_MODULE" {
   source         = "./modules/cloudbuild"
   region         = var.region
+  project_id     = var.project_id
   project_number = var.project_number
   repo_name      = "django-shiny"
   repo_uri       = "https://github.com/PHACDataHub/django-shiny.git"

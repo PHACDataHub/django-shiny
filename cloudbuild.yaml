@@ -1,14 +1,25 @@
 steps:
+  # Try to use Cached Docker Image
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args: ['-c', 'docker pull northamerica-northeast1-docker.pkg.dev/phx-01hgge58cfn/django-shiny-platform/app:latest || exit 0']
   # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 
-           'northamerica-northeast1-docker.pkg.dev/phx-andrewguo/django-shiny-platform/djangoapp', 
+           'northamerica-northeast1-docker.pkg.dev/phx-01hgge58cfn/django-shiny-platform/app:latest',
+           '--cache-from', 'northamerica-northeast1-docker.pkg.dev/phx-01hgge58cfn/django-shiny-platform/app:latest',
            '.']
+
+  # # Docker Build from Scratch
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   args: ['build', '-t', 
+  #          'northamerica-northeast1-docker.pkg.dev/phx-01hgge58cfn/django-shiny-platform/app', 
+  #          '.']
 
   # Docker Push
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 
-           'northamerica-northeast1-docker.pkg.dev/phx-andrewguo/django-shiny-platform/djangoapp']
+           'northamerica-northeast1-docker.pkg.dev/phx-01hgge58cfn/django-shiny-platform/app']
 
   # Kubectl Apply
   - name: 'gcr.io/cloud-builders/kubectl'
