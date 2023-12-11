@@ -1,17 +1,8 @@
 # based on this guide: https://cloud.google.com/build/docs/private-pools/accessing-private-gke-clusters-with-cloud-build-private-pools
-variable "project_id" {
-  description = "The id of the project"
-}
-variable "project_name" {
-  description = "The name of the project"
-}
 variable "app_name" {
   description = "The name of the app to made in the project. (Mostly used as a prefix for resources)"
 }
-variable "region" {
-  description = "The region to deploy to"
-  default     = "northamerica-northeast1"
-}
+variable "region" {}
 variable "worker_pool_address" {
   description = "The IP address range for the worker pool"
   default     = "192.168.0.0"

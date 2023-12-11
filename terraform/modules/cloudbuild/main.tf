@@ -1,13 +1,5 @@
-
-data "google_project" "project" {}
-variable "project_id" {
-  description = "The id of the project"
-}
-variable "project_name" {
-  description = "The name of the project"
-}
-variable "app_name" {
-  description = "The name of the app to made in the project. (Mostly used as a prefix for resources)"
+variable "project_number" {
+  description = "The project number of the project ()"
 }
 variable "region" {
   description = "The region to deploy to"
@@ -41,7 +33,7 @@ resource "google_secret_manager_secret_version" "github_token_secret_version" {
 data "google_iam_policy" "p4sa-secretAccessor" {
   binding {
     role    = "roles/secretmanager.secretAccessor"
-    members = ["serviceAccount:service-${data.google_project.project.number}@gcp-sa-cloudbuild.iam.gserviceaccount.com"]
+    members = ["serviceAccount:service-${var.project_number}@gcp-sa-cloudbuild.iam.gserviceaccount.com"]
   }
 }
 

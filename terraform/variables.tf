@@ -1,9 +1,13 @@
-variable "project_id" {
-  description = "The id of the project"
+variable "project_name" {
+  description = "The name of the project (first row of 'Project info' in GCP)"
 }
 
-variable "project_name" {
-  description = "The name of the project"
+variable "project_number" {
+  description = "The project number of the project (second row of 'Project info' in GCP)"
+}
+
+variable "project_id" {
+  description = "The id of the project (third row of 'Project info' in GCP)"
 }
 
 variable "app_name" {
@@ -22,4 +26,14 @@ variable "zone" {
 
 variable "subdomain_name" {
   description = "The name of the DNS zone (must end with a period character)"
+}
+
+# variables from secrets.auto.tfvars
+variable "email_host_user" { 
+  description = "Host email used for magic link authentication (in plaintext format)"
+  sensitive = true 
+  }
+variable "email_host_password" { 
+  description = "Host email password used for magic link authentication (in plaintext format)"
+  sensitive = true 
 }

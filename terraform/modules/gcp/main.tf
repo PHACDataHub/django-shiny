@@ -1,9 +1,6 @@
 variable "project_id" {
   description = "The id of the project"
 }
-variable "project_name" {
-  description = "The name of the project"
-}
 variable "app_name" {
   description = "The name of the app to made in the project. (Mostly used as a prefix for resources)"
 }

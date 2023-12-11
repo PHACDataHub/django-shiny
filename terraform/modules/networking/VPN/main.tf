@@ -1,18 +1,9 @@
 # based on this guide: https://cloud.google.com/build/docs/private-pools/accessing-private-gke-clusters-with-cloud-build-private-pools
 # plus this article: https://cloud.google.com/network-connectivity/docs/vpn/how-to/automate-vpn-setup-with-terraform
-variable "project_id" {
-  description = "The id of the project"
-}
-variable "project_name" {
-  description = "The name of the project"
-}
 variable "app_name" {
   description = "The name of the app to made in the project. (Mostly used as a prefix for resources)"
 }
-variable "region" {
-  description = "The region to deploy to"
-  default     = "northamerica-northeast1"
-}
+variable "region" {}
 variable "gke_vpc_name" {}
 variable "cloudbuild_vpc_name" {}
 variable "gke_clusters_subnetwork_id" {}

@@ -2,8 +2,6 @@ module "VPC_MODULE" {
   source       = "./modules/networking/VPC"
   app_name     = var.app_name
   region       = var.region
-  project_id   = var.project_id
-  project_name = var.project_name
   depends_on   = [module.project-services]
 }
 
@@ -11,8 +9,6 @@ module "VPN_MODULE" {
   source                     = "./modules/networking/VPN"
   app_name                   = var.app_name
   region                     = var.region
-  project_id                 = var.project_id
-  project_name               = var.project_name
   cloudbuild_vpc_name        = module.VPC_MODULE.cloudbuild_private_pool_vpc_network_name
   gke_vpc_name               = module.VPC_MODULE.gke_peering_vpc_network_name
   gke_clusters_subnetwork_id = module.VPC_MODULE.gke_clusters_subnetwork_id
@@ -24,7 +20,6 @@ module "GCP_MODULE" {
   app_name                               = var.app_name
   region                                 = var.region
   project_id                             = var.project_id
-  project_name                           = var.project_name
   subdomain_name                         = var.subdomain_name
   gke_peering_vpc_network_name           = module.VPC_MODULE.gke_peering_vpc_network_name
   gke_peering_vpc_network_id             = module.VPC_MODULE.gke_peering_vpc_network_id
@@ -38,10 +33,8 @@ module "GCP_MODULE" {
 
 module "CLOUDBUILD_MODULE" {
   source       = "./modules/cloudbuild"
-  app_name     = var.app_name
   region       = var.region
-  project_id   = var.project_id
-  project_name = var.project_name
+  project_number = var.project_number
   repo_name    = "django-shiny"
   repo_uri     = "https://github.com/PHACDataHub/django-shiny.git"
   depends_on   = [module.GCP_MODULE]
@@ -67,16 +60,15 @@ module "K8S_MODULE" {
   source           = "./modules/k8s"
   cluster_name     = module.GCP_MODULE.cluster_name
   cluster_endpoint = module.GCP_MODULE.cluster_endpoint
-  app_name         = var.app_name
   app_storage_bucket_name = module.GCP_MODULE.app_storage_bucket_name
-  project_id       = var.project_id
-  project_name     = var.project_name
   cloudbuild_connection_name = module.CLOUDBUILD_MODULE.cloudbuild_github_connection_name
   app_service_account_json = module.GCP_MODULE.app_service_account_json
   providers = {
     kubernetes = kubernetes
     helm       = helm
   }
+  email_host_user = var.email_host_user
+  email_host_password = var.email_host_password
   depends_on = [module.CLOUDBUILD_MODULE]
 }
 
