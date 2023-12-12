@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: djangoapp
-        image: northamerica-northeast1-docker.pkg.dev/phx-datadissemination/django-shiny/djangoapp:latest
+        image: northamerica-northeast1-docker.pkg.dev/phx-01hgge58cfn/django-shiny-platform/app:latest
         imagePullPolicy: Always
         resources:
           requests:
@@ -30,7 +30,7 @@ spec:
         - containerPort: 80
         envFrom:
         - secretRef:
-            name: secrets
+            name: app-secrets
         readinessProbe:
           httpGet:
             scheme: HTTP

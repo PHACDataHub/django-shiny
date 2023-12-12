@@ -14,7 +14,8 @@ variable "gke_peering_vpc_network_name" {}
 variable "gke_peering_vpc_network_id" {}
 variable "cloudbuild_private_pool_vpc_network_id" {}
 variable "gke_clusters_subnetwork_name" {}
-variable "k8s_clusters_ip_range_name" {}
+variable "k8s_pods_ip_range_name" {}
+variable "k8s_pods_ip_range" {}
 variable "k8s_services_ip_range_name" {}
 variable "worker_pool_address" {}
 
@@ -30,7 +31,7 @@ resource "google_storage_bucket" "app_media_bucket" {
 
 ###################### Artifact Registry Setup ######################
 resource "google_artifact_registry_repository" "app_artifact_repo" {
-  repository_id = "${var.app_name}"
+  repository_id = var.app_name
   location      = var.region
   format        = "DOCKER"
 }
@@ -120,7 +121,7 @@ resource "google_container_cluster" "app_cluster" {
 
 
   ip_allocation_policy {
-    cluster_secondary_range_name  = var.k8s_clusters_ip_range_name
+    cluster_secondary_range_name  = var.k8s_pods_ip_range_name
     services_secondary_range_name = var.k8s_services_ip_range_name
   }
 
@@ -183,7 +184,7 @@ resource "google_dns_record_set" "app_tld_dns_record" {
   }
 }
 
-resource "google_compute_global_address" "ingress-ipv4" {
+resource "google_compute_global_address" "ingress_ipv4" {
   name         = "${google_container_cluster.app_cluster.name}-ingress-ipv4"
   address_type = "EXTERNAL"
   ip_version   = "IPV4"
@@ -196,7 +197,7 @@ resource "google_dns_record_set" "app_dns_a_record" {
   managed_zone = google_dns_managed_zone.app_dns_zone.name
   rrdatas = [
     # module.K8S_MODULE.ingress_ipv4_address,
-    google_compute_global_address.ingress-ipv4.address,
+    google_compute_global_address.ingress_ipv4.address,
   ]
 }
 

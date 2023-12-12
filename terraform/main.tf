@@ -25,7 +25,8 @@ module "GCP_MODULE" {
   gke_peering_vpc_network_id             = module.VPC_MODULE.gke_peering_vpc_network_id
   cloudbuild_private_pool_vpc_network_id = module.VPC_MODULE.cloudbuild_private_pool_vpc_network_id
   gke_clusters_subnetwork_name           = module.VPC_MODULE.gke_clusters_subnetwork_name
-  k8s_clusters_ip_range_name             = module.VPC_MODULE.k8s_clusters_ip_range_name
+  k8s_pods_ip_range_name                 = module.VPC_MODULE.k8s_pods_ip_range_name
+  k8s_pods_ip_range                      = module.VPC_MODULE.k8s_pods_ip_range
   k8s_services_ip_range_name             = module.VPC_MODULE.k8s_services_ip_range_name
   worker_pool_address                    = module.VPC_MODULE.worker_pool_address
   depends_on                             = [module.VPN_MODULE]
@@ -42,7 +43,6 @@ module "CLOUDBUILD_MODULE" {
   depends_on     = [module.GCP_MODULE]
 }
 
-# This is probably broken, https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs#stacking-with-managed-kubernetes-cluster-resources
 data "google_client_config" "current" {}
 provider "kubernetes" {
   host                   = "https://${module.GCP_MODULE.cluster_endpoint}"
@@ -60,11 +60,10 @@ provider "helm" {
 
 module "K8S_MODULE" {
   source                     = "./modules/k8s"
-  cluster_name               = module.GCP_MODULE.cluster_name
-  cluster_endpoint           = module.GCP_MODULE.cluster_endpoint
   app_storage_bucket_name    = module.GCP_MODULE.app_storage_bucket_name
   cloudbuild_connection_name = module.CLOUDBUILD_MODULE.cloudbuild_github_connection_name
   app_service_account_json   = module.GCP_MODULE.app_service_account_json
+  ingress_ip_address = module.GCP_MODULE.ingress_ipv4_address
   providers = {
     kubernetes = kubernetes
     helm       = helm
@@ -91,6 +90,7 @@ module "project-services" {
     "servicenetworking.googleapis.com",
     "cloudresourcemanager.googleapis.com",
     "secretmanager.googleapis.com",
+    "containerscanning.googleapis.com",
     #"dns.googleapis.com",
     #"artifactregistry.googleapis.com",
   ]

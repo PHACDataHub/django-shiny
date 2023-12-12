@@ -6,9 +6,9 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: jules.kuehn@phac-aspc.gc.ca # ❗ Replace this with your email address
+    email: andrew.guo@phac-aspc.gc.ca # ❗ Replace this with your email address
     privateKeySecretRef:
-      name: letsencrypt-production
+      name: letsencrypt-staging
     solvers:
     - http01:
         ingress:

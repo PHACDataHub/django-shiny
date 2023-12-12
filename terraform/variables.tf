@@ -29,11 +29,11 @@ variable "subdomain_name" {
 }
 
 # variables from secrets.auto.tfvars
-variable "email_host_user" { 
+variable "email_host_user" {
   description = "Host email used for magic link authentication (in plaintext format)"
-  sensitive = true 
-  }
-variable "email_host_password" { 
+  sensitive   = true
+}
+variable "email_host_password" {
   description = "Host email password used for magic link authentication (in plaintext format)"
-  sensitive = true 
+  sensitive   = true
 }

@@ -18,3 +18,6 @@ output "app_service_account_json" {
 output "app_artifact_repo_id" {
   value = google_artifact_registry_repository.app_artifact_repo.id
 }
+output "ingress_ipv4_address" {
+  value = google_compute_global_address.ingress_ipv4.address
+}

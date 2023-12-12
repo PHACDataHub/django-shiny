@@ -54,7 +54,7 @@ resource "google_project_iam_member" "secret_access" {
   ])
   role   = each.key
   member = "serviceAccount:${var.project_number}@cloudbuild.gserviceaccount.com"
-  
+
 }
 
 resource "google_cloudbuildv2_connection" "datahub_automation_connection" {

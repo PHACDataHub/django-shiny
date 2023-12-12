@@ -26,10 +26,13 @@ output "gke_clusters_subnetwork_id" {
   value = google_compute_subnetwork.gke_clusters_subnetwork.id
 }
 
-output "k8s_clusters_ip_range_name" {
-  value = var.clusters_ip_range_name
+output "k8s_pods_ip_range_name" {
+  value = var.pods_ip_range_name
 }
 
+output "k8s_pods_ip_range" {
+  value = google_compute_subnetwork.gke_clusters_subnetwork.secondary_ip_range[0].ip_cidr_range
+}
 output "k8s_services_ip_range_name" {
   value = var.services_ip_range_name
 }

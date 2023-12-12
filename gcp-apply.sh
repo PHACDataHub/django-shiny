@@ -5,3 +5,4 @@ cd "$parent_path/terraform"
 
 terraform init
 terraform apply -auto-approve
+# kubectl apply -f "$$parent_path/k8s"
