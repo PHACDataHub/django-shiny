@@ -37,7 +37,21 @@ resource "kubernetes_secret" "default" {
   }
 }
 
-# Resources generated using k2tf (https://github.com/sl1pm4t/k2tf) from .YAMLs in /k8s directory 
+resource "helm_release" "cert_manager" {
+  name       = "cert-manager"
+  repository = "https://charts.jetstack.io"
+  chart      = "cert-manager"
+  version    = "v1.13.3"
+  namespace = "cert-manager"
+  create_namespace = true
+
+  set {
+    name  = "installCRDs"
+    value = "true"
+  }
+}
+
+# Resources after this point are generated using k2tf (https://github.com/sl1pm4t/k2tf) from .YAMLs in /k8s directory 
 resource "kubernetes_ingress_v1" "djangoapp_ingress" {
   metadata {
     name = "djangoapp-ingress"

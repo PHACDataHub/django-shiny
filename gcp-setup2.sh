@@ -42,7 +42,7 @@ gcloud storage buckets create gs://app-tfstate-bucket --location=$REGION --proje
     --uniform-bucket-level-access --public-access-prevention
 gcloud storage buckets update gs://app-tfstate-bucket --versioning
 gcloud iam service-accounts create $SA_NAME --description="Service account for Terraform" --display-name=$SA_NAME
-var=${ROLES:="editor resourcemanager.projectIamAdmin servicemanagement.quotaAdmin servicenetworking.networksAdmin serviceusage.serviceUsageAdmin storage.objectAdmin secretmanager.admin"}
+var=${ROLES:="editor resourcemanager.projectIamAdmin servicemanagement.quotaAdmin servicenetworking.networksAdmin serviceusage.serviceUsageAdmin storage.objectAdmin secretmanager.admin container.admin"}
 for ROLE_NAME in $ROLES
     do
         gcloud projects add-iam-policy-binding $PROJECT_ID --member="serviceAccount:$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com" --role="roles/$ROLE_NAME"
