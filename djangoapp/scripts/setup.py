@@ -17,7 +17,12 @@ def run():
 
     # Get the JSON string
     json_str = os.environ.get('GCP_SA_KEY_JSON')
-    print('Retrieved Service Account Key JSON string from ENV variable')
+
+    if json_str is not None:
+        print('Retrieved Service Account Key JSON string from ENV variable')
+    else:
+        print('No Service Account Key JSON string found in ENV variable')
+
     if json_str:
         # Write it to file
         with open(os.path.join(parent_dir, 'gcp_service_account_key.json'), 'w') as f:

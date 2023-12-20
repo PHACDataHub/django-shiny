@@ -191,7 +191,7 @@ resource "google_compute_global_address" "ingress_ipv4" {
 }
 
 resource "google_dns_record_set" "app_dns_a_record" {
-  name         = "andrew.shiny.phac.alpha.canada.ca."
+  name         = "dev.shiny.phac.alpha.canada.ca."
   type         = "A"
   ttl          = 300
   managed_zone = google_dns_managed_zone.app_dns_zone.name

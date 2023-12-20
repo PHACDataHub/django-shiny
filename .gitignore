@@ -122,3 +122,4 @@ djangoapp/media
 *github-oauthtoken*
 *secrets.json
 *env.sh
+.DS_Store
