@@ -10,10 +10,9 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-prod
     solvers:
-    - dns01:
-        cloudDNS:
-          # The ID of the GCP project
-            project: phx-01hgge58cfn
+    - http01:
+        ingress:
+          name: djangoapp-ingress
 
 ---
 # issuer-lets-encrypt-staging.yaml
@@ -28,7 +27,6 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-staging
     solvers:
-    - dns01:
-        cloudDNS:
-          # The ID of the GCP project
-            project: phx-01hgge58cfn
+    - http01:
+        ingress:
+          name: djangoapp-ingress
