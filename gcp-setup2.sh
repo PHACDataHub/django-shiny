@@ -37,15 +37,21 @@ var=${REGION:=northamerica-northeast1}
 var=${PROJECT_ID:=phx-datadissemination}
 var=${SA_NAME:=terraform-sa}
 
+# For terraform:
 gcloud services enable serviceusage.googleapis.com
+gcloud services enable cloudresourcemanager.googleapis.com
+# For cloud bucket (tfstate):
+gcloud services enable compute.googleapis.com
 gcloud storage buckets create gs://app-tfstate-bucket --location=$REGION --project=$PROJECT_ID --default-storage-class=STANDARD \
     --uniform-bucket-level-access --public-access-prevention
 gcloud storage buckets update gs://app-tfstate-bucket --versioning
+
+# Create a service account for terraform:
 gcloud iam service-accounts create $SA_NAME --description="Service account for Terraform" --display-name=$SA_NAME
 var=${ROLES:="editor resourcemanager.projectIamAdmin servicemanagement.quotaAdmin servicenetworking.networksAdmin serviceusage.serviceUsageAdmin storage.objectAdmin secretmanager.admin container.admin"}
 for ROLE_NAME in $ROLES
     do
         gcloud projects add-iam-policy-binding $PROJECT_ID --member="serviceAccount:$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com" --role="roles/$ROLE_NAME"
     done
-# add the path of this key to the provider:
+# Add the path of this key to the provider:
 gcloud iam service-accounts keys create terraform-service-account-key.json --iam-account=$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com

@@ -81,17 +81,12 @@ module "project-services" {
   project_id = var.project_id
 
   activate_apis = [
-    "cloudresourcemanager.googleapis.com",
-    "compute.googleapis.com",
-    "container.googleapis.com",
-    "cloudbuild.googleapis.com",
+    "secretmanager.googleapis.com",
     "iam.googleapis.com",
     "cloudkms.googleapis.com",
     "servicenetworking.googleapis.com",
-    "cloudresourcemanager.googleapis.com",
-    "secretmanager.googleapis.com",
+    "cloudbuild.googleapis.com",
+    "container.googleapis.com",
     "containerscanning.googleapis.com",
-    #"dns.googleapis.com",
-    #"artifactregistry.googleapis.com",
   ]
 }
