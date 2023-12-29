@@ -40,6 +40,7 @@ var=${SA_NAME:=terraform-sa}
 # For terraform:
 gcloud services enable serviceusage.googleapis.com
 gcloud services enable cloudresourcemanager.googleapis.com
+
 # For cloud bucket (tfstate):
 gcloud services enable compute.googleapis.com
 gcloud storage buckets create gs://app-tfstate-bucket --location=$REGION --project=$PROJECT_ID --default-storage-class=STANDARD \

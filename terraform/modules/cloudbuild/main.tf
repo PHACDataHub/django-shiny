@@ -29,19 +29,7 @@ resource "google_secret_manager_secret_version" "github_token_secret_version" {
   secret_data = file("datahub-automation-github-oauthtoken.txt")
 }
 
-# data "google_iam_policy" "p4sa-secretAccessor" {
-#   binding {
-#     role    = "roles/secretmanager.secretAccessor"
-#     members = ["serviceAccount:service-${var.project_number}@gcp-sa-cloudbuild.iam.gserviceaccount.com"]
-#   }
-# }
-
-# resource "google_secret_manager_secret_iam_policy" "policy" {
-#   secret_id   = google_secret_manager_secret.github_token_secret.secret_id
-#   policy_data = data.google_iam_policy.p4sa-secretAccessor.policy_data
-# }
-
-resource "google_project_iam_member" "secret_access" {
+resource "google_project_iam_member" "cloudbuild_sa" {
   project = var.project_id
   for_each = toset([
     "roles/cloudbuild.connectionAdmin",
@@ -54,7 +42,12 @@ resource "google_project_iam_member" "secret_access" {
   ])
   role   = each.key
   member = "serviceAccount:${var.project_number}@cloudbuild.gserviceaccount.com"
+}
 
+resource "google_project_iam_member" "secret_access" {
+  project = var.project_id
+  role   = "roles/secretmanager.secretAccessor"
+  member = "serviceAccount:service-${var.project_number}@gcp-sa-cloudbuild.iam.gserviceaccount.com"
 }
 
 resource "google_cloudbuildv2_connection" "datahub_automation_connection" {
@@ -62,13 +55,13 @@ resource "google_cloudbuildv2_connection" "datahub_automation_connection" {
   name     = "datahub-automation-connection"
 
   github_config {
-    app_installation_id = 29060113 # install id in the PHACDataHub org and authorized GitHub app under datahub-automation account
+    app_installation_id = 29060113 # install id in the PHACDataHub org and authorized GitHub app under datahub-automation account (check url)
     authorizer_credential {
       oauth_token_secret_version = google_secret_manager_secret_version.github_token_secret_version.id
     }
   }
 
-  depends_on = [google_project_iam_member.secret_access]
+  depends_on = [google_project_iam_member.secret_access, google_secret_manager_secret_version.github_token_secret_version]
 }
 
 resource "google_cloudbuildv2_repository" "app_repo" {
