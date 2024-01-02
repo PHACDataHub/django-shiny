@@ -184,10 +184,12 @@ resource "google_dns_record_set" "app_tld_dns_record" {
   }
 }
 
-resource "google_compute_global_address" "ingress_ipv4" {
+resource "google_compute_address" "ingress_ipv4" {
   name         = "${google_container_cluster.app_cluster.name}-ingress-ipv4"
   address_type = "EXTERNAL"
   ip_version   = "IPV4"
+  region = var.region
+  network_tier = "PREMIUM"
 }
 
 resource "google_dns_record_set" "app_dns_a_record" {
@@ -197,7 +199,7 @@ resource "google_dns_record_set" "app_dns_a_record" {
   managed_zone = google_dns_managed_zone.app_dns_zone.name
   rrdatas = [
     # module.K8S_MODULE.ingress_ipv4_address,
-    google_compute_global_address.ingress_ipv4.address,
+    google_compute_address.ingress_ipv4.address,
   ]
 }
 
