@@ -33,7 +33,13 @@ variable "email_host_user" {
   description = "Host email used for magic link authentication (in plaintext format)"
   sensitive   = true
 }
+
 variable "email_host_password" {
   description = "Host email password used for magic link authentication (in plaintext format)"
+  sensitive   = true
+}
+
+variable "github_oauth_token" {
+  description = "The GitHub OAuth token for the datahub-automation GitHub service account"
   sensitive   = true
 }

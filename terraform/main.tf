@@ -33,14 +33,15 @@ module "GCP_MODULE" {
 }
 
 module "CLOUDBUILD_MODULE" {
-  source         = "./modules/cloudbuild"
-  region         = var.region
-  project_id     = var.project_id
-  project_number = var.project_number
-  repo_name      = "django-shiny"
-  repo_uri       = "https://github.com/PHACDataHub/django-shiny.git"
-  repo_branch    = "add-terraform"
-  depends_on     = [module.GCP_MODULE]
+  source             = "./modules/cloudbuild"
+  region             = var.region
+  project_id         = var.project_id
+  project_number     = var.project_number
+  repo_name          = "django-shiny"
+  repo_uri           = "https://github.com/PHACDataHub/django-shiny.git"
+  repo_branch        = "add-terraform"
+  github_oauth_token = var.github_oauth_token
+  depends_on         = [module.GCP_MODULE]
 }
 
 data "google_client_config" "current" {}
@@ -63,7 +64,7 @@ module "K8S_MODULE" {
   app_storage_bucket_name    = module.GCP_MODULE.app_storage_bucket_name
   cloudbuild_connection_name = module.CLOUDBUILD_MODULE.cloudbuild_github_connection_name
   app_service_account_json   = module.GCP_MODULE.app_service_account_json
-  ingress_ip_address = module.GCP_MODULE.ingress_ipv4_address
+  ingress_ip_address         = module.GCP_MODULE.ingress_ipv4_address
   providers = {
     kubernetes = kubernetes
     helm       = helm

@@ -10,6 +10,10 @@ variable "repo_uri" {
 variable "repo_branch" {
   description = "The branch of the app repo to trigger on"
 }
+variable "github_oauth_token" {
+  description = "The GitHub OAuth token for the datahub-automation GitHub service account"
+  sensitive   = true
+}
 
 # Cloud Build Connection
 resource "google_secret_manager_secret" "github_token_secret" {
@@ -26,7 +30,7 @@ resource "google_secret_manager_secret" "github_token_secret" {
 
 resource "google_secret_manager_secret_version" "github_token_secret_version" {
   secret      = google_secret_manager_secret.github_token_secret.id
-  secret_data = file("datahub-automation-github-oauthtoken.txt")
+  secret_data = var.github_oauth_token
 }
 
 resource "google_project_iam_member" "cloudbuild_sa" {
@@ -46,8 +50,8 @@ resource "google_project_iam_member" "cloudbuild_sa" {
 
 resource "google_project_iam_member" "secret_access" {
   project = var.project_id
-  role   = "roles/secretmanager.secretAccessor"
-  member = "serviceAccount:service-${var.project_number}@gcp-sa-cloudbuild.iam.gserviceaccount.com"
+  role    = "roles/secretmanager.secretAccessor"
+  member  = "serviceAccount:service-${var.project_number}@gcp-sa-cloudbuild.iam.gserviceaccount.com"
 }
 
 resource "google_cloudbuildv2_connection" "datahub_automation_connection" {

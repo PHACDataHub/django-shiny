@@ -188,7 +188,7 @@ resource "google_compute_address" "ingress_ipv4" {
   name         = "${google_container_cluster.app_cluster.name}-ingress-ipv4"
   address_type = "EXTERNAL"
   ip_version   = "IPV4"
-  region = var.region
+  region       = var.region
   network_tier = "PREMIUM"
 }
 
