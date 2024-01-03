@@ -12,6 +12,7 @@ echo "WARNING: This script is for ONLY the first setup of the project. Ensure yo
 #   - Service Usage Admin
 #   - Service Networking Admin
 #   - Secret Manager Admin
+#   - Container Admin
 #   and enter the path to json key in the provider
 # - Create a storage bucket for the terraform state remotely:
 # resource "google_storage_bucket" "app_tfstate" {
