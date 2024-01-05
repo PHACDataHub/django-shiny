@@ -55,8 +55,7 @@ resource "google_project_iam_member" "app_service_account_iam" {
   for_each = toset([
     "roles/cloudbuild.connectionAdmin",
     "roles/cloudbuild.connectionViewer",
-    "roles/cloudbuild.builds.editor",
-    "roles/cloudbuild.builds.viewer",
+    "roles/cloudbuild.builds.builder",
     "roles/container.admin",
     "roles/container.developer",
     "roles/secretmanager.secretAccessor",

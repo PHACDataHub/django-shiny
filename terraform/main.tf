@@ -61,6 +61,7 @@ provider "helm" {
 
 module "K8S_MODULE" {
   source                     = "./modules/k8s"
+  project_id                 = var.project_id
   app_storage_bucket_name    = module.GCP_MODULE.app_storage_bucket_name
   cloudbuild_connection_name = module.CLOUDBUILD_MODULE.cloudbuild_github_connection_name
   app_service_account_json   = module.GCP_MODULE.app_service_account_json

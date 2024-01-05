@@ -4,6 +4,7 @@ variable "app_service_account_json" { sensitive = true }
 variable "email_host_user" { sensitive = true }
 variable "email_host_password" { sensitive = true }
 variable "ingress_ip_address" {}
+variable "project_id" {}
 
 resource "random_password" "postgres" {
   length  = 16
@@ -30,6 +31,7 @@ resource "kubernetes_secret" "default" {
     EMAIL_HOST : "email-smtp.ca-central-1.amazonaws.com"
     EMAIL_PORT : "587"
     EMAIL_USE_TLS : "True"
+    GCP_PROJECT_ID : var.project_id
     # deprecated
     # "POWER_AUTOMATE_URL" :
   }
