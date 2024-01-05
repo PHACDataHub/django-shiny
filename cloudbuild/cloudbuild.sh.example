@@ -10,7 +10,7 @@ gcloud builds triggers delete $APP_SLUG-shinyapp-trigger --region=northamerica-n
 echo "Setting up new build trigger for $GIT_BRANCH branch"
 gcloud builds triggers create github \
   --name=$APP_SLUG-shinyapp-trigger \
-  --repository=projects/phx-datadissemination/locations/northamerica-northeast1/connections/$CLOUDBUILD_CONNECTION/repositories/$REPO_NAME \
+  --repository=projects/$GCP_PROJECT_ID/locations/northamerica-northeast1/connections/$CLOUDBUILD_CONNECTION/repositories/$REPO_NAME \
   --branch-pattern=^$GIT_BRANCH$ \
   --inline-config=../cloudbuild/$APP_SLUG.cloudbuild.yaml \
   --region=northamerica-northeast1

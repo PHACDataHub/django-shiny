@@ -37,6 +37,7 @@ def generate_deployment(app):
     with open(yaml_template) as f:
         template_lines = f.readlines()
         template_lines = [line.replace('$APP_SLUG', app_slug) for line in template_lines]
+        template_lines = [line.replace('$GCP_PROJECT_ID', GCP_PROJECT_ID) for line in template_lines]
     new_file = os.path.join(cloudbuild_dir, f"{app_slug}.cloudbuild.yaml")
     with open(new_file, 'w') as f:
         f.writelines(template_lines)
@@ -50,6 +51,7 @@ def generate_deployment(app):
         template_lines = [line.replace('$GIT_BRANCH', git_branch) for line in template_lines]
         template_lines = [line.replace('$CLOUDBUILD_CONNECTION', cloudbuild_connection) for line in template_lines]
         template_lines = [line.replace('$REPO_NAME', repo_name) for line in template_lines]
+        template_lines = [line.replace('$GCP_PROJECT_ID', GCP_PROJECT_ID) for line in template_lines]
     new_file = os.path.join(cloudbuild_dir, f"{app_slug}.cloudbuild.sh")
     with open(new_file, 'w') as f:
         f.writelines(template_lines)
