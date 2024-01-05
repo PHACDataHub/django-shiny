@@ -15,9 +15,6 @@ output "app_service_account_json" {
   value     = google_service_account_key.app_sa_key.private_key # this is a base64 encoded json string
   sensitive = true
 }
-output "app_artifact_repo_id" {
-  value = google_artifact_registry_repository.app_artifact_repo.id
-}
 output "ingress_ipv4_address" {
   value = google_compute_address.ingress_ipv4.address
 }

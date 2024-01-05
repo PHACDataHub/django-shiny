@@ -2,13 +2,13 @@ steps:
   # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 
-           'northamerica-northeast1-docker.pkg.dev/${_GCP_PROJECT_ID}/shiny-apps/${_APP_SLUG}', 
+           'northamerica-northeast1-docker.pkg.dev/${_GCP_PROJECT_ID}/hosted-apps-repo/${_APP_SLUG}', 
            '.']
 
   # Docker Push
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 
-           'northamerica-northeast1-docker.pkg.dev/${_GCP_PROJECT_ID}/shiny-apps/${_APP_SLUG}']
+           'northamerica-northeast1-docker.pkg.dev/${_GCP_PROJECT_ID}/hosted-apps-repo/${_APP_SLUG}']
 
   # Kubectl Rollout Restart
   - name: 'gcr.io/cloud-builders/kubectl'

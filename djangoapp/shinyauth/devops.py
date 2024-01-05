@@ -67,7 +67,7 @@ def generate_deployment(app):
     print("Created file: {}".format(new_file))
 
     # Generate Kubernetes deployment YAML
-    app_image = f'northamerica-northeast1-docker.pkg.dev/{GCP_PROJECT_ID}/shiny-apps/{app_slug}'
+    app_image = f'northamerica-northeast1-docker.pkg.dev/{GCP_PROJECT_ID}/hosted-apps-repo/{app_slug}'
     with open(k8s_template) as f:
         template_lines = f.readlines()
         template_lines = [line.replace('$APP_SLUG', app_slug) for line in template_lines]

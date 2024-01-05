@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: djangoapp
-        image: northamerica-northeast1-docker.pkg.dev/phx-01hgge58cfn/django-shiny-platform/app:latest
+        image: northamerica-northeast1-docker.pkg.dev/phx-01hgge58cfn/django-app-repo/app:latest
         imagePullPolicy: Always
         resources:
           requests:
