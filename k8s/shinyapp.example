@@ -56,7 +56,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: shiny.phac.alpha.canada.ca
+  - host: $HOSTNAME
     http:
       paths:
       - path: /shiny/$APP_SLUG/.+

@@ -1,7 +1,7 @@
 from django.conf import settings
 import os
 
-from djangoapp.settings import GCP_PROJECT_ID
+from djangoapp.settings import GCP_PROJECT_ID, HOSTNAME
 
 def generate_deployment(app):
     """
@@ -77,6 +77,7 @@ def generate_deployment(app):
         template_lines = [line.replace('$MEM_MAX', mem_max) for line in template_lines]
         template_lines = [line.replace('$CPU_MIN', cpu_min) for line in template_lines]
         template_lines = [line.replace('$CPU_MAX', cpu_max) for line in template_lines]
+        template_lines = [line.replace('$HOSTNAME', HOSTNAME) for line in template_lines]
     new_file = os.path.join(k8s_dir, f"{app_slug}.shinyapp.yaml")
     with open(new_file, 'w') as f:
         f.writelines(template_lines)
