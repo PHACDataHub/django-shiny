@@ -9,7 +9,7 @@ variable "region" {
   default     = "northamerica-northeast1"
 }
 ### Get from VPC outputs ###
-variable "subdomain_name" {}
+variable "url" {}
 variable "gke_peering_vpc_network_name" {}
 variable "gke_peering_vpc_network_id" {}
 variable "cloudbuild_private_pool_vpc_network_id" {}
@@ -158,8 +158,8 @@ resource "google_cloudbuild_worker_pool" "app_worker_pool" {
 ###################### Cloud DNS ######################
 resource "google_dns_managed_zone" "app_dns_zone" {
   name        = "${var.app_name}-app-dns-zone"
-  dns_name    = "${var.subdomain_name}.phac.alpha.canada.ca."
-  description = "DNS zone for ${var.app_name} at ${var.subdomain_name}.phac.alpha.canada.ca"
+  dns_name    = "${var.url}."
+  description = "DNS zone for ${var.app_name} at ${var.url}."
   dnssec_config {
     state = "on"
   }
@@ -167,7 +167,7 @@ resource "google_dns_managed_zone" "app_dns_zone" {
 
 ###################### Point to SSC DNS to GKE app ######################
 resource "google_dns_record_set" "app_tld_dns_record" {
-  name         = "${var.subdomain_name}.phac.alpha.canada.ca."
+  name         = "${var.url}."
   type         = "NS"
   ttl          = 21600
   managed_zone = google_dns_managed_zone.app_dns_zone.name
@@ -192,7 +192,7 @@ resource "google_compute_address" "ingress_ipv4" {
 }
 
 resource "google_dns_record_set" "app_dns_a_record" {
-  name         = "dev.shiny.phac.alpha.canada.ca."
+  name         = "${var.url}."
   type         = "A"
   ttl          = 300
   managed_zone = google_dns_managed_zone.app_dns_zone.name
@@ -203,7 +203,7 @@ resource "google_dns_record_set" "app_dns_a_record" {
 }
 
 resource "google_dns_record_set" "app_dns_soa_record" {
-  name         = "${var.subdomain_name}.phac.alpha.canada.ca."
+  name         = "${var.url}."
   type         = "SOA"
   ttl          = 21600
   managed_zone = google_dns_managed_zone.app_dns_zone.name

@@ -17,10 +17,10 @@ module "VPN_MODULE" {
 
 module "GCP_MODULE" {
   source                                 = "./modules/gcp"
+  project_id                             = var.project_id
   app_name                               = var.app_name
   region                                 = var.region
-  project_id                             = var.project_id
-  subdomain_name                         = var.subdomain_name
+  url                                    = var.url
   gke_peering_vpc_network_name           = module.VPC_MODULE.gke_peering_vpc_network_name
   gke_peering_vpc_network_id             = module.VPC_MODULE.gke_peering_vpc_network_id
   cloudbuild_private_pool_vpc_network_id = module.VPC_MODULE.cloudbuild_private_pool_vpc_network_id
@@ -66,13 +66,16 @@ module "K8S_MODULE" {
   cloudbuild_connection_name = module.CLOUDBUILD_MODULE.cloudbuild_github_connection_name
   app_service_account_json   = module.GCP_MODULE.app_service_account_json
   ingress_ip_address         = module.GCP_MODULE.ingress_ipv4_address
+  email_host_user            = var.email_host_user
+  email_host_password        = var.email_host_password
+  environment                = var.environment
+  hostname                   = var.url
   providers = {
     kubernetes = kubernetes
     helm       = helm
   }
-  email_host_user     = var.email_host_user
-  email_host_password = var.email_host_password
-  depends_on          = [module.CLOUDBUILD_MODULE]
+
+  depends_on = [module.CLOUDBUILD_MODULE]
 }
 
 ###################### Enable APIs #####################

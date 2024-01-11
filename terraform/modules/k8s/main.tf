@@ -5,6 +5,8 @@ variable "email_host_user" { sensitive = true }
 variable "email_host_password" { sensitive = true }
 variable "ingress_ip_address" {}
 variable "project_id" {}
+variable "environment" {}
+variable "hostname" {}
 
 resource "random_password" "postgres" {
   length  = 16
@@ -32,8 +34,8 @@ resource "kubernetes_secret" "default" {
     EMAIL_PORT : "587"
     EMAIL_USE_TLS : "True"
     GCP_PROJECT_ID : var.project_id
-    # deprecated
-    # "POWER_AUTOMATE_URL" :
+    ENVIRONMENT : var.environment
+    HOSTNAME : var.hostname
   }
 }
 
