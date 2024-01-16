@@ -2,21 +2,21 @@ echo "Connecting repository $GIT_REPO to Cloud Build"
 gcloud builds repositories create $REPO_NAME \
   --remote-uri=$GIT_REPO \
   --connection=$CLOUDBUILD_CONNECTION \
-  --region=northamerica-northeast1
+  --region=$REGION
 
 echo "Deleting existing build trigger $APP_SLUG-shinyapp-trigger"
-gcloud builds triggers delete $APP_SLUG-shinyapp-trigger --region=northamerica-northeast1
+gcloud builds triggers delete $APP_SLUG-shinyapp-trigger --region=$REGION
 
 echo "Setting up new build trigger for $GIT_BRANCH branch"
 gcloud builds triggers create github \
   --name=$APP_SLUG-shinyapp-trigger \
-  --repository=projects/$GCP_PROJECT_ID/locations/northamerica-northeast1/connections/$CLOUDBUILD_CONNECTION/repositories/$REPO_NAME \
+  --repository=projects/$GCP_PROJECT_ID/locations/$REGION/connections/$CLOUDBUILD_CONNECTION/repositories/$REPO_NAME \
   --branch-pattern=^$GIT_BRANCH$ \
   --inline-config=../cloudbuild/$APP_SLUG.cloudbuild.yaml \
-  --region=northamerica-northeast1
+  --region=$REGION
 
 echo "Running build trigger"
-gcloud builds triggers run $APP_SLUG-shinyapp-trigger --region=northamerica-northeast1 --branch=$GIT_BRANCH
+gcloud builds triggers run $APP_SLUG-shinyapp-trigger --region=$REGION --branch=$GIT_BRANCH
 
 echo "Applying kubernetes file"
 kubectl apply -f ../k8s/$APP_SLUG.shinyapp.yaml

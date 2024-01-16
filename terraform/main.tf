@@ -96,3 +96,11 @@ module "project-services" {
     "containerscanning.googleapis.com",
   ]
 }
+
+###################### Generate Templates #####################
+module "YAML_MODULE" {
+  source     = "./modules/yamls"
+  region     = var.region
+  project_id = var.project_id
+  hostname   = var.url
+}

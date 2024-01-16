@@ -2,36 +2,36 @@ steps:
   # # Docker Build from Scratch
   # - name: 'gcr.io/cloud-builders/docker'
   #   args: ['build', '-t', 
-  #          'northamerica-northeast1-docker.pkg.dev/phx-01hgge58cfn/django-app-repo/app', 
+  #          '${region}-docker.pkg.dev/${project_id}/django-app-repo/app', 
   #          '.']
 
   # Try to use Cached Docker Image
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
-    args: ['-c', 'docker pull northamerica-northeast1-docker.pkg.dev/phx-01hgge58cfn/django-app-repo/app:latest || exit 0']
+    args: ['-c', 'docker pull ${region}-docker.pkg.dev/${project_id}/django-app-repo/app:latest || exit 0']
   # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 
-           'northamerica-northeast1-docker.pkg.dev/phx-01hgge58cfn/django-app-repo/app:latest',
-           '--cache-from', 'northamerica-northeast1-docker.pkg.dev/phx-01hgge58cfn/django-app-repo/app:latest',
+           '${region}-docker.pkg.dev/${project_id}/django-app-repo/app:latest',
+           '--cache-from', '${region}-docker.pkg.dev/${project_id}/django-app-repo/app:latest',
            '.']
 
   # Docker Push
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 
-           'northamerica-northeast1-docker.pkg.dev/phx-01hgge58cfn/django-app-repo/app']
+           '${region}-docker.pkg.dev/${project_id}/django-app-repo/app']
 
   # Kubectl Apply
   - name: 'gcr.io/cloud-builders/kubectl'
   # Set environment variables
     env:
-    - 'CLOUDSDK_COMPUTE_REGION=northamerica-northeast1'
+    - 'CLOUDSDK_COMPUTE_REGION=${region}'
     - 'CLOUDSDK_CONTAINER_CLUSTER=django-shiny-platform-app-cluster'
     args: ['apply', '-f', 'k8s']
 
   # Kubectl rollout restart
   - name: 'gcr.io/cloud-builders/kubectl'
     env:
-    - 'CLOUDSDK_COMPUTE_REGION=northamerica-northeast1'
+    - 'CLOUDSDK_COMPUTE_REGION=${region}'
     - 'CLOUDSDK_CONTAINER_CLUSTER=django-shiny-platform-app-cluster'
     args: ['rollout', 'restart', 'deployment', 'djangoapp-deployment']

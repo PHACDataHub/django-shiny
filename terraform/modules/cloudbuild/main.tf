@@ -90,32 +90,3 @@ resource "google_cloudbuild_trigger" "filename-trigger" {
   filename   = "cloudbuild.yaml"
   depends_on = [google_cloudbuildv2_connection.datahub_automation_connection]
 }
-
-# YAML encode and output one of these:
-
-# steps:
-#   # Docker Build
-#   - name: 'gcr.io/cloud-builders/docker'
-#     args: ['build', '-t', 
-#            'northamerica-northeast1-docker.pkg.dev/phx-andrewguo/django-shiny-platform/djangoapp', 
-#            '.']
-
-#   # Docker Push
-#   - name: 'gcr.io/cloud-builders/docker'
-#     args: ['push', 
-#            'northamerica-northeast1-docker.pkg.dev/phx-andrewguo/django-shiny-platform/djangoapp']
-
-#   # Kubectl Apply
-#   - name: 'gcr.io/cloud-builders/kubectl'
-#   # Set environment variables
-#     env:
-#     - 'CLOUDSDK_COMPUTE_REGION=northamerica-northeast1'
-#     - 'CLOUDSDK_CONTAINER_CLUSTER=django-shiny-platform-app-cluster'
-#     args: ['apply', '-f', 'k8s']
-
-#   # Kubectl rollout restart
-#   - name: 'gcr.io/cloud-builders/kubectl'
-#     env:
-#     - 'CLOUDSDK_COMPUTE_REGION=northamerica-northeast1'
-#     - 'CLOUDSDK_CONTAINER_CLUSTER=django-shiny-platform-app-cluster'
-#     args: ['rollout', 'restart', 'deployment', 'djangoapp-deployment']
