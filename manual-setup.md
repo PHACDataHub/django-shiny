@@ -10,3 +10,4 @@
 * Create cloud build trigger pointing at that particular cloudbuild file
 
   * can also be done in terraform
+* After creating `dev`, create a NS record in `prod` with the name servers found by clicking `Registrar Setup `in the top right corner of the `Zone details` page of the DNS zone.
