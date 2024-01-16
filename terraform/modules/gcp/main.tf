@@ -155,31 +155,13 @@ resource "google_cloudbuild_worker_pool" "app_worker_pool" {
   depends_on = [google_service_networking_connection.cloudbuild_service_networking_connection]
 }
 
-###################### Cloud DNS ######################
+###################### Cloud DNS + Ingress IP ######################
 resource "google_dns_managed_zone" "app_dns_zone" {
   name        = "${var.app_name}-app-dns-zone"
   dns_name    = "${var.url}."
   description = "DNS zone for ${var.app_name} at ${var.url}."
   dnssec_config {
     state = "on"
-  }
-}
-
-###################### Point to SSC DNS to GKE app ######################
-resource "google_dns_record_set" "app_tld_dns_record" {
-  name         = "${var.url}."
-  type         = "NS"
-  ttl          = 21600
-  managed_zone = google_dns_managed_zone.app_dns_zone.name
-  rrdatas = [
-    "ns-cloud-d1.googledomains.com.",
-    "ns-cloud-d2.googledomains.com.",
-    "ns-cloud-d3.googledomains.com.",
-    "ns-cloud-d4.googledomains.com.",
-  ]
-
-  lifecycle {
-    prevent_destroy = true # GCP errors if you try to destroy this record, just remove it from tf state before destroying the zone
   }
 }
 
@@ -200,20 +182,6 @@ resource "google_dns_record_set" "app_dns_a_record" {
     # module.K8S_MODULE.ingress_ipv4_address,
     google_compute_address.ingress_ipv4.address,
   ]
-}
-
-resource "google_dns_record_set" "app_dns_soa_record" {
-  name         = "${var.url}."
-  type         = "SOA"
-  ttl          = 21600
-  managed_zone = google_dns_managed_zone.app_dns_zone.name
-  rrdatas = [
-    "ns-cloud-d1.googledomains.com. cloud-dns-hostmaster.google.com. 1 21600 3600 259200 300",
-  ]
-
-  lifecycle {
-    prevent_destroy = true # GCP errors if you try to destroy this record, just remove it from tf state before destroying the zone
-  }
 }
 
 ###################### Add peering to service network api (for terraform) ######################
