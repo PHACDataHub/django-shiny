@@ -116,6 +116,7 @@ GC_NOTIFY_API_KEY = env("GC_NOTIFY_API_KEY", default=None)
 GC_NOTIFY_TEMPLATE_ID = env("GC_NOTIFY_TEMPLATE_ID", default=None)
 POWER_AUTOMATE_URL = env("POWER_AUTOMATE_URL", default=None)
 GCP_PROJECT_ID = env("GCP_PROJECT_ID", default=None)
+GCP_REGION = env("GCP_REGION", default="northamerica-northeast1")
 HOSTNAME = env("HOSTNAME", default=None)
 
 if FAKE_EMAIL:

@@ -69,6 +69,7 @@ module "K8S_MODULE" {
   email_host_user            = var.email_host_user
   email_host_password        = var.email_host_password
   environment                = var.environment
+  region                     = var.region
   hostname                   = var.url
   providers = {
     kubernetes = kubernetes
