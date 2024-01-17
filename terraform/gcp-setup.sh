@@ -1,4 +1,6 @@
 #!/bin/bash
+cd "${0%/*}" # change directory to the script's directory
+
 echo "WARNING: This script is for ONLY the first setup of the project. Ensure your gcloud is logged in and it's the initial setup before proceeding."
 # it's probably fine if you run this script multiple times, but it's not necessary and you get a lot of errors if you do
 
@@ -30,5 +32,4 @@ for ROLE_NAME in $ROLES
     do
         gcloud projects add-iam-policy-binding $PROJECT_ID --member="serviceAccount:$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com" --role="roles/$ROLE_NAME"
     done
-# Add the path of this key to the provider:
 gcloud iam service-accounts keys create terraform-service-account-key.json --iam-account=$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com
