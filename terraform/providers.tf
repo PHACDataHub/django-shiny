@@ -4,7 +4,7 @@ terraform {
   backend "gcs" {
     bucket      = "app-tfstate-bucket"
     prefix      = "terraform/state"
-    credentials = "/Users/aguo/keys/gcp/phx-01hgge58cfn-1315132c2405.json" # any account with Storage Object Admin role
+    credentials = "./terraform-service-account-key.json" # any account with Storage Object Admin role
   }
 
   required_providers {
