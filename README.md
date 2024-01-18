@@ -8,20 +8,23 @@ This is based on [Django Auth Server for Shiny](https://pawamoy.github.io/posts/
 
 ## Video Demo
 
-[<img src="https://github-production-user-asset-6210df.s3.amazonaws.com/367922/276718725-1b6f1333-5e35-4999-9b34-1f33b7531761.png">](https://www.youtube.com/watch?v=O-p3oKCu4rg)
+[`<img src="https://github-production-user-asset-6210df.s3.amazonaws.com/367922/276718725-1b6f1333-5e35-4999-9b34-1f33b7531761.png">`](https://www.youtube.com/watch?v=O-p3oKCu4rg)
 
 ## Adding Shiny apps
 
 In your Shiny app repo:
+
 1. Containerize your app similarly to the example Shiny app in [`/shinyapp_example/`](https://github.com/PHACDataHub/django-shiny/tree/main/shinyapp_example/wastewater).
 2. Take note of what port you are exposing. 8100 is expected, but can be changed in the django-shiny GUI.
 
 For flexdashboard apps using R markdown, the Dockerfile is similar except you will need to install the `flexdashboard` R package and change the command, e.g.:
+
 ```
 CMD ["R", "-e", "rmarkdown::run('shinyapp/app.Rmd', shiny_args = list(port = 8100, host = '0.0.0.0'))"]
 ```
 
 In the django-shiny application:
+
 1. You must be made an "app admin" to add apps.
    1. You must login once before being added as an app admin (for a user account to be created).
    2. If you have kubectl access, you can add yourself from the django shell.
@@ -33,14 +36,17 @@ In the django-shiny application:
 The process is the same as for Shiny apps, with one exception. You have to define the `DASH_REQUESTS_PATHNAME_PREFIX` environment variable to reflect how NGINX has been configured.
 
 Add this to your Dockerfile:
+
 ```
 ENV DASH_REQUESTS_PATHNAME_PREFIX /shiny/<your-app-slug>/
 ```
+
 See [`/dashapp_example/`](https://github.com/PHACDataHub/django-shiny/tree/main/dashapp_example/dash-example).
-  
+
 ## Cloud build automation (CI/CD)
 
 When a new commit is pushed to main in this repo, Cloud Build will:
+
 1. Rebuild the image for this repo and push to the Artifact Registry.
 2. Generate and apply the k8s configuration for the Django app.
    * **IMPORTANT!** You must make an edit to `k8s/djangoapp.yaml` for the container to restart. An environment variable `CHANGE_VALUE_TO_TRIGGER_RESTART` is in the YAML for this purpose.
@@ -48,61 +54,97 @@ When a new commit is pushed to main in this repo, Cloud Build will:
 
 See [cloudbuild.yaml](https://github.com/PHACDataHub/django-shiny/blob/main/cloudbuild.yaml).
 
+## Setup - GCP
+
+1. Create a new project on Google Cloud Platform
+
+   1. From the dashboard, under project info, use the values to update the `project_name`, `project_number`, and `project_id` variables in [terraform.tfvars](terraform/terraform.tfvars)
+2. Ensure the secrets in [secrets.auto.tfvars](terraform/secrets.auto.tfvars) are populated appropriately
+3. Install the [gcloud CLI](https://cloud.google.com/sdk/docs/install)
+4. Open a terminal with the parent directory `/django-shiny` as the current working directory
+5. Login with the CLI
+
+   ```
+    gcloud auth login  
+   ```
+6. Set the project property
+
+   ```
+   gcloud config set project <PROJECT_ID>
+   ```
+7. Change into the `terraform/` directory
+
+   ```
+   cd terraform/
+   ```
+8. Run `gcp-setup.sh`
+
+   ```
+   bash gcp-setup.sh
+   ```
+9. Now, we can run the following Terrafrom commands: (Note, the apply can take up to 30 minutes to finish provision all cloud resources)
+
+   ```
+   terraform init
+   terrafrom apply
+   ```
+10. Now, follow the steps and add the DNS zone's name servers to the [PHAC dns repo](https://github.com/PHACDataHub/dns). This can be tricky to understand at first, if so, ask John Bain for help. Remember that DNS changes usually take a few minutes to propagrate.
+
+    1. If this is a `dev` environment, assuming the `prod` environment is already setup as described in step 10, you will instead add the name servers of `dev`'s DNS zone into `prod`'s DNS zone.
+    2. From the web console in GCP, go to `prod`'s DNS zone and create a NS record with the NS data from `dev`'s DNS zone.
+11. Visit the website at the `url` as set in `terraform.tfvars`
+
+## Setup - Creating an Admin Account
+
+User account roles and permissions can be assigned using the website. However, the first admin account will need to granted manually as follows:
+
+1. Use the gcloud CLI to authenticate in the cluster
+
+   ```
+   gcloud container clusters get-credentials django-shiny-platform-app-cluster --region northamerica-northeast1 --project <PROJECT_ID>
+   ```
+2. Navigate to the `url` as set in `terraform.tfvars` and login
+3. Afterward, use `kubectl get pods` to find the ephemeral name of the pod running the djangoapp and use it to run the following command to access the command line inside the pod:
+
+   ```
+   kubectl exec -it <DJANGOAPP_DEPLOYMENT_NAME>  -- /bin/bash
+   ```
+4. Change into the `djangoapp/` directory and enter the Django shell_plus
+
+   ```
+   cd djangoapp/
+   python ./manage.py shell_plus
+   ```
+5. We will now query the user model and grant it Admin status in the app. There are a few ways to do this. The easiest is probably the following command:
+
+   ```
+   User.objects.filter(email="<YOUR_EMAIL>").update(is_superuser=True)
+   ```
+6. Confirm by checking the website, the change should be immediate
+7. Exit the shell and command line. (i.e. ctrl+d)
+
+## Setup - Manual Steps
+
+* Every Shiny app repo needs to grant owner permissions to the provider auth account of this connection, or else setting up cloud build for the shiny apps won't work!
+  * This is currently set up with name "datahub-automation". You can just continue using this. It uses the GitHub account "datahub-automation", which is a hidden owner for the PHACDataHub github organization, intended for this kind of "machine use".
+
 ## To do
 
 Technical debt
+
 - Better secrets management
+
   - The secrets.yaml file could be stored in Secret Manager. See https://cloud.google.com/kubernetes-engine/docs/tutorials/workload-identity-secrets (not sure this is the right approach).
-- Improve documentation of how to setup the GCP environment: e.g. detailed kubectl and gcloud commands
-- Best case: tutorial to recreate entire setup from scratch - then use this to create a 2nd "dev" environment (*dev*.shiny.phac.alpha.canada.ca)
 
 App features
+
 - French translation of Django app. (Sync with Shiny app language selection? Is this possible?)
 - Improve management UX (e.g. add an email match/group without leaving the Manage App page - HTMX modal; bootstrap checkboxes)
 
 Unsolved process issues
+
 - Connect data to Shiny apps
+
   - Google cloud storage
   - Azure blob storage
   - Databricks SQL?
-
-Automated deployment and dev/test/prod environments
-TODO:
-- Parameterize all the shinyapp automation for dev/test/prod
- - parameterize cloudbuild.sh.example and cloudbuild.example
- - update devops.py to pass the parameters in
-- See `gcp-setup.sh` and `manual-setup.md`
-
-## Setting up in GCP
-
-You will need the following resources:
-* Cloud Storage
-* Artifact Registry
-* IAM
-* Secret Manager
-* Cloud Build
-* Cloud DNS
-* Google Kubernetes Engine (GKE)
-
-1. Create a bucket in cloud storage for the Django media directory.
-2. Create 2 repositories in Artifact Registry: `django-shiny` (for this app) and `shiny-apps` (for the subsidiary Shiny apps).
-3. Set up an IAM service account for the kubernetes deployment to use. It must have these roles:
-   * Cloud Build connection admin
-   * Cloud Build editor
-   * Storage object user
-   * Secret Manager secret accessor
-   Save the account key json file.
-4. Create a secret `gcp_service_account_key` with the value of the account key json:
-   ```
-   gcloud secrets create gcp_service_account_key --data-file=gcp_service_account_key.json --locations=northamerica-northeast1 --replication-policy=user-managed
-   ```
-5. In Cloud Build, set up a 2nd gen connection to GitHub. Every Shiny app repo needs to grant owner permissions to the provider auth account of this connection, or else setting up cloud build for the shiny apps won't work!
-6. In Cloud DNS, set up a zone which is a subdomain of "phac.alpha.canada.ca". Make a pull request to [PHACDataHub/dns repo](https://github.com/PHACDataHub/dns) to complete setup.
-7. Create a VPC network and subnet. See [Use Public NAT with GKE](https://cloud.google.com/nat/docs/gke-example).
-8. In GKE, create a new private cluster following the steps in the link above. You will need to access the cluster somehow, so install gcloud CLI and kubectl on your local machine or use cloud shell for that.
-
-For the most part, setting up the GKE cluster is straightforward, using GKE Autopilot. There are a few extra / unusual steps:
-
-* Create a k8s service account, and associate this with the IAM service account. See https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity
-* Install ingress-nginx on the cluster
-* Set up cert-manager on the cluster: `helm install cert-manager jetstack/cert-manager   --namespace cert-manager   --create-namespace   --version v1.13.1   --set installCRDs=true --set global.leaderElection.namespace=cert-manager`
