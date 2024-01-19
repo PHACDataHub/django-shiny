@@ -10,6 +10,12 @@ if [ "$confirmation" != "Y" ]; then
     exit 0
 fi
 
+read -p "Are you 100% sure? (Y/n): " confirmationAgain
+if [ "$confirmationAgain" != "Y" ]; then
+    echo "Aborted. Exiting the script."
+    exit 0
+fi
+
 # Set these according to your project:
 var=${REGION:=northamerica-northeast1}
 var=${PROJECT_ID:=pht-01hhmqtnrpf}

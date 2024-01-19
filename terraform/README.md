@@ -1,6 +1,13 @@
-## Clean Up - Destroying Project Resources
+# Clean Up
 
-Due to limitations of Terrafrom and the GCP API, some resources will need to untracked before running `terrafrom destroy`.
+## Prerequisites
+
+In order to be deleted, the Github Cloudbuild connection must have no linked repositories.
+Delete all instances of apps running in the web app first or else, you will have to manually delete all connections probably from the GCP console.
+
+## Destroying Project Resources
+
+Due to limitations of Terraform and the GCP API, some resources will need to untracked before running `terrafrom destroy`.
 
 Thus, the recommended method to destory project resources is by running:
 
