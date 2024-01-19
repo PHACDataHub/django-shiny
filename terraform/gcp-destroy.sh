@@ -1,5 +1,5 @@
 #!/bin/bash
-cd "${0%/*}" # change directory to the script's directory
+cd "${0%/*}" 
 
 echo "Warning: This script is intended for the destroying a project with existing terraform apply resources."
 
@@ -16,16 +16,18 @@ if [ "$confirmationAgain" != "Y" ]; then
 fi
 
 terraform init
+# Below still gets removed from the project when the managed zone is deleted
 if terraform state list | grep -q "module\.GCP_MODULE\.google_dns_record_set\.app_tld_dns_record"; then
-    terraform state rm "module.GCP_MODULE.google_dns_record_set.app_tld_dns_record"  # still gets removed from the project when the managed zone is deleted
+    terraform state rm "module.GCP_MODULE.google_dns_record_set.app_tld_dns_record"
 fi
 if terraform state list | grep -q "module\.GCP_MODULE\.google_dns_record_set\.app_dns_soa_record"; then
-    terraform state rm "module.GCP_MODULE.google_dns_record_set.app_dns_soa_record" # still gets removed from the project when the managed zone is deleted
+    terraform state rm "module.GCP_MODULE.google_dns_record_set.app_dns_soa_record"
 fi
+# Below prevents these files from being removed the repo when the project is destroyed
 if terraform state list | grep -q "module\.TEMPLATES_MODULE\.local_file\.app_templates"; then
-    terraform state rm "module.TEMPLATES_MODULE.local_file.app_templates" # don't remove these files from the repo when the project is destroyed
+    terraform state rm "module.TEMPLATES_MODULE.local_file.app_templates"
 fi
 if terraform state list | grep -q "module\.TEMPLATES_MODULE\.local_file\.k8s_templates"; then
-    terraform state rm "module.TEMPLATES_MODULE.local_file.k8s_templates" # don't remove these files from the repo when the project is destroyed
+    terraform state rm "module.TEMPLATES_MODULE.local_file.k8s_templates"
 fi
 terraform destroy -auto-approve
