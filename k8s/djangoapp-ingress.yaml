@@ -13,10 +13,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - dev.shiny.phac.alpha.canada.ca
+    - shiny.phac.alpha.canada.ca
     secretName: django-shiny-tls
   rules:
-  - host: dev.shiny.phac.alpha.canada.ca
+  - host: shiny.phac.alpha.canada.ca
     http:
       paths:
       - path: /

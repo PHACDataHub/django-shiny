@@ -59,7 +59,24 @@ See [cloudbuild.yaml](https://github.com/PHACDataHub/django-shiny/blob/main/clou
 1. Create a new project on Google Cloud Platform
 
    1. From the dashboard, under project info, use the values to update the `project_name`, `project_number`, and `project_id` variables in [terraform.tfvars](terraform/terraform.tfvars)
-2. Ensure the secrets in [secrets.auto.tfvars](terraform/secrets.auto.tfvars) are populated appropriately
+   2. Also update the value of the `PROJECT_ID` variable in [gcp-setup.sh](terraform/gcp-setup.sh)
+   3. In [providers.tf](terraform/providers.tf), inside `backend "gcs"`, suffix `bucket` and `credentials` with the `PROJECT_ID`. For example:
+
+   ```
+   backend "gcs" {
+      bucket      = "tfstate-bucket-PROJECT_ID"
+      prefix      = "terraform/state"
+      credentials = "./terraform-service-account-key-PROJECT_ID.json"
+   }
+   ```
+2. Create a file named [secrets.auto.tfvars](terraform/secrets.auto.tfvars) in the `terraform/` directory with the folllowing variables appropriately defined: (See [Setup - Manual Steps](./README.md#setup---manual-steps))
+
+   ```
+   // Values in plaintext
+   email_host_user = ...
+   email_host_password = ...
+   github_oauth_token = ...
+   ```
 3. Install the [gcloud CLI](https://cloud.google.com/sdk/docs/install)
 4. Open a terminal with the parent directory `/django-shiny` as the current working directory
 5. Login with the CLI
@@ -70,7 +87,7 @@ See [cloudbuild.yaml](https://github.com/PHACDataHub/django-shiny/blob/main/clou
 6. Set the project property
 
    ```
-   gcloud config set project <PROJECT_ID>
+   gcloud config set project PROJECT_ID
    ```
 7. Change into the `terraform/` directory
 
@@ -85,8 +102,8 @@ See [cloudbuild.yaml](https://github.com/PHACDataHub/django-shiny/blob/main/clou
 9. Now, we can run the following Terrafrom commands: (Note, the apply can take up to 30 minutes to finish provision all cloud resources)
 
    ```
-   terraform init
-   terrafrom apply
+   terraform init -reconfigure
+   terraform apply
    ```
 10. Now, follow the steps and add the DNS zone's name servers to the [PHAC dns repo](https://github.com/PHACDataHub/dns). This can be tricky to understand at first, if so, ask John Bain for help. Remember that DNS changes usually take a few minutes to propagrate.
 
@@ -101,7 +118,7 @@ User account roles and permissions can be assigned using the website. However, t
 1. Use the gcloud CLI to authenticate in the cluster
 
    ```
-   gcloud container clusters get-credentials django-shiny-platform-app-cluster --region northamerica-northeast1 --project <PROJECT_ID>
+   gcloud container clusters get-credentials django-shiny-platform-app-cluster --region northamerica-northeast1 --project PROJECT_ID
    ```
 2. Navigate to the `url` as set in `terraform.tfvars` and login
 3. Afterward, use `kubectl get pods` to find the ephemeral name of the pod running the djangoapp and use it to run the following command to access the command line inside the pod:

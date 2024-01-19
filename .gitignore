@@ -118,7 +118,7 @@ cloudbuild/*.delete_cloudbuild.sh
 
 djangoapp/media
 
-*-key.json
+terraform-service-account-key*
 *github-oauthtoken*
 *secrets.json
 *env.sh

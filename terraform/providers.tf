@@ -2,9 +2,9 @@ terraform {
   required_version = ">= 0.13"
 
   backend "gcs" {
-    bucket      = "app-tfstate-bucket"
+    bucket      = "tfstate-bucket-pht-01hhmqtnrpf"
     prefix      = "terraform/state"
-    credentials = "./terraform-service-account-key.json" # any account with Storage Object Admin role
+    credentials = "./terraform-service-account-key-pht-01hhmqtnrpf.json" 
   }
 
   required_providers {
@@ -24,8 +24,13 @@ terraform {
 }
 
 provider "google" {
-  credentials = file("${path.root}/terraform-service-account-key.json")
+  credentials = file("${path.root}/terraform-service-account-key-${var.project_id}.json")
   project     = var.project_id
   region      = var.region
   zone        = var.zone
+}
+
+provider "google-beta" {
+  credentials = file("${path.root}/terraform-service-account-key-${var.project_id}.json")
+  project     = var.project_id
 }
