@@ -39,7 +39,7 @@ module "CLOUDBUILD_MODULE" {
   project_number     = var.project_number
   repo_name          = "django-shiny"
   repo_uri           = "https://github.com/PHACDataHub/django-shiny.git"
-  repo_branch        = "add-terraform"
+  repo_branch        = var.environment
   github_oauth_token = var.github_oauth_token
   depends_on         = [module.GCP_MODULE]
 }
@@ -98,8 +98,8 @@ module "project-services" {
 }
 
 ###################### Generate Templates #####################
-module "YAML_MODULE" {
-  source     = "./modules/yamls"
+module "TEMPLATES_MODULE" {
+  source     = "./modules/templates"
   region     = var.region
   project_id = var.project_id
   hostname   = var.url

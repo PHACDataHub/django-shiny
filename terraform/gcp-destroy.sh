@@ -9,6 +9,12 @@ if [ "$confirmation" != "Y" ]; then
     exit 0
 fi
 
+read -p "Are you 100% sure? (Y/n): " confirmationAgain
+if [ "$confirmationAgain" != "Y" ]; then
+    echo "Aborted. Exiting the script."
+    exit 0
+fi
+
 terraform init
 if terraform state list | grep -q "module\.GCP_MODULE\.google_dns_record_set\.app_tld_dns_record"; then
     terraform state rm "module.GCP_MODULE.google_dns_record_set.app_tld_dns_record"  # still gets removed from the project when the managed zone is deleted
@@ -16,10 +22,10 @@ fi
 if terraform state list | grep -q "module\.GCP_MODULE\.google_dns_record_set\.app_dns_soa_record"; then
     terraform state rm "module.GCP_MODULE.google_dns_record_set.app_dns_soa_record" # still gets removed from the project when the managed zone is deleted
 fi
-if terraform state list | grep -q "module\.YAML_MODULE\.local_file\.app_templates"; then
-    terraform state rm "module.YAML_MODULE.local_file.app_templates" # don't remove these files from the repo when the project is destroyed
+if terraform state list | grep -q "module\.TEMPLATES_MODULE\.local_file\.app_templates"; then
+    terraform state rm "module.TEMPLATES_MODULE.local_file.app_templates" # don't remove these files from the repo when the project is destroyed
 fi
-if terraform state list | grep -q "module\.YAML_MODULE\.local_file\.k8s_templates"; then
-    terraform state rm "module.YAML_MODULE.local_file.k8s_templates" # don't remove these files from the repo when the project is destroyed
+if terraform state list | grep -q "module\.TEMPLATES_MODULE\.local_file\.k8s_templates"; then
+    terraform state rm "module.TEMPLATES_MODULE.local_file.k8s_templates" # don't remove these files from the repo when the project is destroyed
 fi
 terraform destroy -auto-approve

@@ -42,24 +42,24 @@ resource "google_compute_subnetwork" "gke_clusters_subnetwork" {
   }
 }
 
-# Peering by creating two VPCs between cloudbuild and GKE networks (these should be in the same region/zone)
-resource "google_compute_network_peering" "cloudbuild_gke_peering" {
-  name                                = "${var.app_name}-cloudbuild-gke-peering"
-  network                             = google_compute_network.cloudbuild_private_pool_vpc_network.id
-  peer_network                        = google_compute_network.gke_peering_vpc_network.id
-  export_custom_routes                = true
-  export_subnet_routes_with_public_ip = false
-}
+# # Peering by creating two VPCs between cloudbuild and GKE networks (these should be in the same region/zone)
+# resource "google_compute_network_peering" "cloudbuild_gke_peering" {
+#   name                                = "${var.app_name}-cloudbuild-gke-peering"
+#   network                             = google_compute_network.cloudbuild_private_pool_vpc_network.id
+#   peer_network                        = google_compute_network.gke_peering_vpc_network.id
+#   export_custom_routes                = true
+#   export_subnet_routes_with_public_ip = false
+# }
 
-resource "google_compute_network_peering" "gke_cloudbuild_peering" {
-  name                                = "${var.app_name}-gke-cloudbuild-peering"
-  network                             = google_compute_network.gke_peering_vpc_network.id
-  peer_network                        = google_compute_network.cloudbuild_private_pool_vpc_network.id
-  export_custom_routes                = true
-  export_subnet_routes_with_public_ip = false
-}
+# resource "google_compute_network_peering" "gke_cloudbuild_peering" {
+#   name                                = "${var.app_name}-gke-cloudbuild-peering"
+#   network                             = google_compute_network.gke_peering_vpc_network.id
+#   peer_network                        = google_compute_network.cloudbuild_private_pool_vpc_network.id
+#   export_custom_routes                = true
+#   export_subnet_routes_with_public_ip = false
+# }
 
-# Create named IP range for cloudbuild pool and connect
+# Create named IP range for cloudbuild pool 
 resource "google_compute_global_address" "cloudbuild_worker_range" {
   name          = "${var.app_name}-cloudbuild-worker-range"
   purpose       = "VPC_PEERING"

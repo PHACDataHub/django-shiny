@@ -87,7 +87,7 @@ resource "google_container_cluster" "app_cluster" {
   # ]
 
 
-  # # Too Private: https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept
+  # Too Private: https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept
   # master_authorized_networks_config {
   #   cidr_blocks {
   #     cidr_block   = "${var.worker_pool_address}/28"

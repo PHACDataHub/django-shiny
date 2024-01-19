@@ -5,7 +5,7 @@ variable "hostname" {}
 
 resource "local_file" "app_templates" {
   for_each = toset([
-    for template in fileset(path.module, "templates/app/**") : template
+    for template in fileset(path.module, "app/**") : template
   ])
 
   content = templatefile("${path.module}/${each.key}", {
@@ -13,7 +13,7 @@ resource "local_file" "app_templates" {
     project_id = var.project_id
   })
 
-  filename = replace("../${path.root}/${each.key}", "templates/app/", "")
+  filename = replace("../${path.root}/${each.key}", "app/", "")
 
   lifecycle {
     prevent_destroy = true
@@ -22,7 +22,7 @@ resource "local_file" "app_templates" {
 
 resource "local_file" "k8s_templates" {
   for_each = toset([
-    for template in fileset(path.module, "templates/k8s/**") : template
+    for template in fileset(path.module, "k8s/**") : template
   ])
 
   content = templatefile("${path.module}/${each.key}", {
@@ -31,7 +31,7 @@ resource "local_file" "k8s_templates" {
     hostname   = var.hostname
   })
 
-  filename = replace("../${path.root}/${each.key}", "templates/k8s/", "k8s/")
+  filename = "../${path.root}/${each.key}"
 
   lifecycle {
     prevent_destroy = true

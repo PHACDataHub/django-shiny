@@ -105,11 +105,17 @@ See [cloudbuild.yaml](https://github.com/PHACDataHub/django-shiny/blob/main/clou
    terraform init -reconfigure
    terraform apply
    ```
-10. Now, follow the steps and add the DNS zone's name servers to the [PHAC dns repo](https://github.com/PHACDataHub/dns). This can be tricky to understand at first, if so, ask John Bain for help. Remember that DNS changes usually take a few minutes to propagrate.
+10. Now run the following commands to apply the yamls from the `k8s/` directory
+
+    ```
+    cd ..
+    bash ./apply_k8s.sh
+    ```
+11. Now, follow the steps and add the DNS zone's name servers to the [PHAC dns repo](https://github.com/PHACDataHub/dns). This can be tricky to understand at first, if so, ask John Bain for help. Remember that DNS changes usually take a few minutes to propagrate.
 
     1. If this is a `dev` environment, assuming the `prod` environment is already setup as described in step 10, you will instead add the name servers of `dev`'s DNS zone into `prod`'s DNS zone.
     2. From the web console in GCP, go to `prod`'s DNS zone and create a NS record with the NS data from `dev`'s DNS zone.
-11. Visit the website at the `url` as set in `terraform.tfvars`
+12. Now you can visit the website at the `url` as set in `terraform.tfvars`
 
 ## Setup - Creating an Admin Account
 

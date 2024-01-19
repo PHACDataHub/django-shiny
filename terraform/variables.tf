@@ -30,6 +30,7 @@ variable "url" {
 }
 variable "environment" {
   type = string
+  description = "Environment the Terraform is being deployed inside. Is determines which branch the cloudbuild trigger is attached to"
   validation {
     condition     = contains(["dev", "prod"], var.environment)
     error_message = "Allowed values for environment are \"dev\" or \"prod\"."

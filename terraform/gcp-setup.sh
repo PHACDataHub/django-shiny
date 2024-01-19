@@ -18,7 +18,7 @@ fi
 
 # Set these according to your project:
 var=${REGION:=northamerica-northeast1}
-var=${PROJECT_ID:=pht-01hhmqtnrpf}
+var=${PROJECT_ID:=phx-01hgge58cfn}
 var=${SA_NAME:=terraform-sa}
 
 # For terraform:
@@ -36,6 +36,6 @@ gcloud iam service-accounts create $SA_NAME --description="Service account for T
 var=${ROLES:="editor resourcemanager.projectIamAdmin servicemanagement.quotaAdmin servicenetworking.networksAdmin serviceusage.serviceUsageAdmin storage.objectAdmin secretmanager.admin container.admin"}
 for ROLE_NAME in $ROLES
     do
-        gcloud projects add-iam-policy-binding $PROJECT_ID --member="serviceAccount:$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com" --role="roles/$ROLE_NAME"
+        gcloud projects add-iam-policy-binding $PROJECT_ID --member="serviceAccount:$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com" --role="roles/$ROLE_NAME" --condition=None
     done
 gcloud iam service-accounts keys create "terraform-service-account-key-${PROJECT_ID}.json" --iam-account=$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com
