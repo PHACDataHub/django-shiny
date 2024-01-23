@@ -10,8 +10,8 @@ variable "region" {
 }
 ### Get from VPC outputs ###
 variable "url" {}
-variable "gke_peering_vpc_network_name" {}
-variable "gke_peering_vpc_network_id" {}
+variable "gke_vpc_network_name" {}
+variable "gke_vpc_network_id" {}
 variable "cloudbuild_private_pool_vpc_network_id" {}
 variable "gke_clusters_subnetwork_name" {}
 variable "k8s_pods_ip_range_name" {}
@@ -74,7 +74,7 @@ resource "google_service_account_key" "app_sa_key" {
 resource "google_container_cluster" "app_cluster" {
   name                = "${var.app_name}-app-cluster"
   location            = var.region
-  network             = var.gke_peering_vpc_network_name
+  network             = var.gke_vpc_network_name
   subnetwork          = var.gke_clusters_subnetwork_name
   networking_mode     = "VPC_NATIVE"
   deletion_protection = false
@@ -199,7 +199,7 @@ resource "google_compute_global_address" "gke_service_api_private_ip_alloc" {
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
   prefix_length = 16
-  network       = var.gke_peering_vpc_network_id
+  network       = var.gke_vpc_network_id
 }
 
 resource "google_service_networking_connection" "cloudbuild_service_networking_connection" {
@@ -209,7 +209,7 @@ resource "google_service_networking_connection" "cloudbuild_service_networking_c
 }
 
 resource "google_service_networking_connection" "gke_service_networking_connection" {
-  network                 = var.gke_peering_vpc_network_id
+  network                 = var.gke_vpc_network_id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.gke_service_api_private_ip_alloc.name]
 }

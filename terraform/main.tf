@@ -1,18 +1,26 @@
+###################### Enable APIs #####################
+module "project-services" {
+  source  = "terraform-google-modules/project-factory/google//modules/project_services"
+  version = "~> 14.4"
+
+  project_id = var.project_id
+
+  activate_apis = [
+    "secretmanager.googleapis.com",
+    "iam.googleapis.com",
+    "cloudkms.googleapis.com",
+    "servicenetworking.googleapis.com",
+    "cloudbuild.googleapis.com",
+    "container.googleapis.com",
+    "containerscanning.googleapis.com",
+  ]
+}
+
 module "VPC_MODULE" {
-  source     = "./modules/networking/VPC"
+  source     = "./modules/VPC"
   app_name   = var.app_name
   region     = var.region
   depends_on = [module.project-services]
-}
-
-module "VPN_MODULE" {
-  source                     = "./modules/networking/VPN"
-  app_name                   = var.app_name
-  region                     = var.region
-  cloudbuild_vpc_name        = module.VPC_MODULE.cloudbuild_private_pool_vpc_network_name
-  gke_vpc_name               = module.VPC_MODULE.gke_peering_vpc_network_name
-  gke_clusters_subnetwork_id = module.VPC_MODULE.gke_clusters_subnetwork_id
-  depends_on                 = [module.VPC_MODULE]
 }
 
 module "GCP_MODULE" {
@@ -21,15 +29,15 @@ module "GCP_MODULE" {
   app_name                               = var.app_name
   region                                 = var.region
   url                                    = var.url
-  gke_peering_vpc_network_name           = module.VPC_MODULE.gke_peering_vpc_network_name
-  gke_peering_vpc_network_id             = module.VPC_MODULE.gke_peering_vpc_network_id
+  gke_vpc_network_name                   = module.VPC_MODULE.gke_vpc_network_name
+  gke_vpc_network_id                     = module.VPC_MODULE.gke_vpc_network_id
   cloudbuild_private_pool_vpc_network_id = module.VPC_MODULE.cloudbuild_private_pool_vpc_network_id
   gke_clusters_subnetwork_name           = module.VPC_MODULE.gke_clusters_subnetwork_name
   k8s_pods_ip_range_name                 = module.VPC_MODULE.k8s_pods_ip_range_name
   k8s_pods_ip_range                      = module.VPC_MODULE.k8s_pods_ip_range
   k8s_services_ip_range_name             = module.VPC_MODULE.k8s_services_ip_range_name
   worker_pool_address                    = module.VPC_MODULE.worker_pool_address
-  depends_on                             = [module.VPN_MODULE]
+  depends_on                             = [module.VPC_MODULE]
 }
 
 module "CLOUDBUILD_MODULE" {
@@ -77,24 +85,6 @@ module "K8S_MODULE" {
   }
 
   depends_on = [module.CLOUDBUILD_MODULE]
-}
-
-###################### Enable APIs #####################
-module "project-services" {
-  source  = "terraform-google-modules/project-factory/google//modules/project_services"
-  version = "~> 14.4"
-
-  project_id = var.project_id
-
-  activate_apis = [
-    "secretmanager.googleapis.com",
-    "iam.googleapis.com",
-    "cloudkms.googleapis.com",
-    "servicenetworking.googleapis.com",
-    "cloudbuild.googleapis.com",
-    "container.googleapis.com",
-    "containerscanning.googleapis.com",
-  ]
 }
 
 ###################### Generate Templates #####################

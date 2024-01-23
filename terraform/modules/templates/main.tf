@@ -9,8 +9,8 @@ resource "local_file" "app_templates" {
   ])
 
   content = templatefile("${path.module}/${each.key}", {
-    region     = var.region
-    project_id = var.project_id
+    region       = var.region
+    project_id   = var.project_id
   })
 
   filename = replace("../${path.root}/${each.key}", "app/", "")
