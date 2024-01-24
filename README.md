@@ -105,7 +105,11 @@ See [cloudbuild.yaml](https://github.com/PHACDataHub/django-shiny/blob/main/clou
    terraform init -reconfigure
    terraform apply
    ```
-10. Now run trigger a cloudbuild by pushing to the respective environment remote branch, `dev` or `prod`. (i.e. push a small change or **carefully** force push)
+10. Then trigger a cloudbuild by running:
+
+    ```
+    bash ../run_cloudbuild.sh
+    ```
 11. Now, follow the steps and add the DNS zone's name servers to the [PHAC dns repo](https://github.com/PHACDataHub/dns). This can be tricky to understand at first, if so, ask John Bain for help. Remember that DNS changes usually take a few minutes to propagrate.
 
     1. If this is a `dev` environment, assuming the `prod` environment is already setup as described in step 10, you will instead add the name servers of `dev`'s DNS zone into `prod`'s DNS zone.
