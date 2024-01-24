@@ -4,7 +4,7 @@ metadata:
   name: djangoapp-ingress
   annotations:
     kubernetes.io/ingress.global-static-ip-name: django-shiny-ip
-    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
     certmanager.k8s.io/acme-challenge-type: http01
     kubernetes.io/ingress.allow-http: "true"
   labels:
@@ -13,10 +13,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - shiny.phac.alpha.canada.ca
+    - dev.shiny.phac.alpha.canada.ca
     secretName: django-shiny-tls
   rules:
-  - host: shiny.phac.alpha.canada.ca
+  - host: dev.shiny.phac.alpha.canada.ca
     http:
       paths:
       - path: /

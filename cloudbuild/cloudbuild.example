@@ -14,7 +14,7 @@ steps:
   - name: 'gcr.io/cloud-builders/kubectl'
     env:
     - 'CLOUDSDK_COMPUTE_REGION=$REGION'
-    - 'CLOUDSDK_CONTAINER_CLUSTER=django-shiny-platform-app-cluster'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=$CLUSTER_NAME'
     args: ['rollout', 'restart', 'deployment/${_APP_SLUG}-deployment']
 
 substitutions:

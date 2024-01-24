@@ -118,6 +118,7 @@ POWER_AUTOMATE_URL = env("POWER_AUTOMATE_URL", default=None)
 GCP_PROJECT_ID = env("GCP_PROJECT_ID", default=None)
 GCP_REGION = env("GCP_REGION", default="northamerica-northeast1")
 HOSTNAME = env("HOSTNAME", default=None)
+CLUSTER_NAME = env("CLUSTER_NAME", default=None)
 
 if FAKE_EMAIL:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

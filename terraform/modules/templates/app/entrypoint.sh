@@ -9,7 +9,7 @@ python ./djangoapp/manage.py runscript setup
 gcloud auth activate-service-account --key-file=./djangoapp/gcp_service_account_key.json
 
 # This needs to be changed per project
-gcloud container clusters get-credentials django-shiny-platform-app-cluster --region ${region} --project ${project_id}
+gcloud container clusters get-credentials ${cluster_name} --region ${region} --project ${project_id}
 
 # Exec the CMD from the Dockerfile (gunicorn)
 exec "$@"

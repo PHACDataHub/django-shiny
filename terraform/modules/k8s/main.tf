@@ -8,6 +8,7 @@ variable "project_id" {}
 variable "region" {}
 variable "environment" {}
 variable "hostname" {}
+variable "cluster_name" {}
 
 resource "random_password" "postgres" {
   length  = 16
@@ -38,6 +39,7 @@ resource "kubernetes_secret" "default" {
     GCP_REGION : var.region
     ENVIRONMENT : var.environment
     HOSTNAME : var.hostname
+    CLUSTER_NAME : var.cluster_name
   }
 }
 

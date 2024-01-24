@@ -1,5 +1,5 @@
 #!/bin/bash
-cd "${0%/*}" # change directory to the script's directory
+cd "${0%/*}"
 
 echo "WARNING: This script is for ONLY the first setup of the project. Ensure your gcloud is logged in and it's the initial setup before proceeding."
 # it's probably fine if you run this script multiple times, but it's not necessary and you get a lot of errors if you do
@@ -10,15 +10,9 @@ if [ "$confirmation" != "Y" ]; then
     exit 0
 fi
 
-read -p "Are you 100% sure? (Y/n): " confirmationAgain
-if [ "$confirmationAgain" != "Y" ]; then
-    echo "Aborted. Exiting the script."
-    exit 0
-fi
-
 # Set these according to your project:
 var=${REGION:=northamerica-northeast1}
-var=${PROJECT_ID:=pht-01hhmqtnrpf}
+var=${PROJECT_ID:=phx-01hgge58cfn}
 var=${SA_NAME:=terraform-sa}
 
 # For terraform:
