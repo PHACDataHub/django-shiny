@@ -12,7 +12,7 @@ fi
 
 # Set these according to your project:
 var=${REGION:=northamerica-northeast1}
-var=${PROJECT_ID:=phx-01hgge58cfn}
+var=${PROJECT_ID:=pht-01hhmqtnrpf}
 var=${SA_NAME:=terraform-sa}
 
 # For terraform:

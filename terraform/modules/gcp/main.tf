@@ -21,7 +21,7 @@ variable "worker_pool_address" {}
 
 ###################### Bucket Setup ######################
 resource "google_storage_bucket" "app_media_bucket" {
-  name                        = "${var.app_name}-app-media-bucket"
+  name                        = "${var.app_name}-app-media-bucket-${var.project_id}"
   location                    = var.region
   storage_class               = "STANDARD"
   public_access_prevention    = "enforced"

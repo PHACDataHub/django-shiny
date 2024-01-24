@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: djangoapp
-        image: northamerica-northeast1-docker.pkg.dev/phx-01hgge58cfn/django-app-repo/app:latest
+        image: northamerica-northeast1-docker.pkg.dev/pht-01hhmqtnrpf/django-app-repo/app:latest
         imagePullPolicy: Always
         resources:
           requests:
@@ -38,7 +38,7 @@ spec:
             port: 8000
             httpHeaders:
             - name: Host
-              value: dev.shiny.phac.alpha.canada.ca
+              value: shiny.phac.alpha.canada.ca
           initialDelaySeconds: 30
           periodSeconds: 15
           successThreshold: 1
