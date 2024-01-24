@@ -23,7 +23,7 @@ fi
 if terraform state list | grep -q "module\.GCP_MODULE\.google_dns_record_set\.app_dns_soa_record"; then
     terraform state rm "module.GCP_MODULE.google_dns_record_set.app_dns_soa_record"
 fi
-# Below prevents these files from being removed the repo when the project is destroyed
+# Below prevents these files from being removed from the repo when the project is destroyed
 if terraform state list | grep -q "module\.TEMPLATES_MODULE\.local_file\.app_templates"; then
     terraform state rm "module.TEMPLATES_MODULE.local_file.app_templates"
 fi

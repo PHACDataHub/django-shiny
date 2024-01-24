@@ -4,6 +4,7 @@ variable "project_id" {}
 variable "hostname" {}
 variable "trigger_name" {}
 variable "branch_name" {}
+variable "cluster_name" {}
 
 resource "local_file" "app_templates" {
   for_each = toset([
@@ -15,6 +16,7 @@ resource "local_file" "app_templates" {
     project_id   = var.project_id
     trigger_name = var.trigger_name
     branch_name  = var.branch_name
+    cluster_name = var.cluster_name
   })
 
   filename = replace("../${path.root}/${each.key}", "app/", "")

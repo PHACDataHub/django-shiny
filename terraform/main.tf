@@ -79,6 +79,7 @@ module "K8S_MODULE" {
   environment                = var.environment
   region                     = var.region
   hostname                   = var.url
+  cluster_name               = module.GCP_MODULE.cluster_name
   providers = {
     kubernetes = kubernetes
     helm       = helm
@@ -95,4 +96,5 @@ module "TEMPLATES_MODULE" {
   hostname     = var.url
   trigger_name = module.CLOUDBUILD_MODULE.cloudbuild_trigger_name
   branch_name  = var.environment
+  cluster_name = module.GCP_MODULE.cluster_name
 }

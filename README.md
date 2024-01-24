@@ -114,7 +114,7 @@ See [cloudbuild.yaml](https://github.com/PHACDataHub/django-shiny/blob/main/clou
 
     1. If this is a `dev` environment, assuming the `prod` environment is already setup as described in step 10, you will instead add the name servers of `dev`'s DNS zone into `prod`'s DNS zone.
     2. From the web console in GCP, go to `prod`'s DNS zone and create a NS record with the NS data from `dev`'s DNS zone.
-12. Now you can visit the website at the `url` as set in `terraform.tfvars`
+12. Wait for all pods to reach minimum availability (check the Workloads in the cluster through the cloud console), then you can visit the website at the `url` as set in `terraform.tfvars`
 
 ## Setup - Creating an Admin Account
 
@@ -157,6 +157,7 @@ Technical debt
 - Better secrets management
 
   - The secrets.yaml file could be stored in Secret Manager. See https://cloud.google.com/kubernetes-engine/docs/tutorials/workload-identity-secrets (not sure this is the right approach).
+  - Maybe put secrets.auto.tfvars here as
 
 App features
 

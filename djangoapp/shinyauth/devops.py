@@ -1,7 +1,7 @@
 from django.conf import settings
 import os
 
-from djangoapp.settings import GCP_PROJECT_ID, HOSTNAME, GCP_REGION
+from djangoapp.settings import GCP_PROJECT_ID, HOSTNAME, GCP_REGION, CLUSTER_NAME
 
 
 def generate_deployment(app):
@@ -45,6 +45,9 @@ def generate_deployment(app):
         ]
         template_lines = [
             line.replace("$REGION", GCP_REGION) for line in template_lines
+        ]
+        template_lines = [
+            line.replace("$CLUSTER_NAME", CLUSTER_NAME) for line in template_lines
         ]
     new_file = os.path.join(cloudbuild_dir, f"{app_slug}.cloudbuild.yaml")
     with open(new_file, "w") as f:
@@ -96,7 +99,9 @@ def generate_deployment(app):
     print("Created file: {}".format(new_file))
 
     # Generate Kubernetes deployment YAML
-    app_image = f"{GCP_REGION}-docker.pkg.dev/{GCP_PROJECT_ID}/hosted-apps-repo/{app_slug}"
+    app_image = (
+        f"{GCP_REGION}-docker.pkg.dev/{GCP_PROJECT_ID}/hosted-apps-repo/{app_slug}"
+    )
     with open(k8s_template) as f:
         template_lines = f.readlines()
         template_lines = [

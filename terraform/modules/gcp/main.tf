@@ -71,8 +71,14 @@ resource "google_service_account_key" "app_sa_key" {
 }
 
 ###################### GKE k8s cluster ######################
+# append a random suffix on cluster creation to prevent this problem: https://www.googlecloudcommunity.com/gc/Google-Kubernetes-Engine-GKE/GKE-autopilot-DNS-not-resolving/m-p/634344
+resource "random_integer" "cluster_suffix" { 
+  min = 100000
+  max = 999999
+}
+
 resource "google_container_cluster" "app_cluster" {
-  name                = "${var.app_name}-app-cluster"
+  name                = "${var.app_name}-app-cluster-${random_integer.cluster_suffix.id}"
   location            = var.region
   network             = var.gke_vpc_network_name
   subnetwork          = var.gke_clusters_subnetwork_name
