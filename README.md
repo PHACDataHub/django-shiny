@@ -165,5 +165,3 @@ Unsolved process issues
   - Google cloud storage
   - Azure blob storage
   - Databricks SQL?
-
-Replace step 10. in [Setup - GCP](./README.md#setup---gcp) with a command to run a cloudbuild manually.

@@ -2,6 +2,8 @@
 variable "region" {}
 variable "project_id" {}
 variable "hostname" {}
+variable "trigger_name" {}
+variable "branch_name" {}
 
 resource "local_file" "app_templates" {
   for_each = toset([
@@ -11,6 +13,8 @@ resource "local_file" "app_templates" {
   content = templatefile("${path.module}/${each.key}", {
     region       = var.region
     project_id   = var.project_id
+    trigger_name = var.trigger_name
+    branch_name  = var.branch_name
   })
 
   filename = replace("../${path.root}/${each.key}", "app/", "")

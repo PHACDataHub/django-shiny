@@ -89,8 +89,10 @@ module "K8S_MODULE" {
 
 ###################### Generate Templates #####################
 module "TEMPLATES_MODULE" {
-  source     = "./modules/templates"
-  region     = var.region
-  project_id = var.project_id
-  hostname   = var.url
+  source       = "./modules/templates"
+  region       = var.region
+  project_id   = var.project_id
+  hostname     = var.url
+  trigger_name = module.CLOUDBUILD_MODULE.cloudbuild_trigger_name
+  branch_name  = var.environment
 }
