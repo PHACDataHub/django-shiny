@@ -4,7 +4,7 @@ metadata:
   name: djangoapp-ingress
   annotations:
     kubernetes.io/ingress.global-static-ip-name: django-shiny-ip
-    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
     certmanager.k8s.io/acme-challenge-type: http01
     kubernetes.io/ingress.allow-http: "true"
   labels:
