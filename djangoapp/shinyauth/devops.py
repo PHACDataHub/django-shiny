@@ -77,7 +77,7 @@ def generate_deployment(app):
             line.replace("$GCP_PROJECT_ID", GCP_PROJECT_ID) for line in template_lines
         ]
         template_lines = [
-            line.replace("$GCP_REGION", GCP_REGION) for line in template_lines
+            line.replace("$REGION", GCP_REGION) for line in template_lines
         ]
     new_file = os.path.join(cloudbuild_dir, f"{app_slug}.cloudbuild.sh")
     with open(new_file, "w") as f:
