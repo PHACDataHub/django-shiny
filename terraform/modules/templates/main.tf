@@ -20,10 +20,6 @@ resource "local_file" "app_templates" {
   })
 
   filename = replace("../${path.root}/${each.key}", "app/", "")
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "local_file" "k8s_templates" {
@@ -38,8 +34,4 @@ resource "local_file" "k8s_templates" {
   })
 
   filename = "../${path.root}/${each.key}"
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
