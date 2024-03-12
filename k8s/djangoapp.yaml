@@ -38,7 +38,7 @@ spec:
             port: 8000
             httpHeaders:
             - name: Host
-              value: test.shiny.phac.alpha.canada.ca
+              value: shiny.phac.alpha.canada.ca
           initialDelaySeconds: 30
           periodSeconds: 15
           successThreshold: 1
