@@ -17,6 +17,21 @@ def check_matches(user, groups):
                     return True
     return False
 
+def get_user_groups(user, groups):
+    group_list = []
+    for group in groups:
+        for match in group.email_matches.all():
+            match match.match_type:
+                case "exact":
+                    if user.email == match.match:
+                        group_list.append(group)
+                case "domain":
+                    if user.email.endswith(match.match):
+                        group_list.append(group)
+                case "regex":
+                    if re.match(match.match, user.email):
+                        group_list.append(group)
+    return group_list
 
 class ShinyApp(models.Model):
     # Required for hosting
@@ -65,6 +80,17 @@ class ShinyApp(models.Model):
             return "viewable"
         return False
     
+    def get_key_values(self, user):
+        rtn_dict = {}
+
+        user_groups = get_user_groups(user, self.accessible_by.all())
+        for group in user_groups:
+            key_values = ShinyAppKeyValue.objects.filter(app=self, group=group)
+            for kv in key_values:
+                rtn_dict[kv.key] = kv.value
+        
+        return rtn_dict
+
     def generate_deployment(self):
         devops.generate_deployment(self)
 
