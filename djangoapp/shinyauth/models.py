@@ -13,13 +13,8 @@ def check_matches(user, groups):
                 if user.email.endswith(match.match):
                     return True
             elif match.match_type == "regex":
-                try:
-                    if re.match(match.match, user.email):
-                        return True
-                except:
-                    # If the email regex is invalid, skip it
-                    print(f"Invalid email regex: {match.match}")
-                    pass
+                if re.match(match.match, user.email):
+                    return True
     return False
 
 
@@ -120,3 +115,13 @@ class UserEmailMatch(models.Model):
 
     def __str__(self):
         return self.name or self.match
+
+
+class ShinyAppKeyValue(models.Model):
+    app = models.ForeignKey(ShinyApp, on_delete=models.CASCADE)
+    group = models.ForeignKey(UserGroup, on_delete=models.CASCADE)
+    key = models.CharField(max_length=100)
+    value = models.CharField(max_length=500)
+
+    def __str__(self):
+        return f"{self.key} = {self.value}"

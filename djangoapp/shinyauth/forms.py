@@ -1,7 +1,7 @@
 import re
 
 from django import forms
-from shinyauth.models import ShinyApp, UserGroup, UserEmailMatch
+from shinyauth.models import ShinyApp, UserGroup, UserEmailMatch, ShinyAppKeyValue
 from django.contrib.auth import get_user_model
 from django.core.validators import EmailValidator
 
@@ -52,6 +52,32 @@ class ShinyAppForm(forms.ModelForm):
             ]:
                 raise forms.ValidationError("The slug cannot be a system-reserved name.")
             return slug
+
+
+class ShinyAppKeyValueForm(forms.ModelForm):
+    class Meta:
+        model = ShinyAppKeyValue
+        fields = [
+            "key", "value", "group"
+        ]
+        widgets = {
+            "key": forms.TextInput(attrs={"class": "form-control"}),
+            "value": forms.TextInput(attrs={"class": "form-control"}),
+            "group": forms.Select(attrs={"class": "form-select"})
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["group"].queryset = UserGroup.objects.all().order_by("id")
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        key = cleaned_data.get("key")
+        value = cleaned_data.get("value")
+        group = cleaned_data.get("group")
+        if not key or not value or not group:
+            raise forms.ValidationError("All fields must be filled out.")
+        return cleaned_data
 
 
 # Form for managing user groups

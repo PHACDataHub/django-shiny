@@ -1,6 +1,18 @@
 {% extends 'base.jinja' %}
 
+{% macro key_value_form(form) %}
+  <tr class="shinyappkeyvalue-form">
+    <td>{{ form.key }}</td>
+    <td>{{ form.value }}</td>
+    <td>{{ form.group }}</td>
+    <td>{{ form.DELETE }}{{form.id}}</td>
+  </tr>
+{% endmacro %}
+
 {% block content %}
+  <table class="d-none shinyappkeyvalue-empty-form-container">
+    {{ key_value_form(key_value_formset.empty_form) }}
+  </table>
 
   <div class="container mt-3 mb-5">
     {% if create %}
@@ -131,6 +143,30 @@
         </div>
       {% endif %}
 
+      {% if not create %}
+        <h4 class="mt-3">Custom Key Values (optional)</h4>
+        <div>
+          <table class="table table-bordered mt-3" id="shinyappkeyvalue-table">
+            <thead>
+              <tr>
+                <th>Key</th>
+                <th>Value</th>
+                <th>Group</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody id="shinyappkeyvalue-table-body" class="shinyappkeyvalue-form-list">
+              {{ key_value_formset.management_form }}
+              {% for form_item in key_value_formset %}
+                {{ key_value_form(form_item) }}
+              {% endfor %}
+            </tbody>
+          </table>
+          <div valss="text-center py-1">
+            <button type="button" id="add-form" class="btn btn-primary btn-sm px-4">New Key Value</button>
+          </div>
+        </div> 
+      {% endif %}
       
       <div class="row mt-3">
         <div class="col">
@@ -173,4 +209,27 @@
       </div>
     </div>
   {% endif %}
+
+  <script>
+    let addButton = document.querySelector("#add-form");
+    addButton.addEventListener('click', addForm);
+    function addForm(e) {
+      e.preventDefault();
+      let forms = document.querySelectorAll(".shinyappkeyvalue-form-list > .shinyappkeyvalue-form");
+      let newFormIndex = forms.length;
+      let numForms = forms.length + 1;
+      let formTemplateNode = document.querySelector(".shinyappkeyvalue-empty-form-container");
+      let container = document.querySelector(".shinyappkeyvalue-form-list");
+      let totalFormsInput = document.querySelector("#id_shinyappkeyvalue_set-TOTAL_FORMS"); //management form inputs
+      
+      let formRegex = RegExp(`shinyappkeyvalue_set-__prefix__-`,'g')
+      let newFormHtml = formTemplateNode.innerHTML.replace(formRegex, `shinyappkeyvalue_set-${newFormIndex}-`)
+      let newForm = document.createElement("tr")
+      newForm.classList.add("shinyappkeyvalue-form")
+      newForm.innerHTML = newFormHtml;
+      container.appendChild(newForm)
+      totalFormsInput.setAttribute('value', `${numForms}`)
+    }
+  </script>
+
 {% endblock %}
