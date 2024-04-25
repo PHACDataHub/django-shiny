@@ -19,6 +19,10 @@ def check_matches(user, groups):
 
 def get_user_groups(user, groups):
     group_list = []
+
+    if not hasattr(user, 'email'):
+        return group_list
+
     for group in groups:
         for match in group.email_matches.all():
             match match.match_type:
