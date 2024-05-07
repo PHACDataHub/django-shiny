@@ -87,7 +87,12 @@ class ShinyApp(models.Model):
     def get_key_values(self, user):
         rtn_dict = {}
 
-        user_groups = get_user_groups(user, self.accessible_by.all())
+        user_groups = get_user_groups(user, UserGroup.objects.all()) 
+
+        if len(user_groups) <= 0 and self.is_publicly_accessible:
+            public_user_group = UserGroup.objects.get(name='Public')
+            user_groups.append(public_user_group)
+
         for group in user_groups:
             key_values = ShinyAppKeyValue.objects.filter(app=self, group=group)
             for kv in key_values:

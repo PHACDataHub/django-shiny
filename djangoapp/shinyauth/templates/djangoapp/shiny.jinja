@@ -19,7 +19,7 @@
     $(document).ready(function () {
       $('body').addClass('loading');
 
-      $.getJSON('{{ url("shiny_contents", app_slug) + query_string }}', function (data) {
+      $.getJSON('{{ url("shiny_contents", app_slug) }}', function (data) {
         $('body').removeClass('loading');
 
         var iframe = document.createElement("iframe");
