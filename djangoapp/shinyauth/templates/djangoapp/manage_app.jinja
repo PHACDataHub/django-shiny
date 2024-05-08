@@ -10,9 +10,11 @@
 {% endmacro %}
 
 {% block content %}
-  <table class="d-none shinyappkeyvalue-empty-form-container">
-    {{ key_value_form(key_value_formset.empty_form) }}
-  </table>
+  {% if not create %}
+    <table class="d-none shinyappkeyvalue-empty-form-container">
+      {{ key_value_form(key_value_formset.empty_form) }}
+    </table>
+  {% endif %}
 
   <div class="container mt-3 mb-5">
     {% if create %}
