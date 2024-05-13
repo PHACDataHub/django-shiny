@@ -86,19 +86,19 @@ AUTHENTICATION_BACKENDS = (
 )
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://shiny.phac.alpha.canada.ca',
-    'https://test.shiny.phac.alpha.canada.ca',
-    'https://dev.shiny.phac.alpha.canada.ca',
+    'https://shiny.alpha.phac.gc.ca​​',
+    'https://test.shiny.alpha.phac.gc.ca​​',
+    'https://dev.shiny.alpha.phac.gc.ca​​',
 ]
 CSRF_ALLOWED_ORIGINS = [
-    'https://shiny.phac.alpha.canada.ca',
-    'https://test.shiny.phac.alpha.canada.ca',
-    'https://dev.shiny.phac.alpha.canada.ca',
+    'https://shiny.alpha.phac.gc.ca​​',
+    'https://test.shiny.alpha.phac.gc.ca​​',
+    'https://dev.shiny.alpha.phac.gc.ca​​',
 ]
 CORS_ORIGINS_WHITELIST = [
-    'https://shiny.phac.alpha.canada.ca',
-    'https://test.shiny.phac.alpha.canada.ca',
-    'https://dev.shiny.phac.alpha.canada.ca',
+    'https://shiny.alpha.phac.gc.ca​​',
+    'https://test.shiny.alpha.phac.gc.ca​​',
+    'https://dev.shiny.alpha.phac.gc.ca​​',
 ]
 
 LOGIN_URL = "email_login"
