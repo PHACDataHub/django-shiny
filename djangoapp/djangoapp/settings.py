@@ -49,6 +49,7 @@ ALLOWED_HOSTS = [
     'shiny.phac.alpha.canada.ca',
     'test.shiny.phac.alpha.canada.ca',
     'dev.shiny.phac.alpha.canada.ca',
+    'shiny.phac.alpha.phac-aspc.gc.ca',
 ]
 
 INTERNAL_IPS = [
