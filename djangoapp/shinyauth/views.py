@@ -54,18 +54,12 @@ def shiny(request, app_slug):
         return redirect(f"/login/?next=/shiny/{app_slug}/")
     
     key_values = app.get_key_values(request.user)
-    query_string = ""
-
     if len(key_values) > 0:
         q = QueryDict(mutable=True)
-        if request.GET.get("fullscreen", False):
-            q["fullscreen"] = True
-        for key, value in key_values.items():
-            q[key] = value
+        q["fullscreen"] = request.GET.get("fullscreen", False)
+        q.update(key_values)
         query_string = q.urlencode()
-
-    for key in key_values:
-        if key not in request.GET.dict():
+        if any(request.GET.get(key) != key_values[key] for key in key_values):
             return redirect(f"/shiny/{app_slug}/?{query_string}")
 
     context = {
