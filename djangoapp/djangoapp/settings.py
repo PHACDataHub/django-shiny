@@ -85,13 +85,13 @@ AUTHENTICATION_BACKENDS = (
 )
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://dev.shiny.alpha.phac-aspc.gc.ca​​',
+    'https://dev.shiny.alpha.phac-aspc.gc.ca',
 ]
 CSRF_ALLOWED_ORIGINS = [
-    'https://dev.shiny.alpha.phac-aspc.gc.ca​​',
+    'https://dev.shiny.alpha.phac-aspc.gc.ca',
 ]
 CORS_ORIGINS_WHITELIST = [
-    'https://dev.shiny.alpha.phac-aspc.gc.ca​​',
+    'https://dev.shiny.alpha.phac-aspc.gc.ca',
 ]
 
 LOGIN_URL = "email_login"
