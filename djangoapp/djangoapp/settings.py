@@ -48,6 +48,7 @@ ALLOWED_HOSTS = [
     'djangoapp-service.default.svc.cluster.local',
     'shiny.phac.alpha.canada.ca',
     'shiny.alpha.phac-aspc.gc.ca',
+    'phac-shiny.org',
 ]
 
 INTERNAL_IPS = [
@@ -86,12 +87,15 @@ AUTHENTICATION_BACKENDS = (
 
 CSRF_TRUSTED_ORIGINS = [
     'https://shiny.alpha.phac-aspc.gc.ca',
+    'https://phac-shiny.org',
 ]
 CSRF_ALLOWED_ORIGINS = [
     'https://shiny.alpha.phac-aspc.gc.ca',
+    'https://phac-shiny.org',
 ]
 CORS_ORIGINS_WHITELIST = [
     'https://shiny.alpha.phac-aspc.gc.ca',
+    'https://phac-shiny.org',
 ]
 
 LOGIN_URL = "email_login"
