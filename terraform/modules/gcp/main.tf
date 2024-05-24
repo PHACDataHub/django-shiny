@@ -219,3 +219,66 @@ resource "google_service_networking_connection" "gke_service_networking_connecti
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.gke_service_api_private_ip_alloc.name]
 }
+
+# Reverse Proxy Workaround for Office Network
+resource "google_compute_global_address" "default" {
+  name = "reverse-proxy-address"
+}
+resource "google_compute_backend_service" "default" {
+  name                  = "backend-service"
+  protocol              = "HTTPS"
+  load_balancing_scheme = "EXTERNAL"
+
+  custom_request_headers          = ["host: ${google_compute_global_network_endpoint.default-endpoint.fqdn}"]
+
+  backend {
+    group = google_compute_global_network_endpoint_group.neg.id
+  }
+}
+
+resource "google_compute_global_network_endpoint_group" "neg" {
+  name                  = "shiny-neg"
+  default_port          = "443"
+  network_endpoint_type = "INTERNET_FQDN_PORT"
+}
+
+resource "google_compute_global_network_endpoint" "default-endpoint" {
+  global_network_endpoint_group = google_compute_global_network_endpoint_group.neg.name
+  fqdn       = var.url
+  port       = 443
+}
+
+resource "google_compute_url_map" "default" {
+  name            = "url-map"
+  default_service = google_compute_backend_service.default.id
+
+  host_rule {
+    hosts        = ["https://phac-shiny.org"]
+    path_matcher = "allpaths"
+  }
+
+  path_matcher {
+    name            = "allpaths"
+    default_service = google_compute_backend_service.default.id
+  }
+}
+
+resource "google_compute_target_https_proxy" "default" {
+  name    = "https-proxy"
+  url_map = google_compute_url_map.default.id
+  ssl_certificates = [google_compute_managed_ssl_certificate.default.id]
+}
+
+resource "google_compute_global_forwarding_rule" "default" {
+  name       = "global-forwarding-rule"
+  target     = google_compute_target_https_proxy.default.self_link
+  port_range = "443"
+  ip_address = google_compute_global_address.default.address
+}
+
+resource "google_compute_managed_ssl_certificate" "default" {
+  name = "managed-ssl-cert"
+  managed {
+    domains = ["https://phac-shiny.org"]
+  }
+}
