@@ -56,7 +56,8 @@ def shiny(request, app_slug):
     key_values = app.get_key_values(request.user)
     if len(key_values) > 0:
         q = QueryDict(mutable=True)
-        q["fullscreen"] = request.GET.get("fullscreen", False)
+        if request.GET.get("fullscreen", False):
+            q["fullscreen"] = True
         q.update(key_values)
         query_string = q.urlencode()
         if any(request.GET.get(key) != key_values[key] for key in key_values):
