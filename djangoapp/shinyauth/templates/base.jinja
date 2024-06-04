@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang= {{ get_lang() }}>
   <head>
-    <title>{% if title %}{{ title }}{% else %}PHAC Shiny app directory{% endif %}</title>
+    <title>{% if title %}{{ title }}{% else %}{{ tm("site_title") }} {% endif %}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="{{ static('thirdparty/htmx.min.js') }}"></script>
@@ -24,7 +24,7 @@
         <h1 class="nav-header">
           <a href="{{ url("index") }}" class="text-reset text-decoration-none">
             {% block nav_header_text %}
-              PHAC Shiny Dev
+              {{ tm("site_title") }} 
             {% endblock nav_header_text %}
           </a>
         </h1>
