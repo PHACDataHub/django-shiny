@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang= {{ get_lang() }}>
   <head>
     <title>{% if title %}{{ title }}{% else %}PHAC Shiny app directory{% endif %}</title>
     <meta charset="utf-8">
@@ -42,17 +42,11 @@
             {% include 'components/header_links.jinja' %}
           {% endblock %}
           <ul class="navbar-nav flex-fill justify-content-end">
-            {#
-            {% block lang_toggle %}
-              {% if not hide_lang_toggle %}
-                <li class="nav-item">
-                  <a lang="{{ get_other_lang_code() }}"
-                     class="nav-link"
-                     href="{{ url_to_other_lang() }}">{{ get_other_lang() }}</a>
-                </li>
-              {% endif %}
-            {% endblock %}
-            #}
+            <li class="nav-item">
+              <a lang="{{ get_other_lang_code() }}"
+                  class="nav-link"
+                  href="{{ url_to_other_lang() }}">{{ get_other_lang() }}</a>
+            </li>
             {% if request.user.is_authenticated %}
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle"

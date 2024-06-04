@@ -13,3 +13,4 @@ whitenoise
 Pillow
 django-extensions
 django-storages[google]
+django-phac-aspc-helpers
