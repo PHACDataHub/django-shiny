@@ -93,7 +93,7 @@ translation_entries = {
         "en": "email the Data Science team",
         "fr": None,
         "translated_using": "email us",
-        "fr_auto": "envoyez-nous un email",
+        "fr_auto": "envoyez-nous un courriel",
     },
     "at_phac": {
         "en": "at Public Health Agency of Canada (PHAC)",
@@ -105,7 +105,7 @@ translation_entries = {
         "en": "Log in with email",
         "fr": None,
         "translated_using": "Log in with email",
-        "fr_auto": "Connectez-vous avec votre adresse e-mail",
+        "fr_auto": "Connectez-vous avec votre adresse courriel",
     },
     "email": {
         "en": "Email",
@@ -194,5 +194,73 @@ translation_entries = {
         "fr": None,
         "translated_using": "You are a superuser or staff user",
         "fr_auto": "Vous êtes un superutilisateur ou un utilisateur du personnel",
+    },
+    "admin_access_only": {
+        "en": "Admin access only",
+        "fr": "Accès administrateur uniquement",
+    },
+    "limited_access": {
+        "en": "Limited access",
+        "fr": "Accès limité",
+    },
+    "public_access": {
+        "en": "Public access",
+        "fr": "Accès public",
+    },
+    "no_description": {
+        "en": "No description",
+        "fr": "Pas de description",
+    },
+    "view_app": {
+        "en": "View app",
+        "fr": "Voir l'application",
+    },
+    "fullscreen": {
+        "en": "Fullscreen",
+        "fr": "Plein écran",
+    },
+    "manage": {
+        "en": "Manage",
+        "fr": "Gérer",
+    },
+    "github_repo": {
+        "en": "GitHub repo",
+        "fr": "Dépôt GitHub",
+    },
+    "branch": {
+        "en": "Branch",
+        "fr": "Branche",
+    },
+    "port": {
+        "en": "Port",
+        "fr": "Port",
+    },
+    "memory": {
+        "en": "Memory (MiB)",
+        "fr": "Mémoire (MiB)",
+    },
+    "vcpu": {
+        "en": "vCPU",
+        "fr": "vCPU",
+    },
+    "contact_email": {
+        "en": "Contact email",
+        "fr": "Courriel de contact",
+    },
+    "accessible_visible_to": {
+        "en": "Accessible and visible to",
+        "fr": "Accessible et visible pour",
+    },
+    "admins_only": {
+        "en": "Admins only",
+        "fr": "Administrateurs uniquement",
+    },
+    "visible_not_accessible_to": {
+        "en": "Visible, but not accessible to",
+        "fr": "Visible, mais non accessible à",
+    },
+    "none": {
+        "en": "None",
+        "fr": "Aucun",
     },
 }
