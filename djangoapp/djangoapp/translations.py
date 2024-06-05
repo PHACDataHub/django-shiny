@@ -96,10 +96,10 @@ translation_entries = {
         "fr_auto": "envoyez-nous un courriel",
     },
     "at_phac": {
-        "en": "at Public Health Agency of Canada (PHAC)",
+        "en": "at Public Health Agency of Canada (PHAC).",
         "fr": None,
-        "translated_using": "at Public Health Agency of Canada (PHAC)",
-        "fr_auto": "à l'Agence de la santé publique du Canada (ASPC)",
+        "translated_using": "at Public Health Agency of Canada (PHAC).",
+        "fr_auto": "à l'Agence de la santé publique du Canada (ASPC).",
     },
     "login_title": {
         "en": "Log in with email",
@@ -322,5 +322,173 @@ translation_entries = {
     "not_an_app_admin": {
         "en": "Not an app admin:",
         "fr": "Pas un administrateur d'application :",
+    },
+    "create_new_app": {
+        "en": "Create new app",
+        "fr": "Créer une nouvelle application",
+    },
+    "manage_app": {
+        "en": "Manage app",
+        "fr": "Gérer l'application",
+    },
+    "view_app": {
+        "en": "View app",
+        "fr": "Voir l'application",
+    },
+    "app_hosting_info": {
+        "en": "App hosting info",
+        "fr": "Informations d'hébergement de l'application",
+    },
+    "required": {
+        "en": "required",
+        "fr": "obligatoire",
+    },
+    "app_slug_label": {
+        "en": "App slug (alphanumeric and hyphens only; e.g. your-app)",
+        "fr": "Slug de l'application (caractères alphanumériques et tirets uniquement ; par ex. votre-application)",
+    },
+    "app_slug_example": {
+        "en": "your-app",
+        "fr": "votre-application",
+    },
+    "github_repo_label": {
+        "en": "GitHub repo (e.g. https://github.com/PHACDataHub/YOUR_APP.git)",
+        "fr": "Dépôt GitHub (par exemple https://github.com/PHACDataHub/VOTRE_APPLICATION.git)",
+    },
+    "github_repo_example": {
+        "en": "https://github.com/PHACDataHub/YOUR_APP.git",
+        "fr": "https://github.com/PHACDataHub/VOTRE_APPLICATION.git",
+    },
+    "minimum_memory_label": {
+        "en": "Minimum memory",
+        "fr": "Mémoire minimale",
+    },
+    "maximum_memory_label": {
+        "en": "Maximum memory",
+        "fr": "Mémoire maximale",
+    },
+    "minimum_vcpu_label": {
+        "en": "Minimum vCPU",
+        "fr": "vCPU minimum",
+    },
+    "maximum_vcpu_label": {
+        "en": "Maximum vCPU",
+        "fr": "vCPU maximum",
+    },
+    "dockerfile_expose_port": {
+        "en": "Ensure your app's Dockerfile exposes the specified port.",
+        "fr": "Assurez-vous que le Dockerfile de votre application expose le port spécifié.",
+    },
+    "example_wastewater_app": {
+        "en": "example Wastewater R Shiny app",
+        "fr": "application R Shiny Wastewater d'exemple",
+    },
+    "in_this_repo": {
+        "en": "in this repo",
+        "fr": "dans ce dépôt",
+    },
+    "cloud_build_trigger_info1": {
+        "en": "A Cloud Build trigger will be set up for pushes to the branch of the repo, so the app deployment will remain up to date with the repo.",
+        "fr": "Un déclencheur Cloud Build sera configuré pour les poussées vers la branche du dépôt, de sorte que le déploiement de l'application reste à jour avec le dépôt.",
+    },
+    "cloud_build_trigger_info2": {
+        "en": "The trigger will run immediately when the app is created. It may take several minutes for your app to start working.",
+        "fr": "Le déclencheur s'exécutera immédiatement lorsque l'application est créée. Il peut falloir plusieurs minutes avant que votre application ne commence à fonctionner.",
+    },
+    "repo_organization_restriction": {
+        "en": "The repo must be within the PHACDataHub GitHub organization, or the Cloud Build setup will fail.",
+        "fr": "Le dépôt doit être dans l'organisation GitHub PHACDataHub, sinon la configuration de Cloud Build échouera.",
+    },
+    "app_metadata": {
+        "en": "App metadata",
+        "fr": "Métadonnées de l'application",
+    },
+    "optional_but_recommended": {
+        "en": "optional, but recommended",
+        "fr": "optionnel, mais recommandé",
+    },
+    "display_name_label": {
+        "en": "Display name",
+        "fr": "Nom d'affichage",
+    },
+    "description_label": {
+        "en": "Description",
+        "fr": "Description",
+    },
+    "contact_email_label": {
+        "en": "Contact email",
+        "fr": "Courriel de contact",
+    },
+    "thumbnail_label": {
+        "en": "Thumbnail",
+        "fr": "Vignette",
+    },
+    "app_display_options": {
+        "en": "App display options",
+        "fr": "Options d'affichage de l'application",
+    },
+    "display_full_width": {
+        "en": "Display at full width",
+        "fr": "Afficher en pleine largeur",
+    },
+    "access_controls": {
+        "en": "Access controls",
+        "fr": "Contrôles d'accès",
+    },
+    "initial_access_limited_to_admins": {
+        "en": "When you first create the app, access will be limited to admins only. You can change this later, once you have confirmed that the app has deployed successfully.",
+        "fr": "Lorsque vous créez l'application pour la première fois, l'accès sera limité aux administrateurs uniquement. Vous pouvez modifier cela plus tard, une fois que vous avez confirmé que l'application a été déployée avec succès.",
+    },
+    "manage_user_groups": {
+        "en": "Manage user groups",
+        "fr": "Gérer les groupes d'utilisateurs",
+    },
+    "accessible_and_visible_to": {
+        "en": "Accessible and visible to",
+        "fr": "Accessible et visible par",
+    },
+    "visible_but_not_accessible_to": {
+        "en": "Visible, but not accessible to",
+        "fr": "Visible, mais non accessible par",
+    },
+    "custom_key_values": {
+        "en": "Custom Key Values",
+        "fr": "Valeurs clés personnalisées",
+    },
+    "optional": {
+        "en": "optional",
+        "fr": "optionnel",
+    },
+    "key_label": {
+        "en": "Key",
+        "fr": "Clé",
+    },
+    "value_label": {
+        "en": "Value",
+        "fr": "Valeur",
+    },
+    "group_label": {
+        "en": "Group",
+        "fr": "Groupe",
+    },
+    "delete_label": {
+        "en": "Delete",
+        "fr": "Supprimer",
+    },
+    "new_key_value": {
+        "en": "New Key Value",
+        "fr": "Nouvelle clé valeur",
+    },
+    "submit_button": {
+        "en": "Submit",
+        "fr": "Soumettre",
+    },
+    "cancel_button": {
+        "en": "Cancel",
+        "fr": "Annuler",
+    },
+    "delete_button": {
+        "en": "Delete",
+        "fr": "Supprimer",
     },
 }
