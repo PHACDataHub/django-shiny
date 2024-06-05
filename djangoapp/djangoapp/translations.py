@@ -263,4 +263,64 @@ translation_entries = {
         "en": "None",
         "fr": "Aucun",
     },
+    "manage_apps": {
+        "en": "Manage Apps",
+        "fr": "Gérer les applications",
+    },
+    "add_app": {
+        "en": "Add app",
+        "fr": "Ajouter une application",
+    },
+     "manage_email_matches": {
+        "en": "Manage email matches",
+        "fr": "Gérer les correspondances de courriel",
+    },
+    "email_matches_description1": {
+        "en": "Apps can be limited in visibility or accessibility to certain user groups.",
+        "fr": "Les applications peuvent être limitées en visibilité ou en accessibilité à certains groupes d'utilisateurs.",
+    },
+    "email_matches_description2": {
+        "en": "Specify an individual email address, a domain name, or regex to match user login emails.",
+        "fr": "Spécifiez une adresse e-mail individuelle, un nom de domaine ou une expression régulière pour correspondre aux e-mails de connexion des utilisateurs.",
+    },
+    "create_new_email_match": {
+        "en": "Create new email match",
+        "fr": "Créer une nouvelle correspondance de courriel",
+    },
+    "manage_user_groups": {
+        "en": "Manage user groups",
+        "fr": "Gérer les groupes d'utilisateurs",
+    },
+    "user_groups_description1": {
+        "en": "Each user group has one or more email matches associated with it.",
+        "fr": "Chaque groupe d'utilisateurs a une ou plusieurs correspondances de courriels associées.",
+    },
+    "user_groups_description2": {
+        "en": "Unless you want to match multiple domain names, or make a group of multiple individuals, you probably don't need to edit these manually. Instead, create a new email match above.",
+        "fr": "À moins que vous ne souhaitiez faire correspondre plusieurs noms de domaine ou créer un groupe de plusieurs individus, vous n'avez probablement pas besoin de modifier ces éléments manuellement. Au lieu de cela, créez une nouvelle correspondance de courriel ci-dessus.",
+    },
+    "create_new_user_group": {
+        "en": "Create new user group",
+        "fr": "Créer un nouveau groupe d'utilisateurs",
+    },
+    "manage_app_admins": {
+        "en": "Manage app admins",
+        "fr": "Gérer les administrateurs d'applications",
+    },
+    "app_admins_description1": {
+        "en": "App admins can access all apps, and can modify access controls. If you are reading this, you are an app admin!",
+        "fr": "Les administrateurs d'applications peuvent accéder à toutes les applications et peuvent modifier les contrôles d'accès. Si vous lisez ceci, vous êtes un administrateur d'application!",
+    },
+    "app_admins_description2": {
+        "en": "Grant or revoke add admin privileges to users below. <em>A user must login once before they can be made an app admin.</em>",
+        "fr": "Accordez ou révoquez les privilèges d'administrateur aux utilisateurs ci-dessous. <em>Un utilisateur doit se connecter une fois avant de pouvoir être nommé administrateur d'application.</em>",
+    },
+    "currently_an_app_admin": {
+        "en": "Currently an app admin:",
+        "fr": "Actuellement un administrateur d'application :",
+    },
+    "not_an_app_admin": {
+        "en": "Not an app admin:",
+        "fr": "Pas un administrateur d'application :",
+    },
 }
