@@ -61,7 +61,7 @@
                     <a class="dropdown-item" href="{{ url("logout") }}">
                       {# Bootstrap icon for logout #}
                       <i class="bi bi-box-arrow-right"></i>
-                      Log out
+                      {{ tm("logout") }}
                     </a>
                   </li>
                 </ul>
@@ -72,7 +72,7 @@
               <a class="nav-link fw-semibold"
                  href="{{ url("email_login") }}">
                 <i class="bi bi-box-arrow-in-right me-1"></i>
-                Log in
+                {{ tm("login") }}
               </a>
             </li>
             {% endif %}
@@ -105,14 +105,14 @@
       {% block content %}
       {% endblock content %}
     </main>
-    <footer class="d-print-none">
+    {# <footer class="d-print-none">
       <nav class="navbar navbar-dark mt-3 bg-dark">
         <div class="container">
           <p class="my-3">Version 0.01</p>
           <ul class="list-unstyled my-3 list-inline">
-            {# <li class="list-inline-item">
+            <li class="list-inline-item">
               <a href="#" data-bs-toggle="modal" data-bs-target="#terms-modal">{{ _("terms_and_conditions") }}</a>
-            </li> #}
+            </li>
             <li class="list-inline-item">
               <a href="#">
                 Issues? Email dev team
@@ -121,7 +121,7 @@
           </ul>
         </div>
       </nav>
-    </footer>
+    </footer> #}
     <script>
     htmx.on("htmx:syntax:error", function(evt) {
               debugger;

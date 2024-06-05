@@ -11,11 +11,14 @@ translation_entries = {
         "en": "Français",
         "fr": "English",
     },
-    "log_in": {
+    "login": {
         "en": "Log in",
         "fr": "Se connecter",
     },
-    "logout": {"en": "Logout", "fr": "Fermeture de session"},
+    "logout": {
+        "en": "Logout", 
+        "fr": "Fermeture de session"
+    },
     "welcome": {
         "en": "Welcome",
         "fr": "Bienvenue",
@@ -98,4 +101,45 @@ translation_entries = {
         "translated_using": "at Public Health Agency of Canada (PHAC)",
         "fr_auto": "à l'Agence de la santé publique du Canada (ASPC)",
     },
+    "login_title": {
+        "en": "Log in with email",
+        "fr": None,
+        "translated_using": "Log in with email",
+        "fr_auto": "Connectez-vous avec votre adresse e-mail",
+    },
+    "email": {
+        "en": "Email",
+        "fr": "Courriel",
+    },
+    "send_login_link": {
+        "en": "Send a login link to my email", 
+        "fr": None,
+        "translated_using": "Send a login link to my email",
+        "fr_auto": "Envoyer un lien de connexion à mon courriel",
+    },
+    "login_link_sent": {
+        "en": "A login link has been sent to your email address.",
+        "fr": None,
+        "translated_using": "A login link has been sent to your email address.",
+        "fr_auto": "Un lien de connexion a été envoyé à vos courriel.",
+    },
+    "click_to_login": {
+        "en": "Click the link to login automatically.",
+        "fr": None,
+        "translated_using": "Click the link to login automatically.",
+        "fr_auto": "Cliquez sur le lien pour vous connecter automatiquement.",
+    },
+    "please_wait_for_login": {
+        "en": "Please allow 15 seconds for link to arrive.",
+        "fr": None,
+        "translated_using": "Please allow 15 seconds for link to arrive.",
+        "fr_auto": "Veuillez attendre 15 secondes pour que le lien arrive.",
+    },
+    "login_failed": {
+        "en": "Login failed.",
+        "fr": None,
+        "translated_using": "Login failed.",
+        "fr_auto": "Échec de la connexion.",
+    },
+    
 }

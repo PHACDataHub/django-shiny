@@ -9,7 +9,7 @@
       <label class="form-check-label" for="onlyShowAccessibleApps">
         {{ tm("only_show_accessible_apps") }}
         {% if request.user.is_anonymous %}
-        ({{ tm("anonymous_user_subtitle") }} <a href="{{ url("email_login") }}">{{ tm("log_in") }}</a>)
+        ({{ tm("anonymous_user_subtitle") }} <a href="{{ url("email_login") }}">{{ tm("login") }}</a>)
         {% endif %}
       </label>
     </div>
