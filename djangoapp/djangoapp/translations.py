@@ -141,5 +141,58 @@ translation_entries = {
         "translated_using": "Login failed.",
         "fr_auto": "Échec de la connexion.",
     },
-    
+    "login_failed_message": {
+        "en": "It was not possible to log you in due to:",
+        "fr": None,
+        "translated_using": "It was not possible to log you in due to:",
+        "fr_auto": "Il n'a pas été possible de vous connecter en raison de :",
+    },
+    "login_error_reason": {
+        "en": "There are several possible ways for logins to fail:",
+        "fr": None,
+        "translated_using": "There are several possible ways for logins to fail:",
+        "fr_auto": "Il existe plusieurs raisons possibles pour lesquelles la connexion peut échouer :",
+    },
+    "malformed_url": {
+        "en": "The URL you are trying to use is malformed",
+        "fr": None,
+        "translated_using": "The URL you are trying to use is malformed",
+        "fr_auto": "L'URL que vous essayez d'utiliser est malformée",
+    },
+    "expired_link": {
+        "en": "The magic link you tried to use has expired",
+        "fr": None,
+        "translated_using": "The magic link you tried to use has expired",
+        "fr_auto": "Le lien magique que vous avez essayé d'utiliser a expiré",
+    },
+    "already_used_link": {
+        "en": "You have already used this magic link to login before",
+        "fr": None,
+        "translated_using": "You have already used this magic link to login before",
+        "fr_auto": "Vous avez déjà utilisé ce lien magique pour vous connecter auparavant",
+    },
+    "new_magic_link": {
+        "en": "You have requested another magic causing this magic link to become invalid",
+        "fr": None,
+        "translated_using": "You have requested another magic causing this magic link to become invalid",
+        "fr_auto": "Vous avez demandé un autre lien magique, rendant ce lien magique invalide",
+    },
+    "different_browser": {
+        "en": "You are using a different browser to when you requested the login link",
+        "fr": None,
+        "translated_using": "You are using a different browser to when you requested the login link",
+        "fr_auto": "Vous utilisez un navigateur différent de celui que vous avez utilisé pour demander le lien de connexion",
+    },
+    "different_location": {
+        "en": "You are trying to login from a different location or machine that you requested the login link from",
+        "fr": None,
+        "translated_using": "You are trying to login from a different location or machine that you requested the login link from",
+        "fr_auto": "Vous essayez de vous connecter à partir d'un autre emplacement ou d'une autre machine que celui/celle que vous avez utilisé(e) pour demander le lien de connexion",
+    },
+    "superuser_staff_login": {
+        "en": "You are a superuser or staff user",
+        "fr": None,
+        "translated_using": "You are a superuser or staff user",
+        "fr_auto": "Vous êtes un superutilisateur ou un utilisateur du personnel",
+    },
 }
