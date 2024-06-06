@@ -93,6 +93,7 @@ MIDDLEWARE = configure_middleware(
 AUTHENTICATION_BACKENDS = (
     "magiclink.backends.MagicLinkBackend",
     "django.contrib.auth.backends.ModelBackend",
+    "axes.backends.AxesStandaloneBackend",
 )
 
 CSRF_TRUSTED_ORIGINS = [
