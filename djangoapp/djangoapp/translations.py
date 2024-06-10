@@ -312,8 +312,12 @@ translation_entries = {
         "fr": "Les administrateurs d'applications peuvent accéder à toutes les applications et peuvent modifier les contrôles d'accès. Si vous lisez ceci, vous êtes un administrateur d'application!",
     },
     "app_admins_description2": {
-        "en": "Grant or revoke add admin privileges to users below. <em>A user must login once before they can be made an app admin.</em>",
-        "fr": "Accordez ou révoquez les privilèges d'administrateur aux utilisateurs ci-dessous. <em>Un utilisateur doit se connecter une fois avant de pouvoir être nommé administrateur d'application.</em>",
+        "en": "Grant or revoke add admin privileges to users below.",
+        "fr": "Accordez ou révoquez les privilèges d'administrateur aux utilisateurs ci-dessous.",
+    },
+    "app_admins_description3": {
+        "en": "A user must login once before they can be made an app admin.",
+        "fr": "Un utilisateur doit se connecter une fois avant de pouvoir être nommé administrateur d'application.",
     },
     "currently_an_app_admin": {
         "en": "Currently an app admin:",
@@ -439,10 +443,6 @@ translation_entries = {
         "en": "When you first create the app, access will be limited to admins only. You can change this later, once you have confirmed that the app has deployed successfully.",
         "fr": "Lorsque vous créez l'application pour la première fois, l'accès sera limité aux administrateurs uniquement. Vous pouvez modifier cela plus tard, une fois que vous avez confirmé que l'application a été déployée avec succès.",
     },
-    "manage_user_groups": {
-        "en": "Manage user groups",
-        "fr": "Gérer les groupes d'utilisateurs",
-    },
     "accessible_and_visible_to": {
         "en": "Accessible and visible to",
         "fr": "Accessible et visible par",
@@ -490,5 +490,69 @@ translation_entries = {
     "delete_button": {
         "en": "Delete",
         "fr": "Supprimer",
+    },
+    "manage_email_match": {
+        "en": "Manage email match",
+        "fr": "Gérer la correspondance des courriels",
+    },
+    "email_match_required": {
+        "en": "Email match (required)",
+        "fr": "Correspondance courriel (obligatoire)",
+    },
+    "match_type": {
+        "en": "Match type",
+        "fr": "Type de correspondance",
+    },
+    "display_name_optional": {
+        "en": "Display name (optional)",
+        "fr": "Nom d'affichage (facultatif)",
+    },
+    "create_user_group_recommended": {
+        "en": "Create user group (recommended)",
+        "fr": "Créer un groupe d'utilisateurs (recommandé)",
+    },
+    "confirm_delete": {
+        "en": "Confirm delete",
+        "fr": "Confirmer la suppression",
+    },
+    "confirm_delete_message": {
+        "en": "Are you sure you want to delete this email match?",
+        "fr": "Êtes-vous sûr de vouloir supprimer cette correspondance de courriel?",
+    },
+    "close_button": {
+        "en": "Close",
+        "fr": "Fermer",
+    },
+    "delete_email_match_button": {
+        "en": "Delete email match",
+        "fr": "Supprimer la correspondance de courriel",
+    },
+    "manage_user_group": {
+        "en": "Manage user group",
+        "fr": "Gérer le groupe d'utilisateurs",
+    },
+    "name_optional": {
+        "en": "Name (optional)",
+        "fr": "Nom (facultatif)",
+    },
+    "email_matches": {
+        "en": "Email matches",
+        "fr": "Correspondances de courriels",
+    },
+    "delete_group_button": {
+        "en": "Delete group",
+        "fr": "Supprimer le groupe",
+    },
+    "manage_user": {
+        "en": "Manage user",
+        "fr": "Gérer l'utilisateur",
+    },
+    "app_admin": {
+        "en": "App admin",
+        "fr": "Administrateur de l'application",
+    },
+    "loading": {
+        "en": "Loading...",
+        "fr": "Chargement...",
     },
 }
