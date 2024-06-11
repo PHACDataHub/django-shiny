@@ -25,175 +25,119 @@ translation_entries = {
     },
     "save": {
         "en": "Save",
-        "fr": None,
-        "translated_using": "Save",
-        "fr_auto": "Enregistrer",
-    }, 
+        "fr": "Enregistrer"
+    },
     "app_directory": {
         "en": "App Directory",
-        "fr": None,
-        "translated_using": "App Directory",
-        "fr_auto": "Répertoire des applications",
+        "fr": "Répertoire des applications"
     },
     "manage_apps": {
         "en": "Manage Apps",
-        "fr": None,
-        "translated_using": "Manage Apps",
-        "fr_auto": "Gérer les applications",
+        "fr": "Gérer les applications"
     },
     "manage_users": {
         "en": "Manage Users",
-        "fr": None,
-        "translated_using": "Manage Users",
-        "fr_auto": "Gérer les utilisateurs",
+        "fr": "Gérer les utilisateurs"
     },
     "about_app_directory_title": {
         "en": "About the PHAC Shiny App Directory",
-        "fr": None,
-        "translated_using": "About the PHAC Shiny App Directory",
-        "fr_auto": "À propos du répertoire des applications Shiny de l'ASPC",
+        "fr": "À propos du répertoire des applications Shiny de l'ASPC"
     },
     "about_app_directory_text1": {
         "en": "This is an experimental space within the Public Health Agency of Canada (PHAC). It hosts interactive data apps built with R Shiny, and provides access controls.",
-        "fr": None,
-        "translated_using": "This is an experimental space within the Public Health Agency of Canada (PHAC). It hosts interactive data apps built with R Shiny, and provides access controls.",
-        "fr_auto": "Ceci est un espace expérimental au sein de l'Agence de la santé publique du Canada (ASPC). Il héberge des applications de données interactives construites avec R Shiny et fournit des contrôles d'accès.",
+        "fr": "Ceci est un espace expérimental au sein de l'Agence de la santé publique du Canada (ASPC). Il héberge des applications de données interactives construites avec R Shiny et fournit des contrôles d'accès."
     },
     "about_app_directory_text2": {
         "en": "Some apps are publicly accessible, while others are limited to certain users.",
-        "fr": None,
-        "translated_using": "Some apps are publicly accessible, while others are limited to certain users.",
-        "fr_auto": "Certaines applications sont accessibles au public, tandis que d'autres sont limitées à certains utilisateurs.",
+        "fr": "Certaines applications sont accessibles au public, tandis que d'autres sont limitées à certains utilisateurs."
     },
     "only_show_accessible_apps": {
         "en": "Only show apps that I can access",
-        "fr": None,
-        "translated_using": "Only show apps that I can access",
-        "fr_auto": "Afficher uniquement les applications auxquelles j'ai accès",
+        "fr": "Afficher uniquement les applications auxquelles j'ai accès"
     },
     "anonymous_user_subtitle": {
         "en": "you might see more apps if you",
-        "fr": None,
-        "translated_using": "you might see more apps if you",
-        "fr_auto": "vous pourriez voir plus d'applications si vous",
+        "fr": "vous pourriez voir plus d'applications si vous"
     },
     "technical_info": {
         "en": "For technical information, visit",
-        "fr": None,
-        "translated_using": "For technical information, visit",
-        "fr_auto": "Pour obtenir des informations techniques, visitez",
+        "fr": "Pour obtenir des informations techniques, visitez"
     },
     "on_github": {
         "en": "on GitHub or",
-        "fr": None,
-        "translated_using": "on GitHub or",
-        "fr_auto": "sur GitHub ou",
+        "fr": "sur GitHub ou"
     },
     "email_ds": {
         "en": "email the Data Science team",
-        "fr": None,
-        "translated_using": "email us",
-        "fr_auto": "envoyez-nous un courriel",
+        "fr": "envoyez-nous un courriel"
     },
     "at_phac": {
         "en": "at Public Health Agency of Canada (PHAC).",
-        "fr": None,
-        "translated_using": "at Public Health Agency of Canada (PHAC).",
-        "fr_auto": "à l'Agence de la santé publique du Canada (ASPC).",
+        "fr": "à l'Agence de la santé publique du Canada (ASPC)."
     },
     "login_title": {
         "en": "Log in with email",
-        "fr": None,
-        "translated_using": "Log in with email",
-        "fr_auto": "Connectez-vous avec votre adresse courriel",
+        "fr": "Connectez-vous avec votre adresse courriel"
     },
     "email": {
         "en": "Email",
-        "fr": "Courriel",
+        "fr": "Courriel"
     },
     "send_login_link": {
         "en": "Send a login link to my email", 
-        "fr": None,
-        "translated_using": "Send a login link to my email",
-        "fr_auto": "Envoyer un lien de connexion à mon courriel",
+        "fr": "Envoyer un lien de connexion à mon courriel"
     },
     "login_link_sent": {
         "en": "A login link has been sent to your email address.",
-        "fr": None,
-        "translated_using": "A login link has been sent to your email address.",
-        "fr_auto": "Un lien de connexion a été envoyé à vos courriel.",
+        "fr": "Un lien de connexion a été envoyé à vos courriel."
     },
     "click_to_login": {
         "en": "Click the link to login automatically.",
-        "fr": None,
-        "translated_using": "Click the link to login automatically.",
-        "fr_auto": "Cliquez sur le lien pour vous connecter automatiquement.",
+        "fr": "Cliquez sur le lien pour vous connecter automatiquement."
     },
     "please_wait_for_login": {
         "en": "Please allow 15 seconds for link to arrive.",
-        "fr": None,
-        "translated_using": "Please allow 15 seconds for link to arrive.",
-        "fr_auto": "Veuillez attendre 15 secondes pour que le lien arrive.",
+        "fr": "Veuillez attendre 15 secondes pour que le lien arrive."
     },
     "login_failed": {
         "en": "Login failed.",
-        "fr": None,
-        "translated_using": "Login failed.",
-        "fr_auto": "Échec de la connexion.",
+        "fr": "Échec de la connexion."
     },
     "login_failed_message": {
         "en": "It was not possible to log you in due to:",
-        "fr": None,
-        "translated_using": "It was not possible to log you in due to:",
-        "fr_auto": "Il n'a pas été possible de vous connecter en raison de :",
+        "fr": "Il n'a pas été possible de vous connecter en raison de :"
     },
     "login_error_reason": {
         "en": "There are several possible ways for logins to fail:",
-        "fr": None,
-        "translated_using": "There are several possible ways for logins to fail:",
-        "fr_auto": "Il existe plusieurs raisons possibles pour lesquelles la connexion peut échouer :",
+        "fr": "Il existe plusieurs raisons possibles pour lesquelles la connexion peut échouer :"
     },
     "malformed_url": {
         "en": "The URL you are trying to use is malformed",
-        "fr": None,
-        "translated_using": "The URL you are trying to use is malformed",
-        "fr_auto": "L'URL que vous essayez d'utiliser est malformée",
+        "fr": "L'URL que vous essayez d'utiliser est malformée"
     },
     "expired_link": {
         "en": "The magic link you tried to use has expired",
-        "fr": None,
-        "translated_using": "The magic link you tried to use has expired",
-        "fr_auto": "Le lien magique que vous avez essayé d'utiliser a expiré",
+        "fr": "Le lien magique que vous avez essayé d'utiliser a expiré"
     },
     "already_used_link": {
         "en": "You have already used this magic link to login before",
-        "fr": None,
-        "translated_using": "You have already used this magic link to login before",
-        "fr_auto": "Vous avez déjà utilisé ce lien magique pour vous connecter auparavant",
+        "fr": "Vous avez déjà utilisé ce lien magique pour vous connecter auparavant"
     },
     "new_magic_link": {
         "en": "You have requested another magic causing this magic link to become invalid",
-        "fr": None,
-        "translated_using": "You have requested another magic causing this magic link to become invalid",
-        "fr_auto": "Vous avez demandé un autre lien magique, rendant ce lien magique invalide",
+        "fr": "Vous avez demandé un autre lien magique, rendant ce lien magique invalide"
     },
     "different_browser": {
         "en": "You are using a different browser to when you requested the login link",
-        "fr": None,
-        "translated_using": "You are using a different browser to when you requested the login link",
-        "fr_auto": "Vous utilisez un navigateur différent de celui que vous avez utilisé pour demander le lien de connexion",
+        "fr": "Vous utilisez un navigateur différent de celui que vous avez utilisé pour demander le lien de connexion"
     },
     "different_location": {
         "en": "You are trying to login from a different location or machine that you requested the login link from",
-        "fr": None,
-        "translated_using": "You are trying to login from a different location or machine that you requested the login link from",
-        "fr_auto": "Vous essayez de vous connecter à partir d'un autre emplacement ou d'une autre machine que celui/celle que vous avez utilisé(e) pour demander le lien de connexion",
+        "fr": "Vous essayez de vous connecter à partir d'un autre emplacement ou d'une autre machine que celui/celle que vous avez utilisé(e) pour demander le lien de connexion"
     },
     "superuser_staff_login": {
         "en": "You are a superuser or staff user",
-        "fr": None,
-        "translated_using": "You are a superuser or staff user",
-        "fr_auto": "Vous êtes un superutilisateur ou un utilisateur du personnel",
+        "fr": "Vous êtes un superutilisateur ou un utilisateur du personnel"
     },
     "admin_access_only": {
         "en": "Admin access only",
