@@ -229,7 +229,8 @@ resource "google_compute_backend_service" "default" {
   protocol              = "HTTPS"
   load_balancing_scheme = "EXTERNAL"
 
-  custom_request_headers          = ["host: ${google_compute_global_network_endpoint.default-endpoint.fqdn}"]
+  # custom_request_headers          = ["host: ${google_compute_global_network_endpoint.default-endpoint.fqdn}"]
+    custom_request_headers          = ["host: shiny.alpha.phac-aspc.gc.ca"]
 
   backend {
     group = google_compute_global_network_endpoint_group.neg.id
@@ -244,7 +245,8 @@ resource "google_compute_global_network_endpoint_group" "neg" {
 
 resource "google_compute_global_network_endpoint" "default-endpoint" {
   global_network_endpoint_group = google_compute_global_network_endpoint_group.neg.name
-  fqdn       = var.url
+  # fqdn       = var.url
+  fqdn       = "shiny.alpha.phac-aspc.gc.ca"
   port       = 443
 }
 
@@ -279,6 +281,6 @@ resource "google_compute_global_forwarding_rule" "default" {
 resource "google_compute_managed_ssl_certificate" "default" {
   name = "managed-ssl-cert"
   managed {
-    domains = ["https://phac-shiny.org"]
+    domains = ["phac-shiny.org"]
   }
 }
