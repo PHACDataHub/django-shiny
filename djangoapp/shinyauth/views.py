@@ -54,6 +54,12 @@ def shiny(request, app_slug):
         return redirect(f"/login/?next=/shiny/{app_slug}/")
     
     key_values = app.get_key_values(request.user)
+    is_fr = "/fr-ca" in request.path
+    if is_fr:
+        key_values["lang"] = "fr-ca"
+    else:
+        key_values["lang"] = "en-ca"
+
     if len(key_values) > 0:
         q = QueryDict(mutable=True)
         if request.GET.get("fullscreen", False):
@@ -61,7 +67,7 @@ def shiny(request, app_slug):
         q.update(key_values)
         query_string = q.urlencode()
         if any(request.GET.get(key) != key_values[key] for key in key_values):
-            return redirect(f"/shiny/{app_slug}/?{query_string}")
+            return redirect(f"{'/fr-ca' if is_fr else ''}/shiny/{app_slug}/?{query_string}")
 
     context = {
         "app_slug": app_slug,
