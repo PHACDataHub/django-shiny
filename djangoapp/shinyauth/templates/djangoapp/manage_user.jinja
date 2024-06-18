@@ -3,7 +3,7 @@
 {% block content %}
 
   <div class="container mt-4">
-    <h2>Manage user: {{ target_user }}</h2>
+    <h2>{{ tm("manage_user") }}: {{ target_user }}</h2>
     <hr>
     <form method="POST">
       {% csrf_token %}
@@ -11,11 +11,11 @@
         <div class="col">
           <input type="checkbox" class="form-check-input" id="is_superuser"
           name="is_superuser" {% if form.instance.is_superuser %}checked{% endif %}>
-          <label class="form-check-label" for="is_superuser">App admin</label>
+          <label class="form-check-label" for="is_superuser">{{ tm("app_admin") }}</label>
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary mt-3">Submit</button>
+      <button type="submit" class="btn btn-primary mt-3">{{ tm("submit_button") }}</button>
     </form>
     
   </div>
