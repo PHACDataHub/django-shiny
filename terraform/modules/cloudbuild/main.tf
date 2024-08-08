@@ -14,6 +14,9 @@ variable "github_oauth_token" {
   description = "The GitHub OAuth token for the datahub-automation GitHub service account"
   sensitive   = true
 }
+variable "app_service_account_id" {
+  description = "The service account id for the Cloud Build service account created in the gcp module"
+}
 
 # Cloud Build Connection
 resource "google_secret_manager_secret" "github_token_secret" {
@@ -88,5 +91,6 @@ resource "google_cloudbuild_trigger" "filename-trigger" {
   }
 
   filename   = "cloudbuild.yaml"
+  service_account = var.app_service_account_id
   depends_on = [google_cloudbuildv2_connection.datahub_automation_connection]
 }

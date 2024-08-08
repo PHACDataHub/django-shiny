@@ -25,11 +25,11 @@ variable "zone" {
   default     = "northamerica-northeast1-a"
 }
 variable "url" {
-  type = string
+  type        = string
   description = "Subdomain (optional) + the domain name of the DNS zone registered on https://github.com/PHACDataHub/dns/tree/e6bbbcefbaa7eb7b82c1233c858d408e7ca1118c"
 }
 variable "environment" {
-  type = string
+  type        = string
   description = "Environment the Terraform is being deployed inside. Is determines which branch the cloudbuild trigger is attached to"
   validation {
     condition     = contains(["dev", "prod"], var.environment)
@@ -38,7 +38,7 @@ variable "environment" {
 }
 # variables from secrets.auto.tfvars
 variable "email_host_user" {
-  type = string
+  type        = string
   description = "Host email used for magic link authentication (in plaintext format)"
   sensitive   = true
 }
