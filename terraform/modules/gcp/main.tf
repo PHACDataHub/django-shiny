@@ -60,6 +60,7 @@ resource "google_project_iam_member" "app_service_account_iam" {
     "roles/container.developer",
     "roles/secretmanager.secretAccessor",
     "roles/storage.objectViewer",
+    "roles/iam.serviceAccountUser",
   ])
   role   = each.key
   member = "serviceAccount:${google_service_account.app_service_account.email}"

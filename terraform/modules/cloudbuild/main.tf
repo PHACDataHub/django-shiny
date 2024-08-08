@@ -79,7 +79,7 @@ resource "google_cloudbuildv2_repository" "app_repo" {
 }
 
 # Cloud Build Trigger
-resource "google_cloudbuild_trigger" "filename-trigger" {
+resource "google_cloudbuild_trigger" "app_repo_trigger" {
   location = var.region
   name     = "${var.repo_name}-repo-trigger"
 

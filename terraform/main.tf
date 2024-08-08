@@ -74,6 +74,7 @@ module "K8S_MODULE" {
   app_storage_bucket_name    = module.GCP_MODULE.app_storage_bucket_name
   cloudbuild_connection_name = module.CLOUDBUILD_MODULE.cloudbuild_github_connection_name
   app_service_account_json   = module.GCP_MODULE.app_service_account_json
+  app_service_account_id     = module.GCP_MODULE.app_service_account_id
   ingress_ip_address         = module.GCP_MODULE.ingress_ipv4_address
   email_host_user            = var.email_host_user
   email_host_password        = var.email_host_password

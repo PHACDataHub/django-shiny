@@ -1,6 +1,7 @@
 variable "app_storage_bucket_name" {}
 variable "cloudbuild_connection_name" {}
 variable "app_service_account_json" { sensitive = true }
+variable "app_service_account_id" {}
 variable "email_host_user" { sensitive = true }
 variable "email_host_password" { sensitive = true }
 variable "ingress_ip_address" {}
@@ -40,6 +41,7 @@ resource "kubernetes_secret" "default" {
     ENVIRONMENT : var.environment
     HOSTNAME : var.hostname
     CLUSTER_NAME : var.cluster_name
+    SERVICE_ACCOUNT_ID : var.app_service_account_id
   }
 }
 
