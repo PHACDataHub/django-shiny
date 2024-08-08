@@ -2,9 +2,9 @@ terraform {
   required_version = ">= 0.13"
 
   backend "gcs" {
-    bucket      = "tfstate-bucket-phx-01hgge58cfn"
+    bucket      = "tfstate-bucket-phx-01hnapz4khw"
     prefix      = "terraform/state"
-    credentials = "./terraform-service-account-key-phx-01hgge58cfn.json" 
+    credentials = "./terraform-service-account-key-phx-01hnapz4khw.json"
   }
 
   required_providers {

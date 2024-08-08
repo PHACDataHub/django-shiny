@@ -35,3 +35,6 @@ steps:
     - 'CLOUDSDK_COMPUTE_REGION=${region}'
     - 'CLOUDSDK_CONTAINER_CLUSTER=${cluster_name}'
     args: ['rollout', 'restart', 'deployment', 'djangoapp-deployment']
+
+options:
+  logging: CLOUD_LOGGING_ONLY
