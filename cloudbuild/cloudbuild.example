@@ -20,3 +20,6 @@ steps:
 substitutions:
     _APP_SLUG: $APP_SLUG
     _GCP_PROJECT_ID: $GCP_PROJECT_ID
+
+options:
+  logging: 'CLOUD_LOGGING_ONLY'

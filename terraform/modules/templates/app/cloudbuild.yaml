@@ -37,4 +37,4 @@ steps:
     args: ['rollout', 'restart', 'deployment', 'djangoapp-deployment']
 
 options:
-  logging: CLOUD_LOGGING_ONLY
+  logging: 'CLOUD_LOGGING_ONLY'
