@@ -7,12 +7,14 @@ Delete all instances of apps running in the web app first or else, you will have
 
 ## Destroying Project Resources
 
-Due to limitations of Terraform and the GCP API, some resources will need to untracked before running `terrafrom destroy`.
+~~Due to limitations of Terraform and the GCP API, some resources will need to untracked before running `terrafrom destroy`.~~
 
-Thus, the recommended method to destory project resources is by running:
+~~Thus, the recommended method to destory project resources is by running:~~
 
 ```
 bash gcp-destroy.sh
 ```
+
+As of August 13, 2024, running `terraform destroy` works completely without needing to run the above script.
 
 Note, this only destroys the resources initially created by `terrafrom apply`. Thus, the project resources created during the initial setup will remain (i.e. does not undo `bash gcp-setup.sh`).

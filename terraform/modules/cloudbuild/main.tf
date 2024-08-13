@@ -90,7 +90,7 @@ resource "google_cloudbuild_trigger" "app_repo_trigger" {
     }
   }
 
-  filename   = "cloudbuild.yaml"
+  filename        = "cloudbuild.yaml"
   service_account = var.app_service_account_id
-  depends_on = [google_cloudbuildv2_connection.datahub_automation_connection]
+  depends_on      = [google_cloudbuildv2_connection.datahub_automation_connection]
 }
