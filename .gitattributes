@@ -1,0 +1,13 @@
+# Make sure you add merge driver with this command: git config --global merge.ours.driver true
+# These might need to be manually merge if modified:
+terraform/providers.tf merge=ours
+terraform/gcp-setup.sh merge=ours
+terraform/terraform.tfvars merge=ours
+# These are generated files, terraform will create new ones if needed:
+cloudbuild.yaml merge=ours
+entrypoint.sh merge=ours
+run_cloudbuild.sh merge=ours
+k8s/djangoapp.yaml merge=ours
+k8s/djangoapp-ingress.yaml merge=ours
+# Don't merge these:
+terraform/.terraform.lock.hcl merge=ours
