@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: postgres-backup
 spec:
-  # Backup the database every day at 2AM
+  # Backup the database every day at 2AM (UTC)
   schedule: "0 2 * * *"
   jobTemplate:
     spec:
@@ -26,18 +26,25 @@ spec:
                 sh -c 'echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' &&
                 apt update &&
                 apt install -y postgresql-client-16 &&
+
                 # Write the JSON key to a file
                 printf "%s" "$GCP_SA_KEY_JSON" > /root/gcp_service_account_key.json &&
+
                 # Authenticate with Google Cloud
                 gcloud auth activate-service-account --key-file=/root/gcp_service_account_key.json &&
+
+                # Save the current timestamp
+                BACKUP_TIME=$(date +"%m-%d-%Y-%H-%M") &&
+
                 # Perform the database backup
-                PGPASSWORD="$PGPASS" pg_dump -Fc -U postgres -h database-service > /tmp/postgres-backup-$(date +"%m-%d-%Y-%H-%M").dump &&
-                PGPASSWORD="$PGPASS" pg_dump -U postgres -h database-service > /tmp/postgres-backup-$(date +"%m-%d-%Y-%H-%M").sql &&
+                pg_dump -Fc -U postgres -h database-service > /tmp/postgres-backup-$BACKUP_TIME.dump &&
+                pg_dump -U postgres -h database-service > /tmp/postgres-backup-$BACKUP_TIME.sql &&
+
                 # Upload the backup to GCS
-                gsutil cp /tmp/postgres-backup-$(date +"%m-%d-%Y-%H-%M").dump gs://$POSTGRES_BACKUP_BUCKET/ &&
-                gsutil cp /tmp/postgres-backup-$(date +"%m-%d-%Y-%H-%M").sql gs://$POSTGRES_BACKUP_BUCKET/
+                gsutil cp /tmp/postgres-backup-$BACKUP_TIME.dump gs://$POSTGRES_BACKUP_BUCKET/ &&
+                gsutil cp /tmp/postgres-backup-$BACKUP_TIME.sql gs://$POSTGRES_BACKUP_BUCKET/
             env:
-            - name: PGPASS
+            - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
                   name: app-secrets
