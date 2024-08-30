@@ -8,7 +8,7 @@ from django.utils.translation import get_language
 import phac_aspc.django.helpers.templatetags as phac_aspc
 from jinja2 import Environment, pass_context
 from phac_aspc.rules import test_rule
-from djangoapp.settings import HOSTNAME
+from djangoapp.settings import ENVIRONMENT
 
 from shinyauth import models
 
@@ -147,6 +147,7 @@ def environment(**options):
             "get_other_lang_code": get_other_lang_code,
             "get_other_lang": get_other_lang,
             "get_lang": get_language,
+            "env": ENVIRONMENT,
             "urlencode": urlencode,
             "static": static,
             "phac_aspc": phac_aspc,

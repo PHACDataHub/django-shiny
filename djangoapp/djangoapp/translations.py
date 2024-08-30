@@ -1,5 +1,9 @@
 translation_entries = {
     "site_title": {
+        "en": "PHAC Shiny",
+        "fr": "ASPC Shiny",
+    },
+    "site_title_dev": {
         "en": "PHAC Shiny Dev",
         "fr": "ASPC Shiny Dev",
     },

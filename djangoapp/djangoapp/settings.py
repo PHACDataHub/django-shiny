@@ -53,7 +53,7 @@ ALLOWED_HOSTS = [
     'djangoapp',
     '34.95.50.116',
     'djangoapp-service.default.svc.cluster.local',
-    'dev.shiny.phac.alpha.canada.ca',
+    'shiny.alpha.phac-aspc.gc.ca',
     'dev.shiny.alpha.phac-aspc.gc.ca',
 ]
 
@@ -97,12 +97,15 @@ AUTHENTICATION_BACKENDS = (
 )
 
 CSRF_TRUSTED_ORIGINS = [
+    'https://shiny.alpha.phac-aspc.gc.ca',
     'https://dev.shiny.alpha.phac-aspc.gc.ca',
 ]
 CSRF_ALLOWED_ORIGINS = [
+    'https://shiny.alpha.phac-aspc.gc.ca',
     'https://dev.shiny.alpha.phac-aspc.gc.ca',
 ]
 CORS_ORIGINS_WHITELIST = [
+    'https://shiny.alpha.phac-aspc.gc.ca',
     'https://dev.shiny.alpha.phac-aspc.gc.ca',
 ]
 
