@@ -26,7 +26,7 @@ resource "google_storage_bucket" "app_media_bucket" {
   storage_class               = "STANDARD"
   public_access_prevention    = "enforced"
   uniform_bucket_level_access = true
-  force_destroy               = true 
+  force_destroy               = true
 }
 
 ###################### Artifact Registry Setup ######################
@@ -60,6 +60,7 @@ resource "google_project_iam_member" "app_service_account_iam" {
     "roles/container.developer",
     "roles/secretmanager.secretAccessor",
     "roles/storage.objectViewer",
+    "roles/iam.serviceAccountUser",
   ])
   role   = each.key
   member = "serviceAccount:${google_service_account.app_service_account.email}"
@@ -72,7 +73,7 @@ resource "google_service_account_key" "app_sa_key" {
 
 ###################### GKE k8s cluster ######################
 # append a random suffix on cluster creation to prevent this problem: https://www.googlecloudcommunity.com/gc/Google-Kubernetes-Engine-GKE/GKE-autopilot-DNS-not-resolving/m-p/634344
-resource "random_integer" "cluster_suffix" { 
+resource "random_integer" "cluster_suffix" {
   min = 100000
   max = 999999
 }
@@ -219,3 +220,4 @@ resource "google_service_networking_connection" "gke_service_networking_connecti
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.gke_service_api_private_ip_alloc.name]
 }
+

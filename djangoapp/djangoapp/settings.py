@@ -16,6 +16,12 @@ import environ
 from pathlib import Path
 from urllib.parse import urlparse
 
+from phac_aspc.django.settings.utils import (
+    configure_apps,
+    configure_middleware,
+)
+from phac_aspc.django.settings import *
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -30,6 +36,7 @@ if os.path.isfile(env_file):
 SECRET_KEY = env("SECRET_KEY", default='abc123')
 
 CLOUDBUILD_CONNECTION = env("CLOUDBUILD_CONNECTION", default=None)
+SERVICE_ACCOUNT_ID = env("SERVICE_ACCOUNT_ID", default=None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -46,9 +53,8 @@ ALLOWED_HOSTS = [
     'djangoapp',
     '34.95.50.116',
     'djangoapp-service.default.svc.cluster.local',
-    'shiny.phac.alpha.canada.ca',
     'shiny.alpha.phac-aspc.gc.ca',
-    'phac-shiny.org',
+    'dev.shiny.alpha.phac-aspc.gc.ca',
 ]
 
 INTERNAL_IPS = [
@@ -56,46 +62,51 @@ INTERNAL_IPS = [
 ]
 
 # Application definition
-INSTALLED_APPS = [
-    "shinyauth.apps.ShinyAuthConfig",
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    "django_jinja",
-    "magiclink",
-    "django_extensions",
-]
+INSTALLED_APPS = configure_apps(
+    [
+        "shinyauth.apps.ShinyAuthConfig",
+        'django.contrib.admin',
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
+        'django.contrib.sessions',
+        'django.contrib.messages',
+        'django.contrib.staticfiles',
+        "django_jinja",
+        "magiclink",
+        "django_extensions",
+    ]
+)
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    "whitenoise.middleware.WhiteNoiseMiddleware",
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+MIDDLEWARE = configure_middleware(
+    [
+        'django.middleware.security.SecurityMiddleware',
+        "whitenoise.middleware.WhiteNoiseMiddleware",
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    ]
+)
 
 AUTHENTICATION_BACKENDS = (
     "magiclink.backends.MagicLinkBackend",
     "django.contrib.auth.backends.ModelBackend",
+    "axes.backends.AxesStandaloneBackend",
 )
 
 CSRF_TRUSTED_ORIGINS = [
     'https://shiny.alpha.phac-aspc.gc.ca',
-    'https://phac-shiny.org',
+    'https://dev.shiny.alpha.phac-aspc.gc.ca',
 ]
 CSRF_ALLOWED_ORIGINS = [
     'https://shiny.alpha.phac-aspc.gc.ca',
-    'https://phac-shiny.org',
+    'https://dev.shiny.alpha.phac-aspc.gc.ca',
 ]
 CORS_ORIGINS_WHITELIST = [
     'https://shiny.alpha.phac-aspc.gc.ca',
-    'https://phac-shiny.org',
+    'https://dev.shiny.alpha.phac-aspc.gc.ca',
 ]
 
 LOGIN_URL = "email_login"
@@ -114,7 +125,7 @@ GC_NOTIFY_TEMPLATE_ID = env("GC_NOTIFY_TEMPLATE_ID", default=None)
 POWER_AUTOMATE_URL = env("POWER_AUTOMATE_URL", default=None)
 GCP_PROJECT_ID = env("GCP_PROJECT_ID", default=None)
 GCP_REGION = env("GCP_REGION", default="northamerica-northeast1")
-HOSTNAME = env("HOSTNAME", default=None)
+HOSTNAME = env("HOSTNAME", default="localhost:8000")
 CLUSTER_NAME = env("CLUSTER_NAME", default=None)
 
 if FAKE_EMAIL:
@@ -136,6 +147,7 @@ TEMPLATES = [
         "DIRS": [],
         "APP_DIRS": True,
         "OPTIONS": {
+            "environment": "djangoapp.jinja_helpers.environment",
             "globals": {
                 "len": len,
                 "str": str,
@@ -218,7 +230,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-ca'
 
 TIME_ZONE = 'UTC'
 

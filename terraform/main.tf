@@ -41,15 +41,16 @@ module "GCP_MODULE" {
 }
 
 module "CLOUDBUILD_MODULE" {
-  source             = "./modules/cloudbuild"
-  region             = var.region
-  project_id         = var.project_id
-  project_number     = var.project_number
-  repo_name          = "django-shiny"
-  repo_uri           = "https://github.com/PHACDataHub/django-shiny.git"
-  repo_branch        = var.environment
-  github_oauth_token = var.github_oauth_token
-  depends_on         = [module.GCP_MODULE]
+  source                 = "./modules/cloudbuild"
+  region                 = var.region
+  project_id             = var.project_id
+  project_number         = var.project_number
+  repo_name              = "django-shiny"
+  repo_uri               = "https://github.com/PHACDataHub/django-shiny.git"
+  repo_branch            = var.environment
+  github_oauth_token     = var.github_oauth_token
+  app_service_account_id = module.GCP_MODULE.app_service_account_id
+  depends_on             = [module.GCP_MODULE]
 }
 
 data "google_client_config" "current" {}
@@ -73,6 +74,7 @@ module "K8S_MODULE" {
   app_storage_bucket_name    = module.GCP_MODULE.app_storage_bucket_name
   cloudbuild_connection_name = module.CLOUDBUILD_MODULE.cloudbuild_github_connection_name
   app_service_account_json   = module.GCP_MODULE.app_service_account_json
+  app_service_account_id     = module.GCP_MODULE.app_service_account_id
   ingress_ip_address         = module.GCP_MODULE.ingress_ipv4_address
   email_host_user            = var.email_host_user
   email_host_password        = var.email_host_password

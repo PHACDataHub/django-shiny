@@ -4,9 +4,11 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.utils.safestring import mark_safe
+from django.forms import inlineformset_factory
+from django.http import QueryDict
 
-from shinyauth.models import ShinyApp, UserGroup, UserEmailMatch
-from shinyauth.forms import ShinyAppForm, UserGroupForm, UserEmailMatchForm, UserSuperuserForm
+from shinyauth.models import ShinyApp, UserGroup, UserEmailMatch, ShinyAppKeyValue
+from shinyauth.forms import ShinyAppForm, UserGroupForm, UserEmailMatchForm, UserSuperuserForm, ShinyAppKeyValueForm
 
 import requests
 import threading
@@ -50,6 +52,23 @@ def shiny(request, app_slug):
             ) if app.contact_email else "You don't have permission to access this app. Please login with an authorized email."
         )
         return redirect(f"/login/?next=/shiny/{app_slug}/")
+    
+    key_values = app.get_key_values(request.user)
+    is_fr = "/fr-ca" in request.path
+    if is_fr:
+        key_values["lang"] = "fr-ca"
+    else:
+        key_values["lang"] = "en-ca"
+
+    if len(key_values) > 0:
+        q = QueryDict(mutable=True)
+        if request.GET.get("fullscreen", False):
+            q["fullscreen"] = True
+        q.update(key_values)
+        query_string = q.urlencode()
+        if any(request.GET.get(key) != key_values[key] for key in key_values):
+            return redirect(f"{'/fr-ca' if is_fr else ''}/shiny/{app_slug}/?{query_string}")
+
     context = {
         "app_slug": app_slug,
         "app_name": str(app),
@@ -93,40 +112,52 @@ def manage_app(request, app_slug):
         return redirect("index")
     app = ShinyApp.objects.get(slug=app_slug)
 
+    key_value_formset = inlineformset_factory(ShinyApp, ShinyAppKeyValue, ShinyAppKeyValueForm, extra=1, fields=["key", "value", "group"])
+    
     if request.method == "POST":
-        # Keep track of original repo and branch
-        original_repo = app.repo
-        original_branch = app.branch
-        original_port = app.port
-        original_mem_max = app.mem_max
-        original_mem_min = app.mem_min
-        original_cpu_min = app.cpu_min
-        original_cpu_max = app.cpu_max
-        form = ShinyAppForm(request.POST, request.FILES, instance=app)
-        if form.is_valid():
-            form.save()
-            app = ShinyApp.objects.get(slug=app_slug)
-            # If the repo or branch has changed, we need to update the automation
-            if (
-                app.repo != original_repo
-                or app.branch != original_branch
-                or app.port != original_port
-                or app.mem_max != original_mem_max
-                or app.mem_min != original_mem_min
-                or app.cpu_min != original_cpu_min
-                or app.cpu_max != original_cpu_max
-            ):
-                create_app_automation(app)
-                messages.success(request, "App hosting info updated. It may take a few minutes for changes to appear.")
-            else:
-                messages.success(request, "App successfully updated.")
-            return redirect("manage_apps")
+        kv_formset = key_value_formset(request.POST, request.FILES, instance=app)
+        if not kv_formset.is_valid():
+            messages.error(request, "Unable to create key pair value: " + str(kv_formset.errors))
         else:
-            # Show the errors in a message
-            messages.error(request, "App could not be updated: " + str(form.errors))
+            if kv_formset.has_changed():
+                for form_row in kv_formset.deleted_forms:
+                    if form_row.instance.pk:
+                        form_row.instance.delete()
+                kv_formset.save()
+            # Keep track of original repo and branch
+            original_repo = app.repo
+            original_branch = app.branch
+            original_port = app.port
+            original_mem_max = app.mem_max
+            original_mem_min = app.mem_min
+            original_cpu_min = app.cpu_min
+            original_cpu_max = app.cpu_max
+            form = ShinyAppForm(request.POST, request.FILES, instance=app)
+            if form.is_valid():
+                form.save()
+                app = ShinyApp.objects.get(slug=app_slug)
+                # If the repo or branch has changed, we need to update the automation
+                if (
+                    app.repo != original_repo
+                    or app.branch != original_branch
+                    or app.port != original_port
+                    or app.mem_max != original_mem_max
+                    or app.mem_min != original_mem_min
+                    or app.cpu_min != original_cpu_min
+                    or app.cpu_max != original_cpu_max
+                ):
+                    create_app_automation(app)
+                    messages.success(request, "App hosting info updated. It may take a few minutes for changes to appear.")
+                else:
+                    messages.success(request, "App successfully updated.")
+                return redirect("manage_apps")
+            else:
+                # Show the errors in a message
+                messages.error(request, "App could not be updated: " + str(form.errors))
 
+    kv_formset = key_value_formset(instance=app)
     form = ShinyAppForm(instance=app)
-    context = {"active_tab": "manage_apps", "app": app, "form": form}
+    context = {"active_tab": "manage_apps", "app": app, "form": form, "key_value_formset": kv_formset}
     return render(request, "djangoapp/manage_app.jinja", context)
 
 

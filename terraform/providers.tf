@@ -4,7 +4,7 @@ terraform {
   backend "gcs" {
     bucket      = "tfstate-bucket-pht-01hhmqtnrpf"
     prefix      = "terraform/state"
-    credentials = "./terraform-service-account-key-pht-01hhmqtnrpf.json" 
+    credentials = "./terraform-service-account-key-pht-01hhmqtnrpf.json"
   }
 
   required_providers {

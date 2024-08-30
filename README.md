@@ -154,14 +154,10 @@ User account roles and permissions can be assigned using the website. However, t
 
 Technical debt
 
-- Better secrets management
-
-  - The secrets.yaml file could be stored in Secret Manager. See https://cloud.google.com/kubernetes-engine/docs/tutorials/workload-identity-secrets (not sure this is the right approach).
-  - Maybe put secrets.auto.tfvars here as
+* K8s cron DB dump in GCS
 
 App features
 
-- French translation of Django app. (Sync with Shiny app language selection? Is this possible?)
 - Improve management UX (e.g. add an email match/group without leaving the Manage App page - HTMX modal; bootstrap checkboxes)
 
 Unsolved process issues
