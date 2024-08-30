@@ -39,7 +39,7 @@ CLOUDBUILD_CONNECTION = env("CLOUDBUILD_CONNECTION", default=None)
 SERVICE_ACCOUNT_ID = env("SERVICE_ACCOUNT_ID", default=None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG", default=False)
+DEBUG = False
 SQLITE_DB = env("SQLITE_DB", default=False)
 FAKE_EMAIL = env("FAKE_EMAIL", default=False)
 ENVIRONMENT = env("ENVIRONMENT", default="dev")
