@@ -18,3 +18,9 @@ bash gcp-destroy.sh
 As of August 13, 2024, running `terraform destroy` works completely without needing to run the above script.
 
 Note, this only destroys the resources initially created by `terrafrom apply`. Thus, the project resources created during the initial setup will remain (i.e. does not undo `bash gcp-setup.sh`).
+
+## Database Recovery
+
+Backups of the database are dumped daily from the postgres container and uploaded to a storage bucket in the project space.
+
+After downloading the dump, the database can be restored using `pg_restore` on a new postgres container. Prefer `.dump` over `.sql`.

@@ -42,6 +42,8 @@ resource "kubernetes_secret" "default" {
     HOSTNAME : var.hostname
     CLUSTER_NAME : var.cluster_name
     SERVICE_ACCOUNT_ID : var.app_service_account_id
+    # for postgres backup
+    POSTGRES_BACKUP_BUCKET : google_storage_bucket.postgres_backup.name
   }
 }
 
@@ -87,4 +89,30 @@ resource "helm_release" "cm" {
 
   depends_on = [kubernetes_namespace.cm]
   wait       = false
+}
+
+resource "google_storage_bucket" "postgres_backup" {
+  name                        = "postgres-backups-${var.project_id}"
+  location                    = var.region
+  force_destroy               = true
+  uniform_bucket_level_access = true
+
+  lifecycle_rule {
+    action {
+      type = "Delete"
+    }
+
+    condition {
+      age = 30 # Delete backups older than 30 days
+    }
+  }
+
+  versioning {
+    enabled = true
+  }
+
+  labels = {
+    environment = var.environment
+    purpose     = "postgres-backup"
+  }
 }
