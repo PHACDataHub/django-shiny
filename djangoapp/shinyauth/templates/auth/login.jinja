@@ -20,7 +20,7 @@
           {% endif %}
 
           <div class="card">
-            <h2 class="card-header">Log in with email</h2>
+            <h2 class="card-header">{{ tm("login_title") }}</h2>
             <div class="card-body">
               <div class="form-floating mb-3">
                 <input type="text"
@@ -30,10 +30,10 @@
                        required
                        id="{{ login_form.email.auto_id }}"
                        class="textinput textInput form-control">
-                <label for="{{ login_form.email.auto_id }}">Email:</label>
+                <label for="{{ login_form.email.auto_id }}">{{ tm("email") }}:</label>
               </div>
               <div>
-                <input class='btn btn-primary white' type="submit" value="Send a login link to my email" />
+                <input class='btn btn-primary white' type="submit" value="{{ tm('send_login_link') }}" />
               </div>
             </div>
           </div>

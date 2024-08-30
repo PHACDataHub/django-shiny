@@ -1,4 +1,5 @@
 #!/bin/sh
+
 # Prepare Django environment
 python ./djangoapp/manage.py makemigrations
 python ./djangoapp/manage.py migrate
@@ -10,6 +11,14 @@ gcloud auth activate-service-account --key-file=./djangoapp/gcp_service_account_
 
 # This needs to be changed per project
 gcloud container clusters get-credentials ${cluster_name} --region ${region} --project ${project_id}
+
+# Run Django shell_plus and rebuild all apps (relies on SA permissions given above)
+cd ./djangoapp
+python ./manage.py shell_plus <<EOF
+# Rebuild all Shiny apps
+[app.deploy() for app in ShinyApp.objects.all()]
+EOF
+cd ..
 
 # Exec the CMD from the Dockerfile (gunicorn)
 exec "$@"

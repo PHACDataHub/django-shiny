@@ -3,10 +3,10 @@
 {% block content %}
 
   <div class="container mt-4">
-    <h2>Manage email matches</h2>
-    <p class="mt-3">Apps can be limited in visibility or accessibility to certain user groups.</p>
-    <p>Specify an individual email address, a domain name, or regex to match user login emails.</p>
-    <a href="{{ url('create_email_match') }}" class="btn btn-primary mb-3">Create new email match</a>
+    <h2>{{ tm("manage_email_matches") }}</h2>
+    <p class="mt-3">{{ tm("email_matches_description1") }}</p>
+    <p>{{ tm("email_matches_description2") }}</p>
+    <a href="{{ url('create_email_match') }}" class="btn btn-primary mb-3">{{ tm("create_new_email_match") }}</a>
     <ul>
     {% for email_match in email_matches %}
       <li>
@@ -17,10 +17,10 @@
     {% endfor %}
     </ul>
 
-    <h2>Manage user groups</h2>
-    <p class="mt-3">Each user group has one or more email matches associated with it.</p>
-    <p>Unless you want to match multiple domain names, or make a group of multiple individuals, you probably don't need to edit these manually. Instead, create a new email match above.</p>
-    <a href="{{ url('create_user_group') }}" class="btn btn-outline-primary mb-3">Create new user group</a>
+    <h2>{{ tm("manage_user_groups") }}</h2>
+    <p class="mt-3">{{ tm("user_groups_description1") }}</p>
+    <p>{{ tm("user_groups_description2") }}</p>
+    <a href="{{ url('create_user_group') }}" class="btn btn-outline-primary mb-3">{{ tm("create_new_user_group") }}</a>
     <ul>
     {% for user_group in user_groups %}
       <li>
@@ -35,11 +35,11 @@
     {% endfor %}
     </ul>
 
-  <h2>Manage app admins</h2>
-  <p class="mt-3">App admins can access all apps, and can modify access controls. If you are reading this, you are an app admin!</p>
-  <p>Grant or revoke add admin privileges to users below. <em>A user must login once before they can be made an app admin.</em></p>
+  <h2>{{ tm("manage_app_admins") }}</h2>
+  <p class="mt-3">{{ tm("app_admins_description1") }}</p>
+  <p>{{ tm("app_admins_description2") }} <b>{{ tm("app_admins_description3") }}</b></p>
   {% if superusers %}
-  <h4>Currently an app admin:</h4>
+  <h4>{{ tm("currently_an_app_admin") }}</h4>
   <ul>
   {% for user in superusers %}
     <li>
@@ -51,7 +51,7 @@
   </ul>
   {% endif %}
   {% if non_superusers %}
-  <h4>Not an app admin:</h4>
+  <h4>{{ tm("not_an_app_admin") }}</h4>
   <ul>
   {% for user in non_superusers %}
     <li>

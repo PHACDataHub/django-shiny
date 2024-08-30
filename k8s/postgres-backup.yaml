@@ -1,0 +1,68 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: postgres-backup
+spec:
+  # Backup the database every day at 2AM (UTC)
+  schedule: "0 2 * * *"
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      ttlSecondsAfterFinished: 60
+      template:
+        spec:
+          containers:
+          - name: postgres-backup
+            image: google/cloud-sdk:latest
+            command: ["/bin/sh"]
+            args: 
+              - "-c"
+              - |
+                # Install PostgreSQL client
+                apt update &&
+                apt install -y curl ca-certificates &&
+                install -d /usr/share/postgresql-common/pgdg &&
+                curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc &&
+                sh -c 'echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' &&
+                apt update &&
+                apt install -y postgresql-client-16 &&
+
+                # Write the JSON key to a file
+                printf "%s" "$GCP_SA_KEY_JSON" > /root/gcp_service_account_key.json &&
+
+                # Authenticate with Google Cloud
+                gcloud auth activate-service-account --key-file=/root/gcp_service_account_key.json &&
+
+                # Save the current timestamp
+                BACKUP_TIME=$(date +"%m-%d-%Y-%H-%M") &&
+
+                # Perform the database backup
+                pg_dump -Fc -U postgres -h database-service > /tmp/postgres-backup-$BACKUP_TIME.dump &&
+                pg_dump -U postgres -h database-service > /tmp/postgres-backup-$BACKUP_TIME.sql &&
+
+                # Upload the backup to GCS
+                gsutil cp /tmp/postgres-backup-$BACKUP_TIME.dump gs://$POSTGRES_BACKUP_BUCKET/ &&
+                gsutil cp /tmp/postgres-backup-$BACKUP_TIME.sql gs://$POSTGRES_BACKUP_BUCKET/
+            env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: POSTGRES_PASSWORD
+            - name: GCP_SA_KEY_JSON
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: GCP_SA_KEY_JSON
+            - name: POSTGRES_BACKUP_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: POSTGRES_BACKUP_BUCKET
+            volumeMounts:
+            - mountPath: /root
+              name: gcp-credentials
+          restartPolicy: Never
+          volumes:
+          - name: gcp-credentials
+            emptyDir: {}

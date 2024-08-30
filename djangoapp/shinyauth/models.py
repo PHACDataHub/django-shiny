@@ -13,15 +13,29 @@ def check_matches(user, groups):
                 if user.email.endswith(match.match):
                     return True
             elif match.match_type == "regex":
-                try:
-                    if re.match(match.match, user.email):
-                        return True
-                except:
-                    # If the email regex is invalid, skip it
-                    print(f"Invalid email regex: {match.match}")
-                    pass
+                if re.match(match.match, user.email):
+                    return True
     return False
 
+def get_user_groups(user, groups):
+    group_list = []
+
+    if not hasattr(user, 'email'):
+        return group_list
+
+    for group in groups:
+        for match in group.email_matches.all():
+            match match.match_type:
+                case "exact":
+                    if user.email == match.match:
+                        group_list.append(group)
+                case "domain":
+                    if user.email.endswith(match.match):
+                        group_list.append(group)
+                case "regex":
+                    if re.match(match.match, user.email):
+                        group_list.append(group)
+    return group_list
 
 class ShinyApp(models.Model):
     # Required for hosting
@@ -70,6 +84,22 @@ class ShinyApp(models.Model):
             return "viewable"
         return False
     
+    def get_key_values(self, user):
+        rtn_dict = {}
+
+        user_groups = get_user_groups(user, UserGroup.objects.all()) 
+
+        if len(user_groups) <= 0 and self.is_publicly_accessible:
+            public_user_group = UserGroup.objects.get(name='Public')
+            user_groups.append(public_user_group)
+
+        for group in user_groups:
+            key_values = ShinyAppKeyValue.objects.filter(app=self, group=group)
+            for kv in key_values:
+                rtn_dict[kv.key] = kv.value
+        
+        return rtn_dict
+
     def generate_deployment(self):
         devops.generate_deployment(self)
 
@@ -120,3 +150,13 @@ class UserEmailMatch(models.Model):
 
     def __str__(self):
         return self.name or self.match
+
+
+class ShinyAppKeyValue(models.Model):
+    app = models.ForeignKey(ShinyApp, on_delete=models.CASCADE)
+    group = models.ForeignKey(UserGroup, on_delete=models.CASCADE)
+    key = models.CharField(max_length=100)
+    value = models.CharField(max_length=500)
+
+    def __str__(self):
+        return f"{self.key} = {self.value}"

@@ -47,7 +47,8 @@ metadata:
   name: $APP_SLUG-ingress
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/configuration-snippet: |-
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite ^/fr-ca/shiny/$APP_SLUG/(.+)$ /$1 break;
       rewrite ^/shiny/$APP_SLUG/(.+)$ /$1 break;
     nginx.ingress.kubernetes.io/auth-url: "http://djangoapp-service.default.svc.cluster.local:8000/shiny_auth/$APP_SLUG/"
     kubernetes.io/ingress.global-static-ip-name: django-shiny-ip
@@ -60,6 +61,13 @@ spec:
     http:
       paths:
       - path: /shiny/$APP_SLUG/.+
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: $APP_SLUG-service
+            port:
+              number: 8100
+      - path: /fr-ca/shiny/$APP_SLUG/.+
         pathType: ImplementationSpecific
         backend:
           service:

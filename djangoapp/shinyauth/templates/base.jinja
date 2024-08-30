@@ -1,7 +1,15 @@
+{% macro env_site_title(env) %}
+  {% if env == 'dev' %}
+    {{ tm("site_title_dev") }}
+  {% else %}
+    {{ tm("site_title") }}
+  {% endif %}
+{% endmacro %}
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang= {{ get_lang() }}>
   <head>
-    <title>{% if title %}{{ title }}{% else %}PHAC Shiny app directory{% endif %}</title>
+    <title>{% if title %}{{ title }}{% else %}{{ env_site_title(env) }} {% endif %}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="{{ static('thirdparty/htmx.min.js') }}"></script>
@@ -24,7 +32,7 @@
         <h1 class="nav-header">
           <a href="{{ url("index") }}" class="text-reset text-decoration-none">
             {% block nav_header_text %}
-              PHAC Shiny
+              {{ env_site_title(env) }}
             {% endblock nav_header_text %}
           </a>
         </h1>
@@ -42,17 +50,11 @@
             {% include 'components/header_links.jinja' %}
           {% endblock %}
           <ul class="navbar-nav flex-fill justify-content-end">
-            {#
-            {% block lang_toggle %}
-              {% if not hide_lang_toggle %}
-                <li class="nav-item">
-                  <a lang="{{ get_other_lang_code() }}"
-                     class="nav-link"
-                     href="{{ url_to_other_lang() }}">{{ get_other_lang() }}</a>
-                </li>
-              {% endif %}
-            {% endblock %}
-            #}
+            <li class="nav-item">
+              <a lang="{{ get_other_lang_code() }}"
+                  class="nav-link"
+                  href="{{ url_to_other_lang() }}">{{ get_other_lang() }}</a>
+            </li>
             {% if request.user.is_authenticated %}
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle"
@@ -67,7 +69,7 @@
                     <a class="dropdown-item" href="{{ url("logout") }}">
                       {# Bootstrap icon for logout #}
                       <i class="bi bi-box-arrow-right"></i>
-                      Log out
+                      {{ tm("logout") }}
                     </a>
                   </li>
                 </ul>
@@ -78,7 +80,7 @@
               <a class="nav-link fw-semibold"
                  href="{{ url("email_login") }}">
                 <i class="bi bi-box-arrow-in-right me-1"></i>
-                Log in
+                {{ tm("login") }}
               </a>
             </li>
             {% endif %}
@@ -111,14 +113,14 @@
       {% block content %}
       {% endblock content %}
     </main>
-    <footer class="d-print-none">
+    {# <footer class="d-print-none">
       <nav class="navbar navbar-dark mt-3 bg-dark">
         <div class="container">
           <p class="my-3">Version 0.01</p>
           <ul class="list-unstyled my-3 list-inline">
-            {# <li class="list-inline-item">
+            <li class="list-inline-item">
               <a href="#" data-bs-toggle="modal" data-bs-target="#terms-modal">{{ _("terms_and_conditions") }}</a>
-            </li> #}
+            </li>
             <li class="list-inline-item">
               <a href="#">
                 Issues? Email dev team
@@ -127,7 +129,7 @@
           </ul>
         </div>
       </nav>
-    </footer>
+    </footer> #}
     <script>
     htmx.on("htmx:syntax:error", function(evt) {
               debugger;

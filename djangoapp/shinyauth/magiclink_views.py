@@ -16,6 +16,8 @@ from magiclink.models import MagicLinkError
 from magiclink.utils import get_url_path
 from magiclink.views import Login
 
+from django.utils.translation import get_language
+
 from djangoapp.settings import (
     ALLOWED_EMAIL_DOMAINS,
     GC_NOTIFY_API_KEY,
@@ -58,6 +60,9 @@ class EmailLoginView(Login):
             get_or_create_user(email)
 
         redirect_url = self.login_redirect_url(request.GET.get("next", ""))
+        if get_language() == "fr-ca":
+            redirect_url= f"/fr-ca{redirect_url}"
+
         try:
             magiclink = create_magiclink(email, request, redirect_url=redirect_url)
         except MagicLinkError as e:
