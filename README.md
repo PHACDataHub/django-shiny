@@ -152,17 +152,14 @@ User account roles and permissions can be assigned using the website. However, t
 
 ## To do
 
-Technical debt
+Technical debt/Improvements
 
-* K8s cron DB dump in GCS
+* Sometimes Django migrations don't apply and need to be fixed manually by ssh into the container and using `manage.py`
+  * Follow this - [https://stackoverflow.com/questions/33086444/django-1-8-migrate-is-not-creating-tables](https://stackoverflow.com/questions/33086444/django-1-8-migrate-is-not-creating-tables)
+* CI/CD - merging between dev and prod is not ideal at the moment
+* Real production would benefit from running Postgres replicas rather than solely relying on backups.
+* Notify clients if a Cloudbuild of their app fails by streaming the logs to the platform from GCP
 
 App features
 
 - Improve management UX (e.g. add an email match/group without leaving the Manage App page - HTMX modal; bootstrap checkboxes)
-
-Unsolved process issues
-
-- Connect data to Shiny apps
-  - Google cloud storage
-  - Azure blob storage
-  - Databricks SQL?
