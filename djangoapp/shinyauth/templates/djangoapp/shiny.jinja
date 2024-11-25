@@ -23,6 +23,7 @@
         $('body').removeClass('loading');
 
         var iframe = document.createElement("iframe");
+        iframe.setAttribute("title", "Main app content")
         $('#content').append(iframe);
 
         iframe.contentWindow.document.open();
