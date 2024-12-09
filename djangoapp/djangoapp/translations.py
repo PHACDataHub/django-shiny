@@ -11,6 +11,10 @@ translation_entries = {
         "en": "Data Collection and Retrieval Application",
         "fr": "Collecte et de récupération des données",
     },
+    "switch_other_lang": {
+        "en": "Switch to French",
+        "fr": "Passer à l'anglais",
+    },
     "other_lang": {
         "en": "Français",
         "fr": "English",
