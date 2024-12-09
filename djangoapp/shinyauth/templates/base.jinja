@@ -53,7 +53,7 @@
             <li class="nav-item">
               <a lang="{{ get_other_lang_code() }}"
                   class="nav-link"
-                  aria-label=""{{ tm("switch_other_lang")}}
+                  aria-label="{{ tm("switch_other_lang")}}"
                   href="{{ url_to_other_lang() }}">{{ get_other_lang() }}</a>
             </li>
             {% if request.user.is_authenticated %}
