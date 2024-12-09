@@ -6,7 +6,7 @@
 
 {% block content %}
   <div id="content" {% if not full_width %}class="container"{% endif %}>
-    <div id="loading-spinner" class="mt-5 text-center">
+    <div id="loading-spinner" class="mt-5 text-center" aria-live="polite">
       <div class="spinner-border text-secondary" role="status">
         <span class="visually-hidden">{{ tm("loading") }}</span>
       </div>
