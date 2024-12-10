@@ -507,4 +507,8 @@ translation_entries = {
         "en": "Loading...",
         "fr": "Chargement...",
     },
+    "skip_to_main": {
+        "en": "Skip to main content",
+        "fr": "Passer au contenu principal",
+    },
 }
